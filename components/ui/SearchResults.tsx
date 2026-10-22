@@ -30,7 +30,7 @@ function SearchResultItem({ item, onSelect }: SearchResultItemProps) {
         className="flex items-center gap-3 p-2.5 hover:bg-gray-50 transition-colors group"
       >
         {/* Miniatuur Poster */}
-        <div className="relative w-10 h-14 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+        <div className="relative w-10 h-14 bg-gray-100 rounded overflow-hidden shrink-0">
           {item.poster_path ? (
             <Image
               src={`https://image.tmdb.org/t/p/w200${item.poster_path}`}
@@ -53,11 +53,10 @@ function SearchResultItem({ item, onSelect }: SearchResultItemProps) {
           </p>
           <div className="flex items-center gap-2 mt-0.5">
             <span
-              className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
-                isMovie
+              className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${isMovie
                   ? 'bg-blue-50 text-blue-700'
                   : 'bg-purple-50 text-purple-700'
-              }`}
+                }`}
             >
               {isMovie ? 'Film' : 'Serie'}
             </span>
