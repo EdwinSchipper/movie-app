@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { UIswitch } from '@/components/ui'
 import { getTrendingMovies, type TimeWindow, type Movie } from '@/lib/tmdb'
 
@@ -28,21 +29,23 @@ export default function TrendingMoviesClient({ initialMovies = [] }: { initialMo
       <ul className="grid grid-cols-10 gap-4 container">
         {movies.map((film) => (
           <li key={film.id}>
-            {film.poster_path ? (
-              <Image
-                src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
-                alt={film.title}
-                width={300}
-                height={450}
-                className="w-full h-auto rounded-md"
-                loading="eager"
-              />
-            ) : (
-              <div className="w-full aspect-2/3 bg-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500">
-                Geen afbeelding
-              </div>
-            )}
-            <p className="mt-2 text-sm font-medium line-clamp-1">{film.title}</p>
+            <Link href={`/movies/${film.id}`} className="group block">
+              {film.poster_path ? (
+                <Image
+                  src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
+                  alt={film.title}
+                  width={300}
+                  height={450}
+                  className="w-full h-auto rounded-md transition-transform duration-200 group-hover:scale-105"
+                  loading="eager"
+                />
+              ) : (
+                <div className="w-full aspect-2/3 bg-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500">
+                  Geen afbeelding
+                </div>
+              )}
+              <p className="mt-2 text-sm font-medium line-clamp-1 group-hover:text-blue-600 transition-colors">{film.title}</p>
+            </Link>
           </li>
         ))}
       </ul>
