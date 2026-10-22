@@ -1,3 +1,6 @@
 export { default as UIswitch } from './Switch'
 export { default as UIButton } from './Button'
 export { default as Header } from './Header'
+export { default as UIInput } from './Input'
+export { default as HeaderSearch } from './HeaderSearch'
+export { default as SearchResults } from './SearchResults'

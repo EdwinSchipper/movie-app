@@ -46,6 +46,17 @@ export interface TvShowDetails {
   genres: Genre[]
 }
 
+export interface SearchItem {
+  id: number
+  media_type: 'movie' | 'tv'
+  title?: string
+  name?: string
+  poster_path: string | null
+  release_date?: string
+  first_air_date?: string
+  vote_average?: number
+}
+
 export async function getTrendingTv(range: TimeWindow = 'day'): Promise<TvShow[]> {
   const apiKey = process.env.TMDB_API_KEY
   if (!apiKey) {
@@ -118,4 +129,32 @@ export async function getTvDetails(id: string | number): Promise<TvShowDetails> 
   }
 
   return res.json()
+}
+
+export async function searchMulti(query: string): Promise<SearchItem[]> {
+  const trimmed = query?.trim()
+  if (!trimmed) {
+    return []
+  }
+
+  const apiKey = process.env.TMDB_API_KEY
+  if (!apiKey) {
+    throw new Error('TMDB_API_KEY is niet ingesteld in .env.local')
+  }
+
+  const res = await fetch(
+    `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${encodeURIComponent(trimmed)}&language=nl-NL`,
+    { next: { revalidate: 60 } }
+  )
+
+  if (!res.ok) {
+    throw new Error(`Fout bij zoeken: ${res.statusText}`)
+  }
+
+  const data = await res.json()
+  const results = data.results || []
+
+  return results.filter(
+    (item: { media_type: string }) => item.media_type === 'movie' || item.media_type === 'tv'
+  )
 }
