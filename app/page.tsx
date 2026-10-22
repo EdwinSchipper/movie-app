@@ -1,6 +1,6 @@
 'use client'
 
-import { UIButton, UIswitch } from '@/components'
+import { UIButton, UIInput, UIswitch } from '@/components'
 
 export default function Page() {
   return <div>
@@ -8,6 +8,7 @@ export default function Page() {
 
     <UIButton />
     <UIswitch />
+    <UIInput />
 
 
   </div>

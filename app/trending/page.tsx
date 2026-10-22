@@ -19,7 +19,7 @@ function TrendingSkeleton({ title }: { title: string }) {
 export default function Page() {
   return (
     <section>
-      <h1 className="p-10 pb-0 text-3xl font-bold">Blog Page</h1>
+      <h1 className="p-10 pb-0 text-3xl font-bold">Trending</h1>
 
       <div className="flex space-y-24 flex-col">
         <Suspense fallback={<TrendingSkeleton title="Trending TV" />}>
