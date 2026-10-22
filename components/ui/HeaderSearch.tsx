@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import type { SearchItem } from '@/lib/tmdb'
 import UIInput from './Input'
 import SearchResults from './SearchResults'
 
@@ -9,17 +8,16 @@ export default function HeaderSearch() {
   const [query, setQuery] = useState('')
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
-  // Register Search Input
+  // Search Input
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const sanitized = e.target.value.replace(/[^a-zA-Z0-9 ]/g, '')
     setQuery(sanitized)
     setIsOpen(sanitized.trim().length > 0)
   }
 
-  // Send selected item to SearchResults
-  const handleSelectResult = (item: SearchItem) => {
-    const selectedTitle = item.title || item.name || ''
-    setQuery(selectedTitle)
+  // OnClick Behaviour
+  const handleSelectResult = () => {
+    setQuery('')
     setIsOpen(false)
   }
 
