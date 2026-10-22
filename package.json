@@ -10,6 +10,7 @@
     "lint:fix": "eslint --fix"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.10",
     "next": "16.4.2",
     "react": "19.3.0",
     "react-dom": "19.3.0"
