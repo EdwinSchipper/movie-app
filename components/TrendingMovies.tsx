@@ -30,6 +30,5 @@ export default function TrendingMovies() {
         </li>
       ))}
     </ul>
-
   </div>
 }
