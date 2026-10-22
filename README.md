@@ -1,20 +1,20 @@
 # Movie App (Movie for Friends)
 
-> **Status:** 🚧 Work in Progress
+> **Status:** 🚧 In ontwikkeling (Work in Progress)
 
-A modern web application for discovering, browsing, and sharing movies with friends, built with [Next.js](https://nextjs.org) (App Router), React 19, and Tailwind CSS.
+Een moderne webapplicatie voor het ontdekken, bekijken en delen van films en series met vrienden, gebouwd met [Next.js](https://nextjs.org) (App Router), React 19 en Tailwind CSS.
 
 ---
 
-## 📌 Project Overview & Context
+## 📌 Projectoverzicht & Context
 
-This project is currently in early active development. The goal is to build an interactive, high-performance movie discovery platform where users can explore trending titles, search movie catalogs, view detailed metadata, and share recommendations.
+Dit project is momenteel in actieve ontwikkeling. Het doel is het bouwen van een interactief, high-performance platform waar gebruikers trending titels kunnen verkennen, door film- en seriecatalogi kunnen zoeken, gedetailleerde metadata kunnen bekijken en aanbevelingen kunnen delen.
 
-Below is an overview of the key development areas and their current status:
+Hieronder vind je een overzicht van de belangrijkste ontwikkelgebieden en hun huidige status:
 
-### 🗺️ Development Status & Roadmap
+### 🗺️ Ontwikkelstatus & Roadmap
 
-| Area | Status | Description |
+| Onderdeel | Status | Omschrijving |
 | :--- | :---: | :--- |
 | **API Integration** | ✅ `Done` | TMDB API v3 geïntegreerd voor trending movies, trending TV series en dynamische detailpagina's. |
 | **Data Streaming** | ✅ `Done` | Server-side data fetching met Partial Prerendering (PPR) en React Suspense streaming met skeleton fallbacks. |
@@ -25,21 +25,21 @@ Below is an overview of the key development areas and their current status:
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Aan de slag (Getting Started)
 
-### Prerequisites
+### Vereisten (Prerequisites)
 
-Ensure you have [Node.js](https://nodejs.org/) (v20+) installed, along with [pnpm](https://pnpm.io/) (`pnpm` recommended).
+Zorg ervoor dat je [Node.js](https://nodejs.org/) (v20+) hebt geïnstalleerd, samen met [pnpm](https://pnpm.io/) (`pnpm` aanbevolen).
 
-### Installation & Development Server
+### Installatie & Lokale Development Server
 
-1. **Install dependencies:**
+1. **Dependencies installeren:**
 
    ```bash
    pnpm install
    ```
 
-2. **Configure environment variables:**
+2. **Environment variables configureren:**
 
    Maak een lokaal omgevingsbestand aan in de root van het project (`.env.development.local`):
 
@@ -47,15 +47,15 @@ Ensure you have [Node.js](https://nodejs.org/) (v20+) installed, along with [pnp
    TMDB_API_KEY=jouw_tmdb_api_sleutel
    ```
 
-3. **Start the local development server:**
+3. **Lokale development server starten:**
 
    ```bash
    pnpm dev
    ```
 
-4. **Open the application:**
+4. **De applicatie openen:**
 
-   Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
+   Navigeer naar [http://localhost:3000](http://localhost:3000) in je browser.
 
 ---
 
@@ -88,9 +88,9 @@ Bij elke push en pull request naar `master` of `development` draait automatisch 
 
 ---
 
-## 📚 Resources & Documentation
+## 📚 Bronnen & Documentatie (Resources)
 
-- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API.
-- [Vercel Deployment Documentation](https://vercel.com/docs) - Deployment, environment variables, and branch workflows.
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs) - Utility-first CSS framework.
+- [Next.js Documentatie](https://nextjs.org/docs) - Features en App Router API documentatie.
+- [Vercel Deployment Documentatie](https://vercel.com/docs) - Deployments, environment variables en branch workflows.
+- [Tailwind CSS Documentatie](https://tailwindcss.com/docs) - Utility-first styling framework.
 - [The Movie Database (TMDB) API](https://developer.themoviedb.org/docs) - Movie & TV metadata API.
