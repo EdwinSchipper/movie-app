@@ -1,7 +1,6 @@
 'use client'
 
-import UIButton from '@/components/ui/Button'
-import UIswitch from '@/components/ui/Switch'
+import { UIButton, UIswitch } from '@/components'
 
 export default function Page() {
   return <div>
