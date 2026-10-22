@@ -11,7 +11,7 @@ interface TvPageProps {
 export default function TvDetailPage({ params }: TvPageProps) {
   return (
     <Suspense fallback={
-      <main className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto animate-pulse">
+      <div className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto animate-pulse">
         <div className="h-4 w-32 bg-gray-200 rounded mb-6" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="aspect-2/3 bg-gray-200 rounded-xl" />
@@ -21,7 +21,7 @@ export default function TvDetailPage({ params }: TvPageProps) {
             <div className="h-24 w-full bg-gray-200 rounded" />
           </div>
         </div>
-      </main>
+      </div>
     }>
       <TvContent params={params} />
     </Suspense>
@@ -39,7 +39,7 @@ async function TvContent({ params }: TvPageProps) {
   }
 
   return (
-    <main className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto">
+    <article className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto">
       <Link
         href="/blog"
         className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 mb-6 transition-colors"
@@ -110,6 +110,6 @@ async function TvContent({ params }: TvPageProps) {
           </div>
         </div>
       </div>
-    </main>
+    </article>
   )
 }
