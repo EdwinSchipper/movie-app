@@ -3,17 +3,16 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { UIswitch } from '@/components/ui'
-import { getTrendingTv, type TvShow } from '@/lib/tmdb'
+import { getTrendingTv, type TimeWindow, type TvShow } from '@/lib/tmdb'
 
 export default function TrendingTvClient({ initialShows = [] }: { initialShows?: TvShow[] }) {
-  const [range, setRange] = useState<'day' | 'week'>('day')
+  const [range, setRange] = useState<TimeWindow>('day')
   const [shows, setShows] = useState<TvShow[]>(initialShows)
 
-  const handleToggle = async (isWeek: boolean) => {
-    const nextRange = isWeek ? 'week' : 'day'
-    setRange(nextRange)
-    const data = await getTrendingTv(nextRange)
-    setShows(data)
+  const handleToggle = async (nextRange: TimeWindow) => {
+    setRange(nextRange) // 1. Werk de geselecteerde tijdspanne bij in de lokale state voor de UI
+    const data = await getTrendingTv(nextRange) // 2. Haal via de Server Action asynchroon de nieuwe trending series op van TMDB
+    setShows(data) // 3. Update de weergavelijst in de state
   }
 
   return (
@@ -21,7 +20,7 @@ export default function TrendingTvClient({ initialShows = [] }: { initialShows?:
       <div className="flex items-center justify-start gap-5 pb-6">
         <h2 className="text-2xl font-bold">Trending TV Series</h2>
         <UIswitch
-          checked={range === 'week'}
+          value={range}
           onChange={handleToggle}
         />
       </div>
