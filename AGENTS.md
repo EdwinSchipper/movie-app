@@ -10,33 +10,38 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Git Commit Message Guidelines
 
-Always format git commit messages with clear conventional types, core edit focus, scale assessment (minor vs. large), and specific context:
+Commit messages moeten te allen tijde haarscherp, specifiek en informatief zijn. Generieke of vage omschrijvingen zijn niet toegestaan.
 
 ### 1. Format
 ```text
-<type>(<scope>): <imperative description of core edit>
+<type>(<specifieke-scope>): <gebiedende wijs omschrijving van de kernwijziging>
 
-[Optional body for large/context-heavy edits]
-- Scale: <minor | moderate | large>
-- Specifics: <concise context on why and what was changed>
+[Verplichte body bij wijzigingen met meer dan 1 regel of bij logica-aanpassingen]
+- Waarom: <concrete aanleiding, bug of doel>
+- Wat: <specifieke functies, interfaces, components of bestanden die zijn gewijzigd>
+- Impact: <technische of visuele consequentie, bijv. type-safety, Suspense streaming, SEO>
 ```
 
-### 2. Types
-- `feat`: A new feature or user-facing functionality (e.g. `feat(movies): add search bar and filter controls`)
-- `fix`: A bug fix or runtime error correction (e.g. `fix(image): use leading slash for public assets`)
-- `docs`: Documentation only changes (e.g. `docs(readme): update project status and roadmap`)
-- `style`: CSS/styling or formatting that does not affect code logic (e.g. `style(layout): add glassmorphic header bar`)
-- `refactor`: Code restructuring without bug fixes or new features
-- `chore`: Configuration, tooling, dependencies, or maintenance (e.g. `chore(vscode): configure custom editor tab labels`)
-- `test`: Adding or updating test cases
+### 2. Typen & Specifieke Scopes
+- `feat`: Nieuwe functionaliteit of route (bijv. `(movie-detail)`, `(trending-tv)`)
+- `fix`: Bugfix of runtime correctie (bijv. `(tmdb-api)`, `(types)`)
+- `refactor`: Structuur- of architectuurwijziging zonder feature-wijziging (bijv. `(features-folder)`, `(choice-alias)`)
+- `style`: Visuele afwerking of CSS (bijv. `(back-link)`, `(switch-ui)`)
+- `docs`: Documentatie of agent instructies (bijv. `(agents-md)`, `(readme)`)
+- `chore`: Tooling, configs, dependencies (bijv. `(next-config)`, `(eslint)`)
 
-### 3. Guidelines
-- **Core Edit**: Summarize the primary change concisely in imperative mood (e.g. "add", "fix", "update", not "added" or "updates").
-- **Scope**: Identify the core component, route, or file group (e.g., `(readme)`, `(vscode)`, `(api)`).
-- **Scale (Minor vs. Large)**:
-  - **Minor**: Single-line commit message is sufficient.
-  - **Large / Multi-file**: Add a bulleted body explaining key specifics, dependencies, and architectural context.
-- **Context & Specifics**: Include the "why" or critical nuances whenever changes affect setup, configs, or public APIs.
+### 3. Strikte Kwaliteitseisen
+1. **Geen vage omschrijvingen**: Gebruik nooit generieke termen zoals "update code", "fix bug", "changes", "tweaks" of "refactor components".
+2. **Specifieke Scopes**: Gebruik de meest nauwe scope (`(tv-detail)` i.p.v. `(app)` of `(components)`).
+3. **Benoem het 'Wat' én het 'Waarom'**: Een commit message moet over 6 maanden nog exact duidelijk maken welke ontwerpkeuze is gemaakt.
+
+### 4. Voorbeelden (Goed vs. Fout)
+| Fout (te generiek) ❌ | Goed (specifiek en contextrijk) ✅ |
+| :--- | :--- |
+| `feat(detail): add page` | `feat(tv-detail): add dynamic /tv/[id] page with Suspense streaming` |
+| `refactor(ui): update switch` | `refactor(switch-ui): adopt TimeWindow choice alias to remove boolean translation` |
+| `refactor(components): reorder folders` | `refactor(components): split generic UI and domain features into dedicated subfolders` |
+| `style(tv): update hover` | `style(tv-detail): update back navigation link hover color to blue-600` |
 
 ## Wijzigingen & Goedkeuringsbeleid (Change Approval Policy)
 

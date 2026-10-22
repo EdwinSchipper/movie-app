@@ -42,7 +42,7 @@ async function MovieContent({ params }: MoviePageProps) {
     <main className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto">
       <Link
         href="/blog"
-        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black mb-6 transition"
+        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 mb-6 transition-colors"
       >
         ← Terug naar overzicht
       </Link>
