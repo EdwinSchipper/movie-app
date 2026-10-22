@@ -1,35 +1,49 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
-
-type TimeWindow = 'day' | 'week'
-
-const range: TimeWindow = 'day'
-const data = await fetch(`https://api.themoviedb.org/3/trending/tv/${range}?api_key=${process.env.TMDB_API_KEY}&language=nl-NL`)
-const series = await data.json()
-
-interface tv {
-  id: number;
-  name: string;
-  poster_path: string;
-}
+import UIswitch from '@/components/ui/Switch'
+import { getTrendingTv, type TvShow } from '@/lib/tmdb'
 
 export default function TrendingTv() {
-  return <div className='p-10'>
-    <h1 className=' text-2xl pb-10'>Trending TV Series</h1>
-    <ul className=' grid grid-cols-12 gap-4 container '>
-      {series.results?.map((tv: tv) => (
-        <li key={tv.id}>
-          <Image
-            src={`https://image.tmdb.org/t/p/w500${tv.poster_path}`}
-            alt={tv.name}
-            width={300}
-            height={450}
-            className="w-full h-auto rounded-md"
-            loading="eager"
-          />
-          {series.name}
-        </li>
-      ))}
-    </ul>
+  const [range, setRange] = useState<'day' | 'week'>('day')
+  const [shows, setShows] = useState<TvShow[]>([])
 
-  </div>
+  useEffect(() => {
+    getTrendingTv(range).then(setShows)
+  }, [range])
+
+  return (
+    <div className="p-10">
+      <div className="flex items-center justify-start gap-5 pb-6">
+        <h2 className="text-2xl font-bold">Trending TV Series</h2>
+        <UIswitch
+          checked={range === 'week'}
+          onChange={(isWeek) => setRange(isWeek ? 'week' : 'day')}
+        />
+      </div>
+
+      <ul className="grid grid-cols-10 gap-4 container">
+        {shows.map((tv) => (
+          <li key={tv.id}>
+            {tv.poster_path ? (
+              <Image
+                src={`https://image.tmdb.org/t/p/w500${tv.poster_path}`}
+                alt={tv.name}
+                width={300}
+                height={450}
+                className="w-full h-auto rounded-md"
+                loading="eager"
+              />
+            ) : (
+              <div className="w-full aspect-2/3 bg-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500">
+                Geen afbeelding
+              </div>
+            )}
+            <p className="mt-2 text-sm font-medium line-clamp-1">{tv.name}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
