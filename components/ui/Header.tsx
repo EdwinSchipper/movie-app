@@ -3,9 +3,9 @@ import HeaderSearch from './HeaderSearch'
 
 export default function Header() {
   return (
-    <header className="border-b border-gray-200 bg-white/95 backdrop-blur sticky top-0 z-50">
+    <header className="backdrop-blur sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        {/* Logo / Merknaam & Navigatie */}
+
         <div className="flex items-center gap-6">
           <Link
             href="/"
@@ -24,7 +24,6 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Zoekbalk Component */}
         <HeaderSearch />
       </div>
     </header>

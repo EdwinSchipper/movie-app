@@ -1,29 +1,56 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import type { SearchItem } from '@/lib/tmdb'
+import { searchMulti, type SearchItem } from '@/lib/tmdb'
 
 export interface SearchResultsProps {
-  results: SearchItem[]
-  isLoading: boolean
   query: string
-  isOpen: boolean
-  onSelect: () => void
+  onSelect: (item: SearchItem) => void
 }
 
 export default function SearchResults({
-  results,
-  isLoading,
   query,
-  isOpen,
   onSelect,
 }: SearchResultsProps) {
-  if (!isOpen || !query.trim()) {
+  const [results, setResults] = useState<SearchItem[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  // Asynchroon data ophalen op basis van de query met een 300ms debounce
+  useEffect(() => {
+    const trimmed = query.trim()
+    if (!trimmed) {
+      return
+    }
+
+    const timeoutId = setTimeout(async () => {
+      setIsLoading(true)
+      try {
+        const data = await searchMulti(trimmed)
+        setResults(data)
+      } catch (err) {
+        console.error('Zoekfout:', err)
+        setResults([])
+      } finally {
+        setIsLoading(false)
+      }
+    }, 300)
+
+    return () => clearTimeout(timeoutId)
+  }, [query])
+
+  if (!query.trim()) {
     return null
   }
 
   return (
     <div className="absolute left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-100 max-h-96 overflow-y-auto z-50">
-      {results.length > 0 ? (
+      {isLoading && results.length === 0 ? (
+        <div className="p-4 text-center text-sm text-gray-500 animate-pulse">
+          Zoeken naar &ldquo;{query}&rdquo;...
+        </div>
+      ) : results.length > 0 ? (
         <ul className="divide-y divide-gray-100">
           {results.map((item) => {
             const isMovie = item.media_type === 'movie'
@@ -36,7 +63,7 @@ export default function SearchResults({
               <li key={`${item.media_type}-${item.id}`}>
                 <Link
                   href={detailHref}
-                  onClick={onSelect}
+                  onClick={() => onSelect(item)}
                   className="flex items-center gap-3 p-2.5 hover:bg-gray-50 transition-colors group"
                 >
                   {/* Miniatuur Poster */}

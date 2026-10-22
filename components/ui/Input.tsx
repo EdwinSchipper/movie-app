@@ -1,11 +1,19 @@
-import { Input } from '@headlessui/react'
+import { Input as HeadlessInput, type InputProps } from '@headlessui/react'
 
-export default function UIInput() {
+export interface UIInputProps extends InputProps {
+  className?: string
+}
+
+export default function UIInput({
+  className = '',
+  type = 'text',
+  ...props
+}: UIInputProps) {
   return (
-    <Input
-      type="text"
-      name="full_name"
-      className="border rounded px-3 py-1.5 text-sm data-focus:bg-blue-100 data-hover:shadow"
+    <HeadlessInput
+      type={type}
+      className={`border rounded px-3 py-1.5 text-sm transition-all focus:outline-none ${className}`.trim()}
+      {...props}
     />
   )
 }
