@@ -15,11 +15,14 @@ export default function Header() {
           </Link>
 
           <nav className="hidden sm:flex items-center gap-4 text-sm font-medium text-gray-600">
-            <Link href="/" className="hover:text-blue-600 transition-colors">
-              Home
-            </Link>
             <Link href="/trending" className="hover:text-blue-600 transition-colors">
               Trending
+            </Link>
+            <Link href="/recommendations" className="hover:text-blue-600 transition-colors">
+              Aanbevelingen
+            </Link>
+            <Link href="/watchlist" className="hover:text-blue-600 transition-colors">
+              Watchlist
             </Link>
           </nav>
         </div>

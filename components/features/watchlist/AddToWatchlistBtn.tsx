@@ -1,0 +1,1 @@
+// Knop voor op de detailpagina's (/movies/[id] en /tv/[id])

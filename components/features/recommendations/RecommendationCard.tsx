@@ -1,0 +1,1 @@
+// Kaartje met de tip + notitie van de vriend
