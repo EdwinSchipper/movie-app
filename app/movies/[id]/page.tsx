@@ -3,6 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getMovieDetails } from '@/lib/tmdb'
+import { isInWatchlist } from '@/lib/watchlist'
+import { AddToWatchlistBtn } from '@/components/features/watchlist'
 
 interface MoviePageProps {
   params: Promise<{ id: string }>
@@ -37,6 +39,8 @@ async function MovieContent({ params }: MoviePageProps) {
   } catch {
     notFound()
   }
+
+  const initialInWatchlist = await isInWatchlist(movie.id, 'movie')
 
   return (
     <article className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto">
@@ -84,6 +88,21 @@ async function MovieContent({ params }: MoviePageProps) {
             {movie.vote_average > 0 && (
               <span className="font-semibold text-yellow-600">⭐ {movie.vote_average.toFixed(1)} / 10</span>
             )}
+          </div>
+
+          <div className="mb-6">
+            <AddToWatchlistBtn
+              item={{
+                tmdb_id: movie.id,
+                media_type: 'movie',
+                title: movie.title,
+                poster_path: movie.poster_path,
+                release_date: movie.release_date,
+                vote_average: movie.vote_average,
+                overview: movie.overview,
+              }}
+              initialInWatchlist={initialInWatchlist}
+            />
           </div>
 
           {movie.genres?.length > 0 && (

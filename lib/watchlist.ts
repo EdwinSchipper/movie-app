@@ -26,7 +26,8 @@ export async function getWatchlist(): Promise<WatchlistItem[]> {
     return []
   }
 
-  return (data as WatchlistItem[]) || []
+  const items = (data as WatchlistItem[]) || []
+  return items
 }
 
 /**
@@ -96,6 +97,10 @@ export async function addToWatchlist(item: AddWatchlistInput): Promise<ActionRes
     return { success: false, error: error.message }
   }
 
+  console.log('----------------');
+  console.log('added');
+  console.log(item);
+  console.log('----------------');
   revalidatePath('/watchlist')
   return { success: true }
 }
@@ -129,25 +134,39 @@ export async function updateWatchlistStatus(
 }
 
 /**
- * Verwijder een film of serie uit de watchlist
+ * Verwijder een film of serie uit de watchlist.
+ * Accepteert een Supabase UUID (string) of een TMDB-doel { tmdbId, mediaType }.
  */
-export async function removeFromWatchlist(id: string): Promise<ActionResult> {
-  if (!id) {
-    return { success: false, error: 'Ontbrekend ID om te verwijderen.' }
-  }
-
+export async function removeFromWatchlist(
+  target: string | { tmdbId: number; mediaType: MediaType }
+): Promise<ActionResult> {
   const supabase = await createClient()
 
-  const { error } = await supabase
-    .from('watchlist')
-    .delete()
-    .eq('id', id)
+  let query = supabase.from('watchlist').delete()
+
+  if (typeof target === 'string') {
+    if (!target.trim()) {
+      return { success: false, error: 'Ontbrekend ID om te verwijderen.' }
+    }
+    query = query.eq('id', target)
+  } else {
+    if (!target.tmdbId || (target.mediaType !== 'movie' && target.mediaType !== 'tv')) {
+      return { success: false, error: 'Ongeldig TMDB ID of mediatype.' }
+    }
+    query = query.eq('tmdb_id', target.tmdbId).eq('media_type', target.mediaType)
+  }
+
+  const { error } = await query
 
   if (error) {
     console.error('Database fout bij verwijderen:', error.message)
     return { success: false, error: error.message }
   }
 
+  console.log('----------------');
+  console.log('removed');
+  console.log(target);
+  console.log('----------------');
   revalidatePath('/watchlist')
   return { success: true }
 }

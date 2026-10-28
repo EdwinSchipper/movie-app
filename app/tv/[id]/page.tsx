@@ -3,6 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getTvDetails } from '@/lib/tmdb'
+import { isInWatchlist } from '@/lib/watchlist'
+import { AddToWatchlistBtn } from '@/components/features/watchlist'
 
 interface TvPageProps {
   params: Promise<{ id: string }>
@@ -37,6 +39,8 @@ async function TvContent({ params }: TvPageProps) {
   } catch {
     notFound()
   }
+
+  const initialInWatchlist = await isInWatchlist(show.id, 'tv')
 
   return (
     <article className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto">
@@ -87,6 +91,21 @@ async function TvContent({ params }: TvPageProps) {
             {show.vote_average > 0 && (
               <span className="font-semibold text-yellow-600">⭐ {show.vote_average.toFixed(1)} / 10</span>
             )}
+          </div>
+
+          <div className="mb-6">
+            <AddToWatchlistBtn
+              item={{
+                tmdb_id: show.id,
+                media_type: 'tv',
+                title: show.name,
+                poster_path: show.poster_path,
+                release_date: show.first_air_date,
+                vote_average: show.vote_average,
+                overview: show.overview,
+              }}
+              initialInWatchlist={initialInWatchlist}
+            />
           </div>
 
           {show.genres?.length > 0 && (
