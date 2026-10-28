@@ -70,3 +70,14 @@ Na elke herstructurering, verplaatsing van bestanden (`git mv`), hernoeming of r
 4. **Proactieve rapportage**:
    - Meld de uitkomst van deze import- en syntaxcontroles altijd expliciet in de samenvatting aan de gebruiker.
 
+
+
+## Database & Query Richtlijnen (Database & Query Policy)
+
+- **STRIKT VERBODEN: Nooit `select('*')` gebruiken**:
+  - Het gebruik van wildcards (`*`) in database queries (Supabase / PostgreSQL) is ten strengste verboden.
+  - Vraag ALTIJD exact en expliciet alleen de benodigde kolommen op (bijv. `.select('id, user_id, title, ...')`).
+- **Waarom**:
+  1. Performance & Bandbreedte: minimaliseert datatransmissie tussen database en server.
+  2. Type-Safety: garandeert dat geretourneerde data 1-op-1 aansluit op TypeScript interfaces.
+  3. Beveiliging: voorkomt dat toekomstige interne of gevoelige kolommen onbedoeld meelekken naar de client.
