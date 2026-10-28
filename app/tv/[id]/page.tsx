@@ -42,8 +42,10 @@ async function TvContent({ params }: TvPageProps) {
     notFound()
   }
 
-  const initialInWatchlist = await isInWatchlist(show.id, 'tv')
-  const initialInRecommendations = await isInRecommendations(show.id, 'tv')
+  const [initialInWatchlist, initialInRecommendations] = await Promise.all([
+    isInWatchlist(show.id, 'tv'),
+    isInRecommendations(show.id, 'tv'),
+  ])
 
   return (
     <article className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto">

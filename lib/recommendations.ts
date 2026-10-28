@@ -78,12 +78,8 @@ export async function addToRecommendations(
   }
 
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
 
   const payload = {
-    user_id: user?.id ?? null,
     sender_name: item.sender_name?.trim() || 'Aanbeveling',
     receiver_name: item.receiver_name?.trim() || 'Iedereen',
     tmdb_id: item.tmdb_id,
@@ -95,7 +91,9 @@ export async function addToRecommendations(
     overview: item.overview ?? null,
   }
 
-  const { error } = await supabase.from('recommendations').insert(payload)
+  const { error } = await supabase
+    .from('recommendations')
+    .upsert(payload, { onConflict: 'user_id,tmdb_id,media_type' })
 
   if (error) {
     console.error('Database fout bij toevoegen aanbeveling:', error.message)
