@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import UIInput from './Input'
+import { UIInput } from '@/components/ui'
 import SearchResults from './SearchResults'
 
 export default function HeaderSearch() {

@@ -19,7 +19,7 @@ Hieronder vind je een overzicht van de belangrijkste ontwikkelgebieden en hun hu
 | **API Integration** | ✅ `Done` | TMDB API v3 geïntegreerd voor trending movies, trending TV series en dynamische detailpagina's. |
 | **Data Streaming** | ✅ `Done` | Server-side data fetching met Partial Prerendering (PPR) en React Suspense streaming met skeleton fallbacks. |
 | **Deployment & CI/CD**| ✅ `Done` | Geautomatiseerde continuous deployment via Vercel en CI kwaliteitscontroles via GitHub Actions. |
-| **UI Components** | 🔄 `In Progress` | Modulaire componenten met Tailwind CSS v4 en Headless UI (Switch, Button, Header, Carousels/Grids). |
+| **Component Architecture** | 🔄 `In Progress` | Modulaire componenten verdeeld over UI primitives (Button, Input, Switch), layout (Header) en features (Search, Trending). |
 | **Design** | 📋 `To Do` | Definitief visual theme, detail views optimalisatie en responsive finetuning. |
 | **State Management** | 📋 `To Do` | Client & server state architectuur voor zoekqueries, watchlists en gebruikersinteracties. |
 

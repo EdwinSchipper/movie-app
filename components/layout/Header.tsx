@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import HeaderSearch from './HeaderSearch'
+import { HeaderSearch } from '@/components/features'
 
 export default function Header() {
   return (
