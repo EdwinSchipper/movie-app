@@ -4,7 +4,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getMovieDetails } from '@/lib/tmdb'
 import { isInWatchlist } from '@/lib/watchlist'
+import { isInRecommendations } from '@/lib/recommendations'
 import { AddToWatchlistBtn } from '@/components/features/watchlist'
+import { AddToRecommendationsBtn } from '@/components/features/recommendations'
 
 interface MoviePageProps {
   params: Promise<{ id: string }>
@@ -41,6 +43,7 @@ async function MovieContent({ params }: MoviePageProps) {
   }
 
   const initialInWatchlist = await isInWatchlist(movie.id, 'movie')
+  const initialInRecommendations = await isInRecommendations(movie.id, 'movie')
 
   return (
     <article className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto">
@@ -90,7 +93,7 @@ async function MovieContent({ params }: MoviePageProps) {
             )}
           </div>
 
-          <div className="mb-6">
+          <div className="flex flex-wrap items-center gap-3 mb-6">
             <AddToWatchlistBtn
               item={{
                 tmdb_id: movie.id,
@@ -102,6 +105,18 @@ async function MovieContent({ params }: MoviePageProps) {
                 overview: movie.overview,
               }}
               initialInWatchlist={initialInWatchlist}
+            />
+            <AddToRecommendationsBtn
+              item={{
+                tmdb_id: movie.id,
+                media_type: 'movie',
+                title: movie.title,
+                poster_path: movie.poster_path,
+                release_date: movie.release_date,
+                vote_average: movie.vote_average,
+                overview: movie.overview,
+              }}
+              initialInRecommendations={initialInRecommendations}
             />
           </div>
 

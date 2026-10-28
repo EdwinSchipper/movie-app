@@ -4,7 +4,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getTvDetails } from '@/lib/tmdb'
 import { isInWatchlist } from '@/lib/watchlist'
+import { isInRecommendations } from '@/lib/recommendations'
 import { AddToWatchlistBtn } from '@/components/features/watchlist'
+import { AddToRecommendationsBtn } from '@/components/features/recommendations'
 
 interface TvPageProps {
   params: Promise<{ id: string }>
@@ -41,6 +43,7 @@ async function TvContent({ params }: TvPageProps) {
   }
 
   const initialInWatchlist = await isInWatchlist(show.id, 'tv')
+  const initialInRecommendations = await isInRecommendations(show.id, 'tv')
 
   return (
     <article className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto">
@@ -93,7 +96,7 @@ async function TvContent({ params }: TvPageProps) {
             )}
           </div>
 
-          <div className="mb-6">
+          <div className="flex flex-wrap items-center gap-3 mb-6">
             <AddToWatchlistBtn
               item={{
                 tmdb_id: show.id,
@@ -105,6 +108,18 @@ async function TvContent({ params }: TvPageProps) {
                 overview: show.overview,
               }}
               initialInWatchlist={initialInWatchlist}
+            />
+            <AddToRecommendationsBtn
+              item={{
+                tmdb_id: show.id,
+                media_type: 'tv',
+                title: show.name,
+                poster_path: show.poster_path,
+                release_date: show.first_air_date,
+                vote_average: show.vote_average,
+                overview: show.overview,
+              }}
+              initialInRecommendations={initialInRecommendations}
             />
           </div>
 
