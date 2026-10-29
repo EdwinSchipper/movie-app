@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition } from 'react'
+import { Suspense, useTransition } from 'react'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { UIButton, UISelect } from '@/components/ui'
 import {
@@ -8,6 +8,7 @@ import {
   SORT_ORDER_OPTIONS,
   PERIOD_OPTIONS,
   DEFAULT_MEDIA_FILTERS,
+  parseMediaFilters,
 } from '@/lib/filters'
 import type {
   FilterMediaType,
@@ -20,21 +21,34 @@ export interface FilterBarProps {
   className?: string
 }
 
-export default function FilterBar({ className = '' }: FilterBarProps) {
+function FilterBarSkeleton({ className = '' }: FilterBarProps) {
+  return (
+    <section className={`px-4 py-2 rounded-xl bg-gray-200/5 ${className}`.trim()}>
+      <div className="flex flex-wrap items-end gap-3 sm:gap-4 py-4 animate-pulse">
+        <div className="w-36 h-14 bg-gray-200/10 rounded-lg" />
+        <div className="w-44 h-14 bg-gray-200/10 rounded-lg" />
+        <div className="w-48 h-14 bg-gray-200/10 rounded-lg" />
+      </div>
+    </section>
+  )
+}
+
+function FilterBarContent({ className = '' }: FilterBarProps) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
 
-  const currentType =
-    (searchParams.get('type') as FilterMediaType) || DEFAULT_MEDIA_FILTERS.type
-  const currentSort =
-    (searchParams.get('sort') as FilterSortOrder) || DEFAULT_MEDIA_FILTERS.sort
-  const currentPeriod =
-    (searchParams.get('period') as FilterPeriod) || DEFAULT_MEDIA_FILTERS.period
+  const activeFilters = parseMediaFilters({
+    type: searchParams.get('type') ?? undefined,
+    sort: searchParams.get('sort') ?? undefined,
+    period: searchParams.get('period') ?? undefined,
+  })
 
   const hasActiveFilters =
-    searchParams.has('type') || searchParams.has('sort') || searchParams.has('period')
+    activeFilters.type !== DEFAULT_MEDIA_FILTERS.type ||
+    activeFilters.sort !== DEFAULT_MEDIA_FILTERS.sort ||
+    activeFilters.period !== DEFAULT_MEDIA_FILTERS.period
 
   const updateParam = (key: keyof MediaFilters, value: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -60,48 +74,54 @@ export default function FilterBar({ className = '' }: FilterBarProps) {
   }
 
   return (
-    <div
-      className={`flex flex-wrap items-end gap-3 sm:gap-4 py-4 ${className}`.trim()}
-    >
-      <UISelect<FilterMediaType>
-        label="Type"
-        value={currentType}
-        options={MEDIA_TYPE_OPTIONS}
-        onChange={(val) => updateParam('type', val)}
-        disabled={isPending}
-        className="w-36"
-      />
+    <section className={`relative z-20 px-4 py-2 rounded-xl bg-gray-200/5 ${className}`.trim()}>
+      <div className="flex flex-wrap items-end gap-3 sm:gap-4 py-4">
+        <UISelect<FilterMediaType>
+          label="Type"
+          value={activeFilters.type}
+          options={MEDIA_TYPE_OPTIONS}
+          onChange={(val) => updateParam('type', val)}
+          className="w-36"
+        />
 
-      <UISelect<FilterSortOrder>
-        label="Sorteer op datum"
-        value={currentSort}
-        options={SORT_ORDER_OPTIONS}
-        onChange={(val) => updateParam('sort', val)}
-        disabled={isPending}
-        className="w-44"
-      />
+        <UISelect<FilterSortOrder>
+          label="Sorteer op datum"
+          value={activeFilters.sort}
+          options={SORT_ORDER_OPTIONS}
+          onChange={(val) => updateParam('sort', val)}
+          className="w-44"
+        />
 
-      <UISelect<FilterPeriod>
-        label="Periode / Aantal"
-        value={currentPeriod}
-        options={PERIOD_OPTIONS}
-        onChange={(val) => updateParam('period', val)}
-        disabled={isPending}
-        className="w-48"
-      />
+        <UISelect<FilterPeriod>
+          label="Periode / Aantal"
+          value={activeFilters.period}
+          options={PERIOD_OPTIONS}
+          onChange={(val) => updateParam('period', val)}
+          className="w-48"
+        />
 
-      {hasActiveFilters && (
-        <UIButton
-          variant="outline"
-          size="sm"
-          disabled={isPending}
-          onClick={handleReset}
-          className="h-9 mb-0.5 text-xs text-gray-400 hover:text-gray-200"
-        >
-          Filters wissen
-        </UIButton>
-      )}
-    </div>
+        {hasActiveFilters && (
+          <UIButton
+            variant="outline"
+            size="sm"
+            disabled={isPending}
+            onClick={handleReset}
+            className="h-9 mb-0.5 text-xs text-gray-400 hover:text-gray-200"
+          >
+            Filters wissen
+          </UIButton>
+        )}
+      </div>
+    </section>
   )
 }
 
+export default function FilterBar(props: FilterBarProps) {
+  const pathname = usePathname()
+
+  return (
+    <Suspense fallback={<FilterBarSkeleton className={props.className} />}>
+      <FilterBarContent key={pathname} {...props} />
+    </Suspense>
+  )
+}
