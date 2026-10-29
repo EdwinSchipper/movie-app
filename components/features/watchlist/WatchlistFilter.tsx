@@ -1,1 +1,3 @@
-// Filterknoppen (Alles, Alleen Films, Alleen Series)
+export default function WatchlistFilter() {
+  return null
+}

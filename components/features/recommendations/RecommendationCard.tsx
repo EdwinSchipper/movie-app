@@ -1,1 +1,3 @@
-// Kaartje met de aanbeveling
+export default function RecommendationCard() {
+  return null
+}

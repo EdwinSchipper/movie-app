@@ -34,6 +34,30 @@ jobs:
       - name: Check TypeScript types
         run: pnpm exec tsc --noEmit
 
+      - name: Master Production Quality Gate
+        if: github.ref == 'refs/heads/master' || github.base_ref == 'master'
+        run: |
+          echo "1. Controle op 0 ESLint warnings..."
+          pnpm run lint --max-warnings=0
+
+          echo "2. Controle op verboden select('*') database queries..."
+          if git grep -n -E "\.select\(\s*['\"]\*['\"]\s*\)" -- "app/" "components/" "lib/" "types/"; then
+            echo "::error::Verboden select('*') gevonden. Specificeer altijd expliciete kolommen."
+            exit 1
+          fi
+
+          echo "3. Controle op achtergebleven console.log() statements..."
+          if git grep -n "console\.log(" -- "app/" "components/" "lib/" "types/"; then
+            echo "::error::console.log() gevonden op master. Verwijder debug logs voor productie."
+            exit 1
+          fi
+
+          echo "4. Controle op achtergebleven code-comments (// of {/* */})..."
+          if git grep -n -P "(^|[^:])//|\{/\*" -- "app/" "components/" "lib/" "types/"; then
+            echo "::error::Code-comments gevonden op master. Verwijder comments voor merge naar master."
+            exit 1
+          fi
+
       - name: Build Next.js application
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}

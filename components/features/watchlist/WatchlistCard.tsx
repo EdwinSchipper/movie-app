@@ -1,1 +1,3 @@
-// het individuele kaartje per film
+export default function WatchlistCard() {
+  return null
+}

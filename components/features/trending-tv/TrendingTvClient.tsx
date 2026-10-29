@@ -18,9 +18,9 @@ export default function TrendingTvClient({
   const [shows, setShows] = useState<TvShow[]>(initialShows)
 
   const handleToggle = async (nextRange: TimeWindow) => {
-    setRange(nextRange) // 1. Werk de geselecteerde tijdspanne bij in de lokale state voor de UI
-    const data = await getTrendingTv(nextRange) // 2. Haal via de Server Action asynchroon de nieuwe trending series op van TMDB
-    setShows(data) // 3. Update de weergavelijst in de state
+    setRange(nextRange)
+    const data = await getTrendingTv(nextRange)
+    setShows(data)
   }
 
   return (

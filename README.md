@@ -82,6 +82,11 @@ Het project maakt gebruik van een volledig geautomatiseerde DevOps pipeline:
 Bij elke push en pull request naar `master` of `development` draait automatisch de CI pipeline ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)):
 - **Linting:** `pnpm run lint` (ESLint 9)
 - **Type Checking:** `pnpm exec tsc --noEmit` (TypeScript 5)
+- **Master Production Quality Gate (`master` branch & PR's naar `master`):**
+  - **Zero Warnings:** `pnpm run lint --max-warnings=0`
+  - **Database Query Policy:** Blokkeert verboden `select('*')` queries
+  - **No Debug Logs:** Blokkeert achtergebleven `console.log()` statements
+  - **Clean Production Code:** Blokkeert achtergebleven `//` en `{/* */}` code-comments
 - **Build Validation:** `pnpm run build` (Next.js 16 Turbopack build test via GitHub Actions Secrets)
 
 ---

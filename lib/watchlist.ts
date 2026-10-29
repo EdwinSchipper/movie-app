@@ -34,14 +34,12 @@ export async function getWatchlist(): Promise<WatchlistItem[]> {
  * Geeft true terug als de film of serie al in de watchlist staat, anders false
  */
 export async function isInWatchlist(tmdbId: number, mediaType: MediaType): Promise<boolean> {
-  // 1. Snelle check: ongeldige invoer hoeft de database niet te belasten
   if (!tmdbId || (mediaType !== 'movie' && mediaType !== 'tv')) {
     return false
   }
 
   const supabase = await createClient()
 
-  // 2. Zoek in Supabase of het item daadwerkelijk bestaat
   const { data, error } = await supabase
     .from('watchlist')
     .select('id')
@@ -54,7 +52,6 @@ export async function isInWatchlist(tmdbId: number, mediaType: MediaType): Promi
     return false
   }
 
-  // 3. true als er een ID gevonden is, false als data leeg (null) is
   return Boolean(data?.id)
 }
 
@@ -62,7 +59,6 @@ export async function isInWatchlist(tmdbId: number, mediaType: MediaType): Promi
  * Voeg een film of serie toe aan de watchlist met runtime type-validatie
  */
 export async function addToWatchlist(item: AddWatchlistInput): Promise<ActionResult> {
-  // Runtime validatie
   if (!item.tmdb_id || typeof item.tmdb_id !== 'number') {
     return { success: false, error: 'Ongeldig of ontbrekend TMDB ID.' }
   }
@@ -97,10 +93,6 @@ export async function addToWatchlist(item: AddWatchlistInput): Promise<ActionRes
     return { success: false, error: error.message }
   }
 
-  console.log('----------------');
-  console.log('added');
-  console.log(item);
-  console.log('----------------');
   revalidatePath('/watchlist')
   return { success: true }
 }
@@ -163,10 +155,6 @@ export async function removeFromWatchlist(
     return { success: false, error: error.message }
   }
 
-  console.log('----------------');
-  console.log('removed');
-  console.log(target);
-  console.log('----------------');
   revalidatePath('/watchlist')
   return { success: true }
 }
