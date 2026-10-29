@@ -97,10 +97,6 @@ export async function addToWatchlist(item: AddWatchlistInput): Promise<ActionRes
     return { success: false, error: error.message }
   }
 
-  console.log('----------------');
-  console.log('added');
-  console.log(item);
-  console.log('----------------');
   revalidatePath('/watchlist')
   return { success: true }
 }
@@ -163,10 +159,6 @@ export async function removeFromWatchlist(
     return { success: false, error: error.message }
   }
 
-  console.log('----------------');
-  console.log('removed');
-  console.log(target);
-  console.log('----------------');
   revalidatePath('/watchlist')
   return { success: true }
 }
