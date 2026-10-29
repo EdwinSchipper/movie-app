@@ -18,9 +18,9 @@ export default function TrendingMoviesClient({
   const [movies, setMovies] = useState<Movie[]>(initialMovies)
 
   const handleToggle = async (nextRange: TimeWindow) => {
-    setRange(nextRange) // 1. Werk de geselecteerde tijdspanne bij in de lokale state voor de UI
-    const data = await getTrendingMovies(nextRange) // 2. Haal via de Server Action asynchroon de nieuwe trending films op van TMDB
-    setMovies(data) // 3. Update de weergavelijst in de state
+    setRange(nextRange)
+    const data = await getTrendingMovies(nextRange)
+    setMovies(data)
   }
 
   return (

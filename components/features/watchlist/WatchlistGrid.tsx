@@ -1,1 +1,3 @@
-// het overzichtsgrid / raster
+export default function WatchlistGrid() {
+  return null
+}

@@ -8,14 +8,12 @@ export default function HeaderSearch() {
   const [query, setQuery] = useState('')
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
-  // Search Input
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[<>]/g, '')
     setQuery(value)
     setIsOpen(value.trim().length > 0)
   }
 
-  // OnClick Behaviour
   const handleSelectResult = () => {
     setQuery('')
     setIsOpen(false)

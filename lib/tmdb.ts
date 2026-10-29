@@ -73,7 +73,6 @@ export async function searchMulti(query: string): Promise<SearchItem[]> {
     return []
   }
 
-  // 1. Als de zoekopdracht een geldig IMDb-ID is (bijv. "tt1375666"), gebruik /find/{external_id}
   if (/^tt\d{7,10}$/i.test(trimmed)) {
     const data = await fetchFromTmdb<FindByIdResponse>(
       `/find/${trimmed}`,
@@ -87,7 +86,6 @@ export async function searchMulti(query: string): Promise<SearchItem[]> {
     ]
   }
 
-  // 2. Anders: reguliere tekst-zoekopdracht via /search/multi
   const data = await fetchFromTmdb<{ results?: SearchItem[] }>(
     '/search/multi',
     {

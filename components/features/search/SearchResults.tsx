@@ -30,7 +30,6 @@ function SearchResultItem({ item, onSelect }: SearchResultItemProps) {
         onClick={() => onSelect(item)}
         className="flex items-center gap-3 p-2.5 hover:bg-gray-50 transition-colors group"
       >
-        {/* Miniatuur Poster */}
         <div className="relative w-10 h-14 bg-gray-100 rounded overflow-hidden shrink-0">
           {item.poster_path ? (
             <Image
@@ -47,17 +46,17 @@ function SearchResultItem({ item, onSelect }: SearchResultItemProps) {
           )}
         </div>
 
-        {/* Titel en Metadata */}
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 truncate group-hover:text-blue-600 transition-colors">
             {title}
           </p>
           <div className="flex items-center gap-2 mt-0.5">
             <span
-              className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${isMovie
+              className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
+                isMovie
                   ? 'bg-blue-50 text-blue-700'
                   : 'bg-purple-50 text-purple-700'
-                }`}
+              }`}
             >
               {isMovie ? 'Film' : 'Serie'}
             </span>
@@ -86,7 +85,6 @@ export default function SearchResults({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Asynchroon data ophalen op basis van de query met een 300ms debounce en race-condition beveiliging
   useEffect(() => {
     let isCancelled = false
     const trimmed = query.trim()
@@ -127,7 +125,6 @@ export default function SearchResults({
 
   return (
     <div className="absolute left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-100 max-h-96 overflow-y-auto z-50">
-      {/* Subtiele indicator wanneer een bestaande lijst wordt bijgewerkt */}
       {isLoading && results.length > 0 && (
         <div className="px-3 py-1 bg-gray-50 text-[11px] text-gray-400 border-b border-gray-100 flex items-center justify-between">
           <span>Zoeken wordt bijgewerkt...</span>

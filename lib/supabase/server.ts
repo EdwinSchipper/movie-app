@@ -17,10 +17,7 @@ export async function createClient() {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             )
-          } catch {
-            // Aangeroepen vanuit een Server Component (read-only);
-            // middleware vangt het schrijven van sessies op.
-          }
+          } catch {}
         },
       },
     }
