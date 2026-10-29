@@ -90,9 +90,9 @@ async function MovieContent({ params }: MoviePageProps) {
             {movie.runtime && (
               <span>⏱️ {Math.floor(movie.runtime / 60)}u {movie.runtime % 60}m</span>
             )}
-            {movie.vote_average > 0 && (
+            {movie.vote_average && movie.vote_average > 0 ? (
               <span className="font-semibold text-yellow-600">⭐ {movie.vote_average.toFixed(1)} / 10</span>
-            )}
+            ) : null}
           </div>
 
           <div className="flex flex-wrap items-center gap-3 mb-6">
@@ -122,7 +122,7 @@ async function MovieContent({ params }: MoviePageProps) {
             />
           </div>
 
-          {movie.genres?.length > 0 && (
+          {movie.genres && movie.genres.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6">
               {movie.genres.map((g) => (
                 <span

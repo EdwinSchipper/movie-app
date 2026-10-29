@@ -93,9 +93,9 @@ async function TvContent({ params }: TvPageProps) {
             {show.number_of_episodes && (
               <span>🎬 {show.number_of_episodes} afleveringen</span>
             )}
-            {show.vote_average > 0 && (
+            {show.vote_average && show.vote_average > 0 ? (
               <span className="font-semibold text-yellow-600">⭐ {show.vote_average.toFixed(1)} / 10</span>
-            )}
+            ) : null}
           </div>
 
           <div className="flex flex-wrap items-center gap-3 mb-6">
@@ -125,7 +125,7 @@ async function TvContent({ params }: TvPageProps) {
             />
           </div>
 
-          {show.genres?.length > 0 && (
+          {show.genres && show.genres.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6">
               {show.genres.map((g) => (
                 <span

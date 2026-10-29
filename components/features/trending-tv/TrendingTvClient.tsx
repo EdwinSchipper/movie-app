@@ -4,7 +4,8 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { UIswitch } from '@/components/ui'
-import { getTrendingTv, type TimeWindow, type TvShow } from '@/lib/tmdb'
+import { getTrendingTv } from '@/lib/tmdb'
+import type { TimeWindow, TvShow } from '@/types'
 
 export default function TrendingTvClient({ initialShows = [] }: { initialShows?: TvShow[] }) {
   const [range, setRange] = useState<TimeWindow>('day')
