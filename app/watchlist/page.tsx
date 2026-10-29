@@ -1,7 +1,10 @@
+import { WatchlistGrid } from '@/components'
+
 export default function Page() {
     return (
-        <div>
-            <h1>Dit is de watchlist pagina</h1>
-        </div>
+        <WatchlistGrid
+            title="Watchlist"
+            subtitle="Ontdek de beste films en series die bij jouw smaak passen."
+        />
     )
 }
