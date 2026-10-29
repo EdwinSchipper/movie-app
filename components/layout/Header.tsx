@@ -9,12 +9,12 @@ export default function Header() {
         <div className="flex items-center gap-6">
           <Link
             href="/"
-            className="text-xl font-bold tracking-tight text-gray-900 hover:text-blue-600 transition-colors"
+            className="text-xl font-bold tracking-tight text-gray-300 hover:text-blue-600 transition-colors"
           >
-            Movie for Friends
+            Movie App
           </Link>
 
-          <nav className="hidden sm:flex items-center gap-4 text-sm font-medium text-gray-600">
+          <nav className="hidden sm:flex items-center gap-4 text-sm font-medium text-gray-500">
             <Link href="/trending" className="hover:text-blue-600 transition-colors">
               Trending
             </Link>
