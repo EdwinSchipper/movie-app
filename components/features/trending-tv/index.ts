@@ -1,4 +1,6 @@
 export { default as TrendingTv } from './TrendingTv'
+export type { TrendingTvProps } from './TrendingTv'
 export { default as TrendingTvClient } from './TrendingTvClient'
 export type { TrendingTvClientProps } from './TrendingTvClient'
-
+export { default as TrendingTvCard } from './TrendingTvCard'
+export type { TrendingTvCardProps } from './TrendingTvCard'
