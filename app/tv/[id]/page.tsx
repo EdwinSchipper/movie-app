@@ -3,9 +3,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getTvDetails } from '@/lib/tmdb'
-import { isInWatchlist } from '@/lib/watchlist'
+import { getWatchlistStatus } from '@/lib/watchlist'
 import { isInRecommendations } from '@/lib/recommendations'
-import { AddToWatchlistBtn, AddToRecommendationsBtn } from '@/components'
+import { WatchlistActions, AddToRecommendationsBtn } from '@/components'
 
 interface TvPageProps {
   params: Promise<{ id: string }>
@@ -41,8 +41,8 @@ async function TvContent({ params }: TvPageProps) {
     notFound()
   }
 
-  const [initialInWatchlist, initialInRecommendations] = await Promise.all([
-    isInWatchlist(show.id, 'tv'),
+  const [initialWatchlistStatus, initialInRecommendations] = await Promise.all([
+    getWatchlistStatus(show.id, 'tv'),
     isInRecommendations(show.id, 'tv'),
   ])
 
@@ -98,7 +98,7 @@ async function TvContent({ params }: TvPageProps) {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 mb-6">
-            <AddToWatchlistBtn
+            <WatchlistActions
               item={{
                 tmdb_id: show.id,
                 media_type: 'tv',
@@ -108,7 +108,7 @@ async function TvContent({ params }: TvPageProps) {
                 vote_average: show.vote_average,
                 overview: show.overview,
               }}
-              initialInWatchlist={initialInWatchlist}
+              initialStatus={initialWatchlistStatus}
             />
             <AddToRecommendationsBtn
               item={{
