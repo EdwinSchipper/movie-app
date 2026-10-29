@@ -57,78 +57,62 @@ export interface SearchItem {
   vote_average?: number
 }
 
-export async function getTrendingTv(range: TimeWindow = 'day'): Promise<TvShow[]> {
+interface FindByIdResponse {
+  movie_results?: SearchItem[]
+  tv_results?: SearchItem[]
+}
+
+const TMDB_BASE_URL = 'https://api.themoviedb.org/3'
+
+/**
+ * Centrale helper voor alle TMDB v3 API-aanroepen volgens de officiële TMDB specificatie
+ */
+async function fetchFromTmdb<T>(
+  endpoint: string,
+  params: Record<string, string> = {},
+  revalidate = 3600
+): Promise<T> {
   const apiKey = process.env.TMDB_API_KEY
   if (!apiKey) {
-    throw new Error('TMDB_API_KEY is niet ingesteld in .env.local')
+    throw new Error('TMDB_API_KEY is niet ingesteld in de environment variabelen.')
   }
 
-  const res = await fetch(
-    `https://api.themoviedb.org/3/trending/tv/${range}?api_key=${apiKey}&language=nl-NL`,
-    { next: { revalidate: 3600 } }
-  )
+  const searchParams = new URLSearchParams({
+    api_key: apiKey,
+    language: 'nl-NL',
+    ...params,
+  })
+
+  const res = await fetch(`${TMDB_BASE_URL}${endpoint}?${searchParams.toString()}`, {
+    headers: {
+      accept: 'application/json',
+    },
+    next: { revalidate },
+  })
 
   if (!res.ok) {
-    throw new Error(`Fout bij ophalen trending tv: ${res.statusText}`)
+    throw new Error(`TMDB API fout (${endpoint}): ${res.status} ${res.statusText}`)
   }
 
-  const data = await res.json()
+  return res.json()
+}
+
+export async function getTrendingTv(range: TimeWindow = 'day'): Promise<TvShow[]> {
+  const data = await fetchFromTmdb<{ results?: TvShow[] }>(`/trending/tv/${range}`)
   return data.results || []
 }
 
 export async function getTrendingMovies(range: TimeWindow = 'day'): Promise<Movie[]> {
-  const apiKey = process.env.TMDB_API_KEY
-  if (!apiKey) {
-    throw new Error('TMDB_API_KEY is niet ingesteld in .env.local')
-  }
-
-  const res = await fetch(
-    `https://api.themoviedb.org/3/trending/movie/${range}?api_key=${apiKey}&language=nl-NL`,
-    { next: { revalidate: 3600 } }
-  )
-
-  if (!res.ok) {
-    throw new Error(`Fout bij ophalen trending movies: ${res.statusText}`)
-  }
-
-  const data = await res.json()
+  const data = await fetchFromTmdb<{ results?: Movie[] }>(`/trending/movie/${range}`)
   return data.results || []
 }
 
 export async function getMovieDetails(id: string | number): Promise<MovieDetails> {
-  const apiKey = process.env.TMDB_API_KEY
-  if (!apiKey) {
-    throw new Error('TMDB_API_KEY is niet ingesteld in .env.local')
-  }
-
-  const res = await fetch(
-    `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=nl-NL`,
-    { next: { revalidate: 3600 } }
-  )
-
-  if (!res.ok) {
-    throw new Error(`Fout bij ophalen filmdetails: ${res.statusText}`)
-  }
-
-  return res.json()
+  return fetchFromTmdb<MovieDetails>(`/movie/${id}`)
 }
 
 export async function getTvDetails(id: string | number): Promise<TvShowDetails> {
-  const apiKey = process.env.TMDB_API_KEY
-  if (!apiKey) {
-    throw new Error('TMDB_API_KEY is niet ingesteld in .env.local')
-  }
-
-  const res = await fetch(
-    `https://api.themoviedb.org/3/tv/${id}?api_key=${apiKey}&language=nl-NL`,
-    { next: { revalidate: 3600 } }
-  )
-
-  if (!res.ok) {
-    throw new Error(`Fout bij ophalen seriedetails: ${res.statusText}`)
-  }
-
-  return res.json()
+  return fetchFromTmdb<TvShowDetails>(`/tv/${id}`)
 }
 
 export async function searchMulti(query: string): Promise<SearchItem[]> {
@@ -137,24 +121,32 @@ export async function searchMulti(query: string): Promise<SearchItem[]> {
     return []
   }
 
-  const apiKey = process.env.TMDB_API_KEY
-  if (!apiKey) {
-    throw new Error('TMDB_API_KEY is niet ingesteld in .env.local')
+  // 1. Als de zoekopdracht een geldig IMDb-ID is (bijv. "tt1375666"), gebruik /find/{external_id}
+  if (/^tt\d{7,10}$/i.test(trimmed)) {
+    const data = await fetchFromTmdb<FindByIdResponse>(
+      `/find/${trimmed}`,
+      { external_source: 'imdb_id' },
+      3600
+    )
+
+    return [
+      ...(data.movie_results || []),
+      ...(data.tv_results || []),
+    ]
   }
 
-  const res = await fetch(
-    `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${encodeURIComponent(trimmed)}&language=nl-NL`,
-    { next: { revalidate: 60 } }
+  // 2. Anders: reguliere tekst-zoekopdracht via /search/multi
+  const data = await fetchFromTmdb<{ results?: SearchItem[] }>(
+    '/search/multi',
+    {
+      query: trimmed,
+      include_adult: 'false',
+      page: '1',
+    },
+    60
   )
 
-  if (!res.ok) {
-    throw new Error(`Fout bij zoeken: ${res.statusText}`)
-  }
-
-  const data = await res.json()
-  const results = data.results || []
-
-  return results.filter(
-    (item: { media_type: string }) => item.media_type === 'movie' || item.media_type === 'tv'
+  return (data.results || []).filter(
+    (item) => item.media_type === 'movie' || item.media_type === 'tv'
   )
 }

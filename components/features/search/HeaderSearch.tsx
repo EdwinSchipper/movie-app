@@ -10,9 +10,9 @@ export default function HeaderSearch() {
 
   // Search Input
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const sanitized = e.target.value.replace(/[^a-zA-Z0-9 ]/g, '')
-    setQuery(sanitized)
-    setIsOpen(sanitized.trim().length > 0)
+    const value = e.target.value.replace(/[<>]/g, '')
+    setQuery(value)
+    setIsOpen(value.trim().length > 0)
   }
 
   // OnClick Behaviour
