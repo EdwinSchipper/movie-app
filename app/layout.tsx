@@ -3,7 +3,7 @@ import "./globals.css";
 import { Header } from '@/components'
 
 export const metadata: Metadata = {
-  title: "Movie for Friends",
+  title: "Movie App",
   description: "Movie for Friends NextJS App",
 };
 

@@ -1,4 +1,6 @@
 export { default as TrendingMovies } from './TrendingMovies'
+export type { TrendingMoviesProps } from './TrendingMovies'
 export { default as TrendingMoviesClient } from './TrendingMoviesClient'
 export type { TrendingMoviesClientProps } from './TrendingMoviesClient'
-
+export { default as TrendingMovieCard } from './TrendingMovieCard'
+export type { TrendingMovieCardProps } from './TrendingMovieCard'
