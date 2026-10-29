@@ -23,6 +23,7 @@ export default function WatchlistActions({
   const [status, setStatus] = useState<WatchlistStatus | null>(initialStatus)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const isWatched = status === 'watched'
 
   const handleAdd = () => {
     setError(null)
@@ -69,8 +70,6 @@ export default function WatchlistActions({
       }
     })
   }
-
-  const isWatched = status === 'watched'
 
   return (
     <div className={`inline-flex flex-col items-start gap-1 ${className}`}>
