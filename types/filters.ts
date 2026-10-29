@@ -2,7 +2,7 @@ export type FilterMediaType = 'all' | 'movie' | 'tv'
 
 export type FilterSortOrder = 'desc' | 'asc'
 
-export type FilterPeriod = 'all' | 'last_month' | 'this_year' | 'last_year' | 'last_15'
+export type FilterPeriod = 'all' | 'last_month' | 'this_year' | 'last_year' | 'last_10'
 
 export interface MediaFilters {
   type: FilterMediaType

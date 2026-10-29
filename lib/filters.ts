@@ -30,7 +30,7 @@ export const PERIOD_OPTIONS: FilterOption<FilterPeriod>[] = [
   { value: 'last_month', label: 'Afgelopen maand' },
   { value: 'this_year', label: 'Dit jaar' },
   { value: 'last_year', label: 'Vorig jaar' },
-  { value: 'last_15', label: 'Laatste 15 titels' },
+  { value: 'last_10', label: 'Laatste 10 titels' },
 ]
 
 export function parseMediaFilters(
@@ -48,9 +48,9 @@ export function parseMediaFilters(
 
   const period: FilterPeriod =
     rawPeriod === 'last_month' ||
-    rawPeriod === 'this_year' ||
-    rawPeriod === 'last_year' ||
-    rawPeriod === 'last_15'
+      rawPeriod === 'this_year' ||
+      rawPeriod === 'last_year' ||
+      rawPeriod === 'last_10'
       ? rawPeriod
       : DEFAULT_MEDIA_FILTERS.period
 
@@ -114,8 +114,8 @@ export function filterAndSortMedia<T extends FilterableMediaItem>(
       return activeFilters.sort === 'asc' ? timeA - timeB : timeB - timeA
     })
 
-  if (activeFilters.period === 'last_15') {
-    return result.slice(0, 15)
+  if (activeFilters.period === 'last_10') {
+    return result.slice(0, 10)
   }
 
   return result
