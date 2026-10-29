@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import UIButton from '@/components/ui/Button'
+import { UIButton } from '@/components/ui'
 import { addToRecommendations, removeFromRecommendations } from '@/lib/recommendations'
 import type { AddRecommendationInput } from '@/types'
 
-interface AddToRecommendationsBtnProps {
+export interface AddToRecommendationsBtnProps {
   item: AddRecommendationInput
   initialInRecommendations?: boolean
   className?: string
@@ -75,4 +75,3 @@ export default function AddToRecommendationsBtn({
     </div>
   )
 }
-

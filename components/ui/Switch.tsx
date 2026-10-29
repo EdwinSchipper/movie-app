@@ -4,19 +4,19 @@ import { useState } from 'react'
 import { Switch } from '@headlessui/react'
 import type { TimeWindow } from '@/types'
 
-export interface UIswitchProps<T extends string = TimeWindow> {
+export interface UISwitchProps<T extends string = TimeWindow> {
   value?: T
   options?: [T, T]
   labels?: [string, string]
   onChange?: (value: T) => void
 }
 
-export default function UIswitch<T extends string = TimeWindow>({
+export default function UISwitch<T extends string = TimeWindow>({
   value,
   options = ['day', 'week'] as unknown as [T, T],
   labels = ['Day', 'Week'],
   onChange,
-}: UIswitchProps<T>) {
+}: UISwitchProps<T>) {
   const [internalValue, setInternalValue] = useState<T>(options[0])
   const currentValue = value !== undefined ? value : internalValue
   const isSecond = currentValue === options[1]

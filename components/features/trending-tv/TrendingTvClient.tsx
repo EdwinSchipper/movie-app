@@ -3,11 +3,17 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { UIswitch } from '@/components/ui'
+import { UISwitch } from '@/components/ui'
 import { getTrendingTv } from '@/lib/tmdb'
 import type { TimeWindow, TvShow } from '@/types'
 
-export default function TrendingTvClient({ initialShows = [] }: { initialShows?: TvShow[] }) {
+export interface TrendingTvClientProps {
+  initialShows?: TvShow[]
+}
+
+export default function TrendingTvClient({
+  initialShows = [],
+}: TrendingTvClientProps) {
   const [range, setRange] = useState<TimeWindow>('day')
   const [shows, setShows] = useState<TvShow[]>(initialShows)
 
@@ -21,20 +27,20 @@ export default function TrendingTvClient({ initialShows = [] }: { initialShows?:
     <div className="p-10">
       <div className="flex items-center justify-start gap-5 pb-6">
         <h2 className="text-2xl font-bold">Trending TV Series</h2>
-        <UIswitch
+        <UISwitch
           value={range}
           onChange={handleToggle}
         />
       </div>
 
       <ul className="grid grid-cols-10 gap-4 container">
-        {shows.map((tv) => (
-          <li key={tv.id}>
-            <Link href={`/tv/${tv.id}`} className="group block">
-              {tv.poster_path ? (
+        {shows.map((show) => (
+          <li key={show.id}>
+            <Link href={`/tv/${show.id}`} className="group block">
+              {show.poster_path ? (
                 <Image
-                  src={`https://image.tmdb.org/t/p/w500${tv.poster_path}`}
-                  alt={tv.name}
+                  src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
+                  alt={show.name}
                   width={300}
                   height={450}
                   className="w-full h-auto rounded-md transition-transform duration-200 group-hover:scale-105"
@@ -45,7 +51,9 @@ export default function TrendingTvClient({ initialShows = [] }: { initialShows?:
                   Geen afbeelding
                 </div>
               )}
-              <p className="mt-2 text-sm font-medium line-clamp-1 group-hover:text-blue-600 transition-colors">{tv.name}</p>
+              <p className="mt-2 text-sm font-medium line-clamp-1 group-hover:text-blue-600 transition-colors">
+                {show.name}
+              </p>
             </Link>
           </li>
         ))}

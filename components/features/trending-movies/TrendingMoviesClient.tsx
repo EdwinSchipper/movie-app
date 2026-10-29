@@ -3,17 +3,23 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { UIswitch } from '@/components/ui'
+import { UISwitch } from '@/components/ui'
 import { getTrendingMovies } from '@/lib/tmdb'
 import type { TimeWindow, Movie } from '@/types'
 
-export default function TrendingMoviesClient({ initialMovies = [] }: { initialMovies?: Movie[] }) {
+export interface TrendingMoviesClientProps {
+  initialMovies?: Movie[]
+}
+
+export default function TrendingMoviesClient({
+  initialMovies = [],
+}: TrendingMoviesClientProps) {
   const [range, setRange] = useState<TimeWindow>('day')
   const [movies, setMovies] = useState<Movie[]>(initialMovies)
 
   const handleToggle = async (nextRange: TimeWindow) => {
     setRange(nextRange) // 1. Werk de geselecteerde tijdspanne bij in de lokale state voor de UI
-    const data = await getTrendingMovies(nextRange) // 2. Haal via de Server Action asynchroon de nieuwe trending series op van TMDB
+    const data = await getTrendingMovies(nextRange) // 2. Haal via de Server Action asynchroon de nieuwe trending films op van TMDB
     setMovies(data) // 3. Update de weergavelijst in de state
   }
 
@@ -21,20 +27,20 @@ export default function TrendingMoviesClient({ initialMovies = [] }: { initialMo
     <div className="p-10">
       <div className="flex items-center justify-start gap-5 pb-6">
         <h2 className="text-2xl font-bold">Trending Movies</h2>
-        <UIswitch
+        <UISwitch
           value={range}
           onChange={handleToggle}
         />
       </div>
 
       <ul className="grid grid-cols-10 gap-4 container">
-        {movies.map((film) => (
-          <li key={film.id}>
-            <Link href={`/movies/${film.id}`} className="group block">
-              {film.poster_path ? (
+        {movies.map((movie) => (
+          <li key={movie.id}>
+            <Link href={`/movies/${movie.id}`} className="group block">
+              {movie.poster_path ? (
                 <Image
-                  src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
-                  alt={film.title}
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
                   width={300}
                   height={450}
                   className="w-full h-auto rounded-md transition-transform duration-200 group-hover:scale-105"
@@ -45,7 +51,9 @@ export default function TrendingMoviesClient({ initialMovies = [] }: { initialMo
                   Geen afbeelding
                 </div>
               )}
-              <p className="mt-2 text-sm font-medium line-clamp-1 group-hover:text-blue-600 transition-colors">{film.title}</p>
+              <p className="mt-2 text-sm font-medium line-clamp-1 group-hover:text-blue-600 transition-colors">
+                {movie.title}
+              </p>
             </Link>
           </li>
         ))}

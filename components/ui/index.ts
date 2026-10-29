@@ -1,3 +1,6 @@
-export { default as UIswitch } from './Switch'
+export { default as UISwitch } from './Switch'
+export type { UISwitchProps } from './Switch'
 export { default as UIButton } from './Button'
+export type { UIButtonProps } from './Button'
 export { default as UIInput } from './Input'
+export type { UIInputProps } from './Input'

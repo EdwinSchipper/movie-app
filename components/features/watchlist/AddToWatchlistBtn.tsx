@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import UIButton from '@/components/ui/Button'
+import { UIButton } from '@/components/ui'
 import { addToWatchlist, removeFromWatchlist } from '@/lib/watchlist'
 import type { AddWatchlistInput } from '@/types'
 
-interface AddToWatchlistBtnProps {
+export interface AddToWatchlistBtnProps {
   item: AddWatchlistInput
   initialInWatchlist?: boolean
   className?: string

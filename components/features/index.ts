@@ -1,5 +1,5 @@
-export { default as TrendingMovies } from './trending-movies/TrendingMovies'
-export { default as TrendingTv } from './trending-tv/TrendingTv'
+export * from './trending-movies'
+export * from './trending-tv'
 export * from './dashboard'
 export * from './search'
 export * from './watchlist'
