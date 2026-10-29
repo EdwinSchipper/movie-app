@@ -1,61 +1,13 @@
 'use server'
 
-export type TimeWindow = 'day' | 'week'
-
-export interface TvShow {
-  id: number
-  name: string
-  poster_path: string
-}
-
-export interface Movie {
-  id: number
-  title: string
-  poster_path: string
-}
-
-export interface Genre {
-  id: number
-  name: string
-}
-
-export interface MovieDetails {
-  id: number
-  title: string
-  overview: string
-  poster_path: string | null
-  backdrop_path: string | null
-  release_date: string
-  runtime: number | null
-  vote_average: number
-  tagline: string
-  genres: Genre[]
-}
-
-export interface TvShowDetails {
-  id: number
-  name: string
-  overview: string
-  poster_path: string | null
-  backdrop_path: string | null
-  first_air_date: string
-  number_of_seasons: number
-  number_of_episodes: number
-  vote_average: number
-  tagline: string
-  genres: Genre[]
-}
-
-export interface SearchItem {
-  id: number
-  media_type: 'movie' | 'tv'
-  title?: string
-  name?: string
-  poster_path: string | null
-  release_date?: string
-  first_air_date?: string
-  vote_average?: number
-}
+import type {
+  TimeWindow,
+  TvShow,
+  Movie,
+  MovieDetails,
+  TvShowDetails,
+  SearchItem,
+} from '@/types'
 
 interface FindByIdResponse {
   movie_results?: SearchItem[]

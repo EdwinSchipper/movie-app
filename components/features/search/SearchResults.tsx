@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { searchMulti, type SearchItem } from '@/lib/tmdb'
+import { searchMulti } from '@/lib/tmdb'
+import type { SearchItem } from '@/types'
 
 export interface SearchResultsProps {
   query: string

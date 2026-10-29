@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Switch } from '@headlessui/react'
-import type { TimeWindow } from '@/lib/tmdb'
+import type { TimeWindow } from '@/types'
 
 export interface UIswitchProps<T extends string = TimeWindow> {
   value?: T
