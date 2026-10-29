@@ -31,28 +31,39 @@ export async function getWatchlist(): Promise<WatchlistItem[]> {
 }
 
 /**
- * Geeft true terug als de film of serie al in de watchlist staat, anders false
+ * Geeft de actuele watchlist status terug voor een film of serie, of null als deze niet in de watchlist staat
  */
-export async function isInWatchlist(tmdbId: number, mediaType: MediaType): Promise<boolean> {
+export async function getWatchlistStatus(
+  tmdbId: number,
+  mediaType: MediaType
+): Promise<WatchlistStatus | null> {
   if (!tmdbId || (mediaType !== 'movie' && mediaType !== 'tv')) {
-    return false
+    return null
   }
 
   const supabase = await createClient()
 
   const { data, error } = await supabase
     .from('watchlist')
-    .select('id')
+    .select('status')
     .eq('tmdb_id', tmdbId)
     .eq('media_type', mediaType)
     .maybeSingle()
 
   if (error) {
-    console.error('Fout bij controleren isInWatchlist:', error.message)
-    return false
+    console.error('Fout bij ophalen getWatchlistStatus:', error.message)
+    return null
   }
 
-  return Boolean(data?.id)
+  return (data?.status as WatchlistStatus) ?? null
+}
+
+/**
+ * Geeft true terug als de film of serie al in de watchlist staat, anders false
+ */
+export async function isInWatchlist(tmdbId: number, mediaType: MediaType): Promise<boolean> {
+  const status = await getWatchlistStatus(tmdbId, mediaType)
+  return status !== null
 }
 
 /**
@@ -98,10 +109,11 @@ export async function addToWatchlist(item: AddWatchlistInput): Promise<ActionRes
 }
 
 /**
- * Wijzig de status (bijv. 'want_to_watch' -> 'watched')
+ * Wijzig de status (bijv. 'want_to_watch' -> 'watched').
+ * Accepteert een Supabase UUID (string) of een TMDB-doel { tmdbId, mediaType }.
  */
 export async function updateWatchlistStatus(
-  id: string,
+  target: string | { tmdbId: number; mediaType: MediaType },
   status: WatchlistStatus
 ): Promise<ActionResult> {
   const validStatuses: WatchlistStatus[] = ['want_to_watch', 'watching', 'watched']
@@ -111,10 +123,21 @@ export async function updateWatchlistStatus(
 
   const supabase = await createClient()
 
-  const { error } = await supabase
-    .from('watchlist')
-    .update({ status })
-    .eq('id', id)
+  let query = supabase.from('watchlist').update({ status })
+
+  if (typeof target === 'string') {
+    if (!target.trim()) {
+      return { success: false, error: 'Ontbrekend ID voor status update.' }
+    }
+    query = query.eq('id', target)
+  } else {
+    if (!target.tmdbId || (target.mediaType !== 'movie' && target.mediaType !== 'tv')) {
+      return { success: false, error: 'Ongeldig TMDB ID of mediatype.' }
+    }
+    query = query.eq('tmdb_id', target.tmdbId).eq('media_type', target.mediaType)
+  }
+
+  const { error } = await query
 
   if (error) {
     console.error('Database fout bij status update:', error.message)

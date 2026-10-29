@@ -3,9 +3,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getMovieDetails } from '@/lib/tmdb'
-import { isInWatchlist } from '@/lib/watchlist'
+import { getWatchlistStatus } from '@/lib/watchlist'
 import { isInRecommendations } from '@/lib/recommendations'
-import { AddToWatchlistBtn, AddToRecommendationsBtn } from '@/components'
+import { WatchlistActions, AddToRecommendationsBtn } from '@/components'
 
 interface MoviePageProps {
   params: Promise<{ id: string }>
@@ -41,8 +41,8 @@ async function MovieContent({ params }: MoviePageProps) {
     notFound()
   }
 
-  const [initialInWatchlist, initialInRecommendations] = await Promise.all([
-    isInWatchlist(movie.id, 'movie'),
+  const [initialWatchlistStatus, initialInRecommendations] = await Promise.all([
+    getWatchlistStatus(movie.id, 'movie'),
     isInRecommendations(movie.id, 'movie'),
   ])
 
@@ -95,7 +95,7 @@ async function MovieContent({ params }: MoviePageProps) {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 mb-6">
-            <AddToWatchlistBtn
+            <WatchlistActions
               item={{
                 tmdb_id: movie.id,
                 media_type: 'movie',
@@ -105,7 +105,7 @@ async function MovieContent({ params }: MoviePageProps) {
                 vote_average: movie.vote_average,
                 overview: movie.overview,
               }}
-              initialInWatchlist={initialInWatchlist}
+              initialStatus={initialWatchlistStatus}
             />
             <AddToRecommendationsBtn
               item={{
