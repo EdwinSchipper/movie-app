@@ -15,13 +15,13 @@ export default function MoviePage({ params }: MoviePageProps) {
   return (
     <Suspense fallback={
       <div className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto animate-pulse">
-        <div className="h-4 w-32 bg-gray-200 rounded mb-6" />
+        <div className="h-4 w-32 bg-gray-200/20 rounded mb-6" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="aspect-2/3 bg-gray-200 rounded-xl" />
+          <div className="aspect-2/3 bg-gray-200/10 rounded-xl" />
           <div className="md:col-span-2 space-y-4">
-            <div className="h-8 w-2/3 bg-gray-200 rounded" />
-            <div className="h-4 w-1/3 bg-gray-200 rounded" />
-            <div className="h-24 w-full bg-gray-200 rounded" />
+            <div className="h-8 w-2/3 bg-gray-200/10 rounded" />
+            <div className="h-4 w-1/3 bg-gray-200/10 rounded" />
+            <div className="h-24 w-full bg-gray-200/10 rounded" />
           </div>
         </div>
       </div>
@@ -56,7 +56,7 @@ async function MovieContent({ params }: MoviePageProps) {
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="relative aspect-2/3 w-full rounded-xl overflow-hidden shadow-lg bg-gray-100">
+        <div className="relative aspect-2/3 w-full rounded-xl overflow-hidden shadow-lg bg-gray-100/10">
           {movie.poster_path ? (
             <Image
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -126,7 +126,7 @@ async function MovieContent({ params }: MoviePageProps) {
               {movie.genres.map((genre) => (
                 <span
                   key={genre.id}
-                  className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full"
+                  className="px-3 py-1 bg-gray-100/10 text-gray-700 text-xs font-medium rounded-full"
                 >
                   {genre.name}
                 </span>
