@@ -81,3 +81,14 @@ Na elke herstructurering, verplaatsing van bestanden (`git mv`), hernoeming of r
   1. Performance & Bandbreedte: minimaliseert datatransmissie tussen database en server.
   2. Type-Safety: garandeert dat geretourneerde data 1-op-1 aansluit op TypeScript interfaces.
   3. Beveiliging: voorkomt dat toekomstige interne of gevoelige kolommen onbedoeld meelekken naar de client.
+
+
+## Officiële Stack & Architectuur Richtlijnen (Official Stack Policy)
+
+- **STRIKT VERPLICHT: Uitsluitend officiële werkwijzen conform stack-documentatie**:
+  - Pas in dit project alleen patronen en implementaties toe die volledig in lijn zijn met de officiële documentatie van **Next.js 16** (`node_modules/next/dist/docs/`), **React 19** (React Foundations: `Components`, `Props`, `State`), **Supabase SSR**, **TMDB API v3**, **Tailwind CSS v4** en **Headless UI**.
+  - Geen ad-hoc workarounds, inline placeholder-hacks of ongedocumenteerde constructies.
+- **Architectuurstandaarden**:
+  1. **App Router & Suspense Streaming**: `app/**/page.tsx` bestanden zijn slanke Server Component shells die feature-componenten uit `@/components` renderen; dynamische data wordt via een async `*Content` sub-component binnen `<Suspense>` gestreamd met een `*Skeleton` fallback.
+  2. **React Core Concepts & Naamgeving**: Componenten en `*Props` interfaces gebruiken `PascalCase`, prop-namen gebruiken `camelCase` met object destructuring, en `'use client'` wordt enkel op interactieve leaf-componenten geplaatst.
+  3. **Scheiding `types/` en `lib/`**: `'use server'` bestanden in `lib/` bevatten uitsluitend async functies; alle gedeelde interfaces staan in `types/` en worden via `types/index.ts` geëxporteerd.

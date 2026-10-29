@@ -4,7 +4,7 @@ import DashboardCard, { type DashboardCardProps } from './DashboardCard'
 import DashboardHero from './DashboardHero'
 
 export interface DashboardProps {
-  title?: string
+  title: string
   subtitle?: string
 }
 
@@ -57,8 +57,8 @@ async function DashboardHeroContent() {
 }
 
 export default function Dashboard({
-  title = 'Movie for Friends',
-  subtitle = 'Ontdek, bewaar en deel de beste films en series op één plek.',
+  title,
+  subtitle,
 }: DashboardProps) {
   return (
     <section className="max-w-6xl mx-auto px-4 py-20">
