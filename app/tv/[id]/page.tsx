@@ -5,14 +5,13 @@ import { notFound } from 'next/navigation'
 import { getTvDetails } from '@/lib/tmdb'
 import { isInWatchlist } from '@/lib/watchlist'
 import { isInRecommendations } from '@/lib/recommendations'
-import { AddToWatchlistBtn } from '@/components/features/watchlist'
-import { AddToRecommendationsBtn } from '@/components/features/recommendations'
+import { AddToWatchlistBtn, AddToRecommendationsBtn } from '@/components'
 
 interface TvPageProps {
   params: Promise<{ id: string }>
 }
 
-export default function TvDetailPage({ params }: TvPageProps) {
+export default function TvPage({ params }: TvPageProps) {
   return (
     <Suspense fallback={
       <div className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto animate-pulse">
@@ -33,11 +32,11 @@ export default function TvDetailPage({ params }: TvPageProps) {
 }
 
 async function TvContent({ params }: TvPageProps) {
-  const { id: tvId } = await params
+  const { id } = await params
 
   let show
   try {
-    show = await getTvDetails(tvId)
+    show = await getTvDetails(id)
   } catch {
     notFound()
   }
@@ -127,12 +126,12 @@ async function TvContent({ params }: TvPageProps) {
 
           {show.genres && show.genres.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6">
-              {show.genres.map((g) => (
+              {show.genres.map((genre) => (
                 <span
-                  key={g.id}
+                  key={genre.id}
                   className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full"
                 >
-                  {g.name}
+                  {genre.name}
                 </span>
               ))}
             </div>

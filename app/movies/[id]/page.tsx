@@ -5,8 +5,7 @@ import { notFound } from 'next/navigation'
 import { getMovieDetails } from '@/lib/tmdb'
 import { isInWatchlist } from '@/lib/watchlist'
 import { isInRecommendations } from '@/lib/recommendations'
-import { AddToWatchlistBtn } from '@/components/features/watchlist'
-import { AddToRecommendationsBtn } from '@/components/features/recommendations'
+import { AddToWatchlistBtn, AddToRecommendationsBtn } from '@/components'
 
 interface MoviePageProps {
   params: Promise<{ id: string }>
@@ -124,12 +123,12 @@ async function MovieContent({ params }: MoviePageProps) {
 
           {movie.genres && movie.genres.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6">
-              {movie.genres.map((g) => (
+              {movie.genres.map((genre) => (
                 <span
-                  key={g.id}
+                  key={genre.id}
                   className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full"
                 >
-                  {g.name}
+                  {genre.name}
                 </span>
               ))}
             </div>
