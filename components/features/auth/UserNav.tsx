@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { getCurrentUser, logout } from '@/lib/auth'
+import { getAppUser, logout } from '@/lib/auth'
 
 function UserNavSkeleton() {
   return (
@@ -12,7 +12,7 @@ function UserNavSkeleton() {
 }
 
 async function UserNavContent() {
-  const user = await getCurrentUser()
+  const user = await getAppUser()
 
   async function handleLogout() {
     'use server'
@@ -25,6 +25,11 @@ async function UserNavContent() {
         <div className="flex items-center gap-3">
           <span className="text-gray-400">
             Ingelogd als <strong className="text-gray-200 font-medium">{user.email}</strong>
+            {user.role === 'admin' ? (
+              <span className="ml-2 px-1.5 py-0.5 text-xs bg-purple-900/60 text-purple-300 border border-purple-700/50 rounded font-normal">
+                Admin
+              </span>
+            ) : null}
           </span>
           <form action={handleLogout}>
             <button

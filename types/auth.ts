@@ -1,5 +1,13 @@
 import { z } from 'zod'
 
+export type UserRole = 'admin' | 'user'
+
+export interface AppUser {
+  id: string
+  email: string
+  role: UserRole
+}
+
 export const registerSchema = z
   .object({
     email: z.email('Vul een geldig e-mailadres in.'),
