@@ -76,7 +76,11 @@ export async function signup(
   }
 
   const headerList = await headers()
-  const origin = headerList.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const forwardedHost = headerList.get('x-forwarded-host')
+  const forwardedProto = headerList.get('x-forwarded-proto') || 'https'
+  const origin = forwardedHost
+    ? `${forwardedProto}://${forwardedHost}`
+    : headerList.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
   const supabase = await createClient()
 
