@@ -3,6 +3,7 @@
 import { headers } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { getSiteUrl } from '@/lib/env'
 import { registerSchema } from '@/types'
 import type { ActionResult, LoginInput } from '@/types'
 
@@ -75,14 +76,11 @@ export async function signup(
     }
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '')
   const headerList = await headers()
-  const forwardedHost = headerList.get('x-forwarded-host')
-  const forwardedProto = headerList.get('x-forwarded-proto') || 'https'
-  const origin =
-    siteUrl ||
-    (forwardedHost ? `${forwardedProto}://${forwardedHost}` : headerList.get('origin')) ||
-    'http://localhost:3000'
+  const origin = getSiteUrl(
+    headerList.get('x-forwarded-host'),
+    headerList.get('x-forwarded-proto')
+  )
 
   const supabase = await createClient()
 
@@ -119,5 +117,23 @@ export async function signup(
     data: {
       needsEmailConfirmation,
     },
+  }
+}
+
+export async function logout(): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { error } = await supabase.auth.signOut()
+
+  if (error) {
+    return {
+      success: false,
+      error: error.message,
+    }
+  }
+
+  revalidatePath('/', 'layout')
+
+  return {
+    success: true,
   }
 }
