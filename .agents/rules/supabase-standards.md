@@ -63,3 +63,37 @@ In dit project hanteren we de officiële standaarden van **Supabase met Next.js 
   - Retourneer altijd een getypeerd `ActionResult` (`{ success: true }` of `{ success: false, error: string }`).
 - **Geen openstaande resources**:
   - De `@supabase/ssr` client is stateless per request en vereist geen handmatige connection-teardown of connection pools in Serverless/Edge functies.
+
+---
+
+## 5. Route-organisatie via Next.js Route Groups (`app/(auth)` & `app/(user)`)
+
+Plaats authenticatie- en gebruikerspagina's nooit los in de `app/` root, maar structureer ze met Route Groups (ronde haakjes):
+
+- **`app/(auth)/` (Toegang)**:
+  - Bevat authenticatieroutes: `login/page.tsx`, `register/page.tsx` en `auth/callback/route.ts`.
+  - URL's blijven schoon en herkenbaar (`/login`, `/register`, `/auth/callback`).
+  - Kan voorzien worden van een dedicated `(auth)/layout.tsx` (bijv. een minimalistische, gecentreerde inlogkaart zonder overbodige navigatiemenu's).
+- **`app/(user)/` (Gebruikersbeheer)**:
+  - Bevat beveiligde account- en profielpagina's: `profile/page.tsx`, `settings/page.tsx`.
+  - URL's blijven strak (`/profile`, `/settings`), terwijl alle user-specifieke code modulair bijeen blijft.
+
+---
+
+## 6. E-mail Verificatie & PKCE Auth Flow (`app/(auth)/auth/callback/route.ts`)
+
+Bij e-mailbevestigingen (registratie, wachtwoordherstel of magic links) hanteren we de officiële **PKCE (Proof Key for Code Exchange)** architectuur:
+
+- **Registratie (`signUp`)**:
+  - Roep `supabase.auth.signUp()` aan met een expliciete `options.emailRedirectTo`:
+    - `${origin}/auth/callback?next=/profile`
+- **Callback Route Handler (`app/(auth)/auth/callback/route.ts`)**:
+  - Vangt de `?code=` query-parameter op uit de verificatie-e-mail.
+  - Wisselt de code server-side in voor een cryptografisch geldige sessie via:
+    `await supabase.auth.exchangeCodeForSession(code)`.
+  - Schrijft de sessie-cookies direct weg via de `@supabase/ssr` server client en redirect de gebruiker naar het opgegeven `next` pad (standaard `/profile`).
+- **Redirect URL Allow-list (Supabase Dashboard)**:
+  - Zowel de lokale development URL (`http://localhost:3000/auth/callback`) als de productie-URL (`https://<productie-domein>/auth/callback`) MOETEN in het Supabase Dashboard geregistreerd staan onder *Authentication → URL Configuration → Redirect URLs*.
+- **E-mail Aflevering (SMTP)**:
+  - In development: gebruik de ingebouwde Supabase mailer (rate-limited tot 3-4 mails per uur).
+  - In productie: configureer een custom SMTP provider (bijv. Resend of Postmark) in het Supabase Dashboard voor gegarandeerde inbox-aflevering vanaf eigen domeinnaam.
