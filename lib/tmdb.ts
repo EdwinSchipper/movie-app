@@ -8,6 +8,7 @@ import type {
   TvShowDetails,
   SearchItem,
 } from '@/types'
+import { env } from '@/lib/env'
 
 interface FindByIdResponse {
   movie_results?: SearchItem[]
@@ -24,13 +25,8 @@ async function fetchFromTmdb<T>(
   params: Record<string, string> = {},
   revalidate = 3600
 ): Promise<T> {
-  const apiKey = process.env.TMDB_API_KEY
-  if (!apiKey) {
-    throw new Error('TMDB_API_KEY is niet ingesteld in de environment variabelen.')
-  }
-
   const searchParams = new URLSearchParams({
-    api_key: apiKey,
+    api_key: env.tmdb.apiKey,
     language: 'nl-NL',
     ...params,
   })
