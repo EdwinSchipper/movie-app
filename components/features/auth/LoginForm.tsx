@@ -2,14 +2,16 @@
 
 import { useState, type FormEvent } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { UIButton } from '@/components/ui'
+import { login } from '@/lib/auth'
 
 export interface LoginFormProps {
   className?: string
-  onSubmitAction?: (formData: FormData) => Promise<{ success: boolean; error?: string }>
 }
 
-export default function LoginForm({ className = '', onSubmitAction }: LoginFormProps) {
+export default function LoginForm({ className = '' }: LoginFormProps) {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -23,11 +25,6 @@ export default function LoginForm({ className = '', onSubmitAction }: LoginFormP
       return
     }
 
-    if (!onSubmitAction) {
-      setError('Authenticatieserver actie wordt in stap 2 geactiveerd.')
-      return
-    }
-
     setError(null)
     setIsPending(true)
 
@@ -36,13 +33,17 @@ export default function LoginForm({ className = '', onSubmitAction }: LoginFormP
       formData.append('email', email)
       formData.append('password', password)
 
-      const result = await onSubmitAction(formData)
+      const result = await login(formData)
       if (!result.success) {
         setError(result.error || 'Er is een fout opgetreden bij het inloggen.')
+        setIsPending(false)
+        return
       }
+
+      router.push('/')
+      router.refresh()
     } catch {
       setError('Er is een onverwachte fout opgetreden. Probeer het later opnieuw.')
-    } finally {
       setIsPending(false)
     }
   }
@@ -133,4 +134,3 @@ export default function LoginForm({ className = '', onSubmitAction }: LoginFormP
     </div>
   )
 }
-
