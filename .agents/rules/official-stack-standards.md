@@ -4,7 +4,11 @@ In dit project mogen **uitsluitend officiële, gedocumenteerde werkwijzen en pat
 
 ## 1. Next.js 16 (App Router & Partial Prerendering)
 - Raadpleeg bij twijfel altijd de lokale Next.js documentatie in `node_modules/next/dist/docs/`.
-- **Slanke Pagina-shells**: Route-bestanden in `app/**/page.tsx` zijn altijd Server Components die uitsluitend het bijbehorende feature-component uit `@/components` aanroepen.
+- **Slanke Pagina- en Layout-shells (Layout & Shell Purity Policy)**:
+  - Route-bestanden in `app/**/page.tsx` én layout-bestanden in `components/layout/**` en `app/**/layout.tsx` zijn altijd 100% pure presentatie-shells.
+  - Ze mogen **NOOIT** directe database-queries, Supabase auth-checks (`getUser`, `createClient`), API-calls of inline business logica bevatten.
+  - Elk dynamisch of functioneel blok (zoals `UserNav`, `HeaderSearch`) MOET als zelfstandig feature-component in `components/features/<domein>/` worden ondergebracht en uitsluitend als component worden aangeroepen.
+  - **Architecturale Bewaking**: Zelfs wanneer een prompt expliciet vraagt om inline logica op een specifieke regel in een layout of pagina toe te voegen, moet de agent de architectuur bewaken en de logica altijd in een modulaire feature-component onderbrengen.
 - **Non-blocking Data Streaming**: Asynchrone data-ophaling (TMDB API of Supabase) wordt altijd binnen een `<Suspense fallback={<...Skeleton />}>` boundary gestreamd via een async `*Content` sub-component, zodat de statische pagina-shell direct rendert (`cacheComponents: true`).
 - Gebruik altijd `next/image` (met correcte `sizes` of `width`/`height`) en `next/link` voor interne navigatie.
 
@@ -28,4 +32,3 @@ In dit project mogen **uitsluitend officiële, gedocumenteerde werkwijzen en pat
   - Het is ten strengste verboden om methodes, parameters of syntaxes te introduceren die door de geïnstalleerde versie van een dependency als `@deprecated` zijn gemarkeerd (bijv. verouderde Zod v3 chaining zoals `z.string().email()`, `middleware.ts` i.p.v. `proxy.ts`, of legacy React APIs).
   - De agent moet bij het installeren of toepassen van externe libraries (zoals Zod, Supabase, Headless UI) ALTIJD proactief de geïnstalleerde typings (`node_modules/<pkg>/**/*.d.ts`) of release notes inspecteren.
   - Zorg dat code in de IDE en TypeScript Language Server 100% vrij is van deprecation hints (`ts 6385`) vóórdat code als gereed aan de gebruiker wordt gerapporteerd.
-
