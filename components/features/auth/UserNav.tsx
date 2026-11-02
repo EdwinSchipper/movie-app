@@ -41,21 +41,12 @@ async function UserNavContent() {
           </form>
         </div>
       ) : (
-        <div className="flex items-center gap-3">
-          <span className="text-gray-500">Niet ingelogd</span>
-          <Link
-            href="/login"
-            className="text-gray-400 hover:text-white transition-colors"
-          >
-            Inloggen
-          </Link>
-          <Link
-            href="/register"
-            className="text-white bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded-md text-xs font-medium transition-colors"
-          >
-            Registreren
-          </Link>
-        </div>
+        <Link
+          href="/login"
+          className="text-white bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded-md text-xs font-medium transition-colors"
+        >
+          Inloggen
+        </Link>
       )}
     </div>
   )
