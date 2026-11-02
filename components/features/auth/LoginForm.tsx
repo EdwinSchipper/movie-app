@@ -1,17 +1,34 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { Suspense, useState, type FormEvent } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { UIButton } from '@/components/ui'
 import { login } from '@/lib/auth'
+import { getSafeRedirectPath } from '@/lib/redirect'
 
 export interface LoginFormProps {
   className?: string
 }
 
-export default function LoginForm({ className = '' }: LoginFormProps) {
+function LoginFormSkeleton({ className = '' }: LoginFormProps) {
+  return (
+    <div className={`rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs dark:border-gray-800 dark:bg-gray-900/60 animate-pulse ${className}`.trim()}>
+      <div className="mx-auto mb-6 h-7 w-40 rounded bg-gray-200/40 dark:bg-gray-700/40" />
+      <div className="space-y-4">
+        <div className="h-10 rounded-lg bg-gray-200/40 dark:bg-gray-700/40" />
+        <div className="h-10 rounded-lg bg-gray-200/40 dark:bg-gray-700/40" />
+        <div className="h-10 rounded-lg bg-gray-200/40 dark:bg-gray-700/40" />
+      </div>
+    </div>
+  )
+}
+
+function LoginFormContent({ className = '' }: LoginFormProps) {
   const router = useRouter()
+  const urlParams = useSearchParams()
+  const destinationPath = getSafeRedirectPath(urlParams.get('next'))
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -40,7 +57,7 @@ export default function LoginForm({ className = '' }: LoginFormProps) {
         return
       }
 
-      router.push('/')
+      router.push(destinationPath)
       router.refresh()
     } catch {
       setError('Er is een onverwachte fout opgetreden. Probeer het later opnieuw.')
@@ -132,5 +149,13 @@ export default function LoginForm({ className = '' }: LoginFormProps) {
         </Link>
       </div>
     </div>
+  )
+}
+
+export default function LoginForm({ className = '' }: LoginFormProps) {
+  return (
+    <Suspense fallback={<LoginFormSkeleton className={className} />}>
+      <LoginFormContent className={className} />
+    </Suspense>
   )
 }

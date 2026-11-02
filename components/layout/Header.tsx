@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { HeaderSearch, UserNav } from '@/components/features'
+import { HeaderSearch, MainNav, UserNav } from '@/components/features'
 
 export default function Header() {
   return (
@@ -18,18 +18,7 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-6">
-            <nav className="hidden sm:flex items-center gap-4 text-sm font-medium text-gray-500">
-              <Link href="/trending" className="hover:text-blue-600 transition-colors">
-                Trending
-              </Link>
-              <Link href="/recommendations" className="hover:text-blue-600 transition-colors">
-                Aanbevelingen
-              </Link>
-              <Link href="/watchlist" className="hover:text-blue-600 transition-colors">
-                Watchlist
-              </Link>
-            </nav>
-
+            <MainNav />
             <UserNav />
           </div>
         </div>

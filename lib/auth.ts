@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getSiteUrl } from '@/lib/env'
 import { registerSchema } from '@/types'
-import type { ActionResult, LoginInput } from '@/types'
+import type { ActionResult, AppUser, LoginInput, UserRole } from '@/types'
 
 export const getCurrentUser = cache(async () => {
   const supabase = await createClient()
@@ -15,6 +15,26 @@ export const getCurrentUser = cache(async () => {
   } = await supabase.auth.getUser()
   return user
 })
+
+export const getAppUser = cache(async (): Promise<AppUser | null> => {
+  const user = await getCurrentUser()
+  if (!user || !user.email) {
+    return null
+  }
+
+  const role: UserRole = user.app_metadata?.role === 'admin' ? 'admin' : 'user'
+
+  return {
+    id: user.id,
+    email: user.email,
+    role,
+  }
+})
+
+export async function isAdmin(): Promise<boolean> {
+  const appUser = await getAppUser()
+  return appUser?.role === 'admin'
+}
 
 export async function login(formData: FormData): Promise<ActionResult> {
   const email = formData.get('email')

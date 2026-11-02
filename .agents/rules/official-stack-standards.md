@@ -27,7 +27,13 @@ In dit project mogen **uitsluitend officiële, gedocumenteerde werkwijzen en pat
 ## 4. UI & Styling
 - Gebruik uitsluitend **Tailwind CSS v4** classes en de herbruikbare **Headless UI** (`@headlessui/react`) primitives uit `components/ui/` (`UIButton`, `UIInput`, `UISwitch`).
 
-## 5. Verbod op Verouderde of @deprecated API's (Zero-Deprecation Policy)
+## 5. Semantische & Domeingerichte Naamgeving (Semantic Naming Policy)
+- **STRIKT VERPLICHT: Betekenisvolle variabelenamen conform projectcontext**:
+  - Gebruik altijd variabelenamen die direct en ondubbelzinnig uitleggen wat de data voor de gebruiker en de applicatie betekent (bijv. `urlParams`, `redirectAfterLogin`, `destinationPath`).
+  - Neem **NOOIT** blind generieke framework-boilerplate over wanneer die botst met kerndomeinen van het project. Gebruik in een media-applicatie met film-zoekfunctionaliteit (`HeaderSearch`) bijvoorbeeld nooit `searchParams` voor URL-routing in een inlogformulier, om verwarring tussen URL-parameters en film-zoeken structureel te voorkomen.
+  - **Uitzondering**: Verplichte framework-API namen die niet hernoemd kunnen worden (zoals de `searchParams` page-prop in `app/**/page.tsx`, de hook-naam `useSearchParams` of `URL.searchParams`) blijven ongewijzigd. Alleen de lokale variabelen die de agent zelf benoemt vallen onder deze regel (bijv. `const urlParams = useSearchParams()`).
+
+## 6. Verbod op Verouderde of @deprecated API's (Zero-Deprecation Policy)
 - **STRIKT VERBODEN: Nooit @deprecated functies, types of syntaxes gebruiken**:
   - Het is ten strengste verboden om methodes, parameters of syntaxes te introduceren die door de geïnstalleerde versie van een dependency als `@deprecated` zijn gemarkeerd (bijv. verouderde Zod v3 chaining zoals `z.string().email()`, `middleware.ts` i.p.v. `proxy.ts`, of legacy React APIs).
   - De agent moet bij het installeren of toepassen van externe libraries (zoals Zod, Supabase, Headless UI) ALTIJD proactief de geïnstalleerde typings (`node_modules/<pkg>/**/*.d.ts`) of release notes inspecteren.
