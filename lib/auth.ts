@@ -1,7 +1,9 @@
 'use server'
 
+import { headers } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { registerSchema } from '@/types'
 import type { ActionResult, LoginInput } from '@/types'
 
 export async function login(formData: FormData): Promise<ActionResult> {
@@ -49,5 +51,67 @@ export async function login(formData: FormData): Promise<ActionResult> {
 
   return {
     success: true,
+  }
+}
+
+export async function signup(
+  formData: FormData
+): Promise<ActionResult<{ needsEmailConfirmation?: boolean }>> {
+  const email = formData.get('email')
+  const password = formData.get('password')
+  const confirmPassword = formData.get('confirmPassword')
+
+  const parseResult = registerSchema.safeParse({
+    email,
+    password,
+    confirmPassword,
+  })
+
+  if (!parseResult.success) {
+    const firstIssue = parseResult.error.issues[0]
+    return {
+      success: false,
+      error: firstIssue?.message || 'Controleer de ingevoerde gegevens.',
+    }
+  }
+
+  const headerList = await headers()
+  const origin = headerList.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.auth.signUp({
+    email: parseResult.data.email,
+    password: parseResult.data.password,
+    options: {
+      emailRedirectTo: `${origin}/auth/callback?next=/`,
+    },
+  })
+
+  if (error) {
+    if (error.message.includes('already registered')) {
+      return {
+        success: false,
+        error: 'Er bestaat al een account met dit e-mailadres.',
+      }
+    }
+
+    return {
+      success: false,
+      error: error.message,
+    }
+  }
+
+  const needsEmailConfirmation = !data.session
+
+  if (!needsEmailConfirmation) {
+    revalidatePath('/', 'layout')
+  }
+
+  return {
+    success: true,
+    data: {
+      needsEmailConfirmation,
+    },
   }
 }

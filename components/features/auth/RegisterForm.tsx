@@ -2,15 +2,17 @@
 
 import { useState, type FormEvent } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { UIButton } from '@/components/ui'
 import { registerSchema } from '@/types'
+import { signup } from '@/lib/auth'
 
 export interface RegisterFormProps {
   className?: string
-  onSubmitAction?: (formData: FormData) => Promise<{ success: boolean; error?: string }>
 }
 
-export default function RegisterForm({ className = '', onSubmitAction }: RegisterFormProps) {
+export default function RegisterForm({ className = '' }: RegisterFormProps) {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -37,11 +39,6 @@ export default function RegisterForm({ className = '', onSubmitAction }: Registe
       return
     }
 
-    if (!onSubmitAction) {
-      setIsSuccess(true)
-      return
-    }
-
     setError(null)
     setIsPending(true)
 
@@ -51,10 +48,16 @@ export default function RegisterForm({ className = '', onSubmitAction }: Registe
       formData.append('password', password)
       formData.append('confirmPassword', confirmPassword)
 
-      const result = await onSubmitAction(formData)
+      const result = await signup(formData)
       if (!result.success) {
         setError(result.error || 'Er is een fout opgetreden bij het registreren.')
         setIsPending(false)
+        return
+      }
+
+      if (result.data?.needsEmailConfirmation === false) {
+        router.push('/')
+        router.refresh()
         return
       }
 
@@ -226,4 +229,3 @@ export default function RegisterForm({ className = '', onSubmitAction }: Registe
     </div>
   )
 }
-

@@ -12,7 +12,7 @@ In dit project hanteren we de officiële standaarden van **Supabase met Next.js 
 
 - **Server Client (`lib/supabase/server.ts`)**:
   - Wordt uitsluitend aangeroepen in Server Components, Server Actions (`'use server'`) en Route Handlers.
-  - Maakt gebruik van `createServerClient` in combinatie met Next.js async `cookies()`.
+  - Maakt gebruik van `createServerClient` in combinatie met Next.js 16 `await connection()` (om `Date.now()` prerendering blocking te voorkomen) en async `cookies()`.
   - Hanteert de moderne `cookies: { getAll, setAll }` interface.
   - Vangt `setAll` fouten op met een lege `try/catch` zodat aanroepen vanuit read-only Server Components geruisloos doorgelaten worden en sessie-mutaties verlopen via Server Actions of de Next.js 16 Proxy.
 
