@@ -30,6 +30,10 @@ In dit project hanteren we de officiële standaarden van **Supabase met Next.js 
   - **STRIKT VERPLICHT**: Gebruik op de server (Server Actions, Server Components, Route Handlers, Proxy) **ALTIJD `supabase.auth.getUser()`** om de identiteit van de gebruiker te valideren.
   - **STRIKT VERBODEN**: Gebruik op de server nooit `supabase.auth.getSession()`. Cookie-sessies kunnen gemanipuleerd worden door de client; `getUser()` valideert het JWT-token direct cryptografisch tegen de Supabase Auth server.
 
+- **Request-Level Memoization via `React.cache()`**:
+  - Roep `supabase.auth.getUser()` in Server Components niet ad-hoc aan, maar gebruik de centrale `getCurrentUser()` helper uit `lib/auth.ts`.
+  - Deze helper is gewrapt in `React.cache()`, waardoor meerdere componenten op dezelfde pagina (bijv. `UserNav`, `WatchlistGrid`, `ProfileCard`) de gebruiker kunnen opvragen zonder meervoudige database-roundtrips binnen hetzelfde request.
+
 - **Anon Key vs Service Role Key**:
   - Reguliere applicatie- en servercode gebruikt uitsluitend de publieke `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
   - De `SUPABASE_SERVICE_ROLE_KEY` mag NOOIT naar de client lekken en wordt uitsluitend ingezet in afgeschermde backend-taken of administratieve migraties.

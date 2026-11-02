@@ -1,11 +1,20 @@
 'use server'
 
+import { cache } from 'react'
 import { headers } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getSiteUrl } from '@/lib/env'
 import { registerSchema } from '@/types'
 import type { ActionResult, LoginInput } from '@/types'
+
+export const getCurrentUser = cache(async () => {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  return user
+})
 
 export async function login(formData: FormData): Promise<ActionResult> {
   const email = formData.get('email')
