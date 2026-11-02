@@ -81,6 +81,12 @@ Na elke herstructurering, verplaatsing van bestanden (`git mv`), hernoeming of r
   1. Performance & Bandbreedte: minimaliseert datatransmissie tussen database en server.
   2. Type-Safety: garandeert dat geretourneerde data 1-op-1 aansluit op TypeScript interfaces.
   3. Beveiliging: voorkomt dat toekomstige interne of gevoelige kolommen onbedoeld meelekken naar de client.
+- **Supabase SSR, Auth & Security Standaarden**:
+  - Raadpleeg altijd `.agents/rules/supabase-standards.md` voor alle database- en authenticatiewerkzaamheden.
+  - Gebruik op de server ALTIJD `supabase.auth.getUser()`, nooit `supabase.auth.getSession()`.
+  - Hanteer de moderne `@supabase/ssr` interface met async `cookies()` en `{ getAll, setAll }`.
+  - Gebruik voor sessie-verversing in Next.js 16 de `proxy.ts` conventie (de officiële vervanger van `middleware.ts`).
+  - Schakel voor complexe database-, authenticatie- en RLS-taken de gespecialiseerde `supabase-architect` subagent in.
 
 
 ## Officiële Stack & Architectuur Richtlijnen (Official Stack Policy)
