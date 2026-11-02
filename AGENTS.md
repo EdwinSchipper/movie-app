@@ -99,3 +99,19 @@ Na elke herstructurering, verplaatsing van bestanden (`git mv`), hernoeming of r
   2. **React Core Concepts & Naamgeving**: Componenten en `*Props` interfaces gebruiken `PascalCase`, prop-namen gebruiken `camelCase` met object destructuring, en `'use client'` wordt enkel op interactieve leaf-componenten geplaatst.
   3. **Scheiding `types/` en `lib/`**: `'use server'` bestanden in `lib/` bevatten uitsluitend async functies; alle gedeelde interfaces staan in `types/` en worden via `types/index.ts` geëxporteerd.
   4. **Strikt Verbod op @deprecated API's (Zero-Deprecation Policy)**: Het is ten strengste verboden om functies, interfaces of syntaxes te gebruiken die door de geïnstalleerde versie van een dependency als `@deprecated` (ts 6385) zijn aangemerkt (zoals verouderde Zod v3 chaining in Zod v4). De agent inspecteert bij elke library altijd proactief de type-definities (`.d.ts`) om uitsluitend de modernste stabiele API toe te passen.
+
+## Master Production Quality Gate & Pre-Flight Checks
+
+Vóór ELKE commit en vóór ELKE push naar een remote branch MOET de agent de Master Production Quality Gate proactief en zonder uitzondering lokaal valideren:
+
+1. **Zero-Comment Policy (Geen `//` of `{/* */}`)**:
+   - Controleer ALTIJD inclusief untracked/unstaged bestanden via:
+     `git grep --untracked -n -P "(^|[^:])//|\{/\*" -- "app/" "components/" "lib/" "types/"`
+   - **Let op string literals**: Gebruik in code NOOIT twee opeenvolgende slashes (`//`) in strings of regexes (tenzij voorafgegaan door `:` zoals in URL-protocollen), omdat de CI-regex dit markeert als commentaar. Gebruik altijd veilige alternatieven zoals `'/' + '/'`.
+2. **Zero-Console Policy**:
+   - `git grep --untracked -n "console\.log(" -- "app/" "components/" "lib/" "types/"` (0 resultaten toegestaan).
+3. **Zero-Wildcard Database Queries**:
+   - `git grep --untracked -n -E "\.select\(\s*['\"]\*['\"]\s*\)" -- "app/" "components/" "lib/" "types/"` (0 resultaten).
+4. **Linter & Type-Safety**:
+   - `npx tsc --noEmit` (0 errors).
+   - `pnpm lint --max-warnings=0` (0 warnings).
