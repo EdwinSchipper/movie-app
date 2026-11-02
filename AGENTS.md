@@ -81,6 +81,12 @@ Na elke herstructurering, verplaatsing van bestanden (`git mv`), hernoeming of r
   1. Performance & Bandbreedte: minimaliseert datatransmissie tussen database en server.
   2. Type-Safety: garandeert dat geretourneerde data 1-op-1 aansluit op TypeScript interfaces.
   3. Beveiliging: voorkomt dat toekomstige interne of gevoelige kolommen onbedoeld meelekken naar de client.
+- **Supabase SSR, Auth & Security Standaarden**:
+  - Raadpleeg altijd `.agents/rules/supabase-standards.md` voor alle database- en authenticatiewerkzaamheden.
+  - Gebruik op de server ALTIJD `supabase.auth.getUser()`, nooit `supabase.auth.getSession()`.
+  - Hanteer de moderne `@supabase/ssr` interface met async `cookies()` en `{ getAll, setAll }`.
+  - Gebruik voor sessie-verversing in Next.js 16 de `proxy.ts` conventie (de officiële vervanger van `middleware.ts`).
+  - Schakel voor complexe database-, authenticatie- en RLS-taken de gespecialiseerde `supabase-architect` subagent in.
 
 
 ## Officiële Stack & Architectuur Richtlijnen (Official Stack Policy)
@@ -92,3 +98,20 @@ Na elke herstructurering, verplaatsing van bestanden (`git mv`), hernoeming of r
   1. **App Router & Suspense Streaming**: `app/**/page.tsx` bestanden zijn slanke Server Component shells die feature-componenten uit `@/components` renderen; dynamische data wordt via een async `*Content` sub-component binnen `<Suspense>` gestreamd met een `*Skeleton` fallback.
   2. **React Core Concepts & Naamgeving**: Componenten en `*Props` interfaces gebruiken `PascalCase`, prop-namen gebruiken `camelCase` met object destructuring, en `'use client'` wordt enkel op interactieve leaf-componenten geplaatst.
   3. **Scheiding `types/` en `lib/`**: `'use server'` bestanden in `lib/` bevatten uitsluitend async functies; alle gedeelde interfaces staan in `types/` en worden via `types/index.ts` geëxporteerd.
+  4. **Strikt Verbod op @deprecated API's (Zero-Deprecation Policy)**: Het is ten strengste verboden om functies, interfaces of syntaxes te gebruiken die door de geïnstalleerde versie van een dependency als `@deprecated` (ts 6385) zijn aangemerkt (zoals verouderde Zod v3 chaining in Zod v4). De agent inspecteert bij elke library altijd proactief de type-definities (`.d.ts`) om uitsluitend de modernste stabiele API toe te passen.
+
+## Master Production Quality Gate & Pre-Flight Checks
+
+Vóór ELKE commit en vóór ELKE push naar een remote branch MOET de agent de Master Production Quality Gate proactief en zonder uitzondering lokaal valideren:
+
+1. **Zero-Comment Policy (Geen `//` of `{/* */}`)**:
+   - Controleer ALTIJD inclusief untracked/unstaged bestanden via:
+     `git grep --untracked -n -P "(^|[^:])//|\{/\*" -- "app/" "components/" "lib/" "types/"`
+   - **Let op string literals**: Gebruik in code NOOIT twee opeenvolgende slashes (`//`) in strings of regexes (tenzij voorafgegaan door `:` zoals in URL-protocollen), omdat de CI-regex dit markeert als commentaar. Gebruik altijd veilige alternatieven zoals `'/' + '/'`.
+2. **Zero-Console Policy**:
+   - `git grep --untracked -n "console\.log(" -- "app/" "components/" "lib/" "types/"` (0 resultaten toegestaan).
+3. **Zero-Wildcard Database Queries**:
+   - `git grep --untracked -n -E "\.select\(\s*['\"]\*['\"]\s*\)" -- "app/" "components/" "lib/" "types/"` (0 resultaten).
+4. **Linter & Type-Safety**:
+   - `npx tsc --noEmit` (0 errors).
+   - `pnpm lint --max-warnings=0` (0 warnings).

@@ -23,3 +23,9 @@ In dit project mogen **uitsluitend officiële, gedocumenteerde werkwijzen en pat
 ## 4. UI & Styling
 - Gebruik uitsluitend **Tailwind CSS v4** classes en de herbruikbare **Headless UI** (`@headlessui/react`) primitives uit `components/ui/` (`UIButton`, `UIInput`, `UISwitch`).
 
+## 5. Verbod op Verouderde of @deprecated API's (Zero-Deprecation Policy)
+- **STRIKT VERBODEN: Nooit @deprecated functies, types of syntaxes gebruiken**:
+  - Het is ten strengste verboden om methodes, parameters of syntaxes te introduceren die door de geïnstalleerde versie van een dependency als `@deprecated` zijn gemarkeerd (bijv. verouderde Zod v3 chaining zoals `z.string().email()`, `middleware.ts` i.p.v. `proxy.ts`, of legacy React APIs).
+  - De agent moet bij het installeren of toepassen van externe libraries (zoals Zod, Supabase, Headless UI) ALTIJD proactief de geïnstalleerde typings (`node_modules/<pkg>/**/*.d.ts`) of release notes inspecteren.
+  - Zorg dat code in de IDE en TypeScript Language Server 100% vrij is van deprecation hints (`ts 6385`) vóórdat code als gereed aan de gebruiker wordt gerapporteerd.
+
