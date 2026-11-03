@@ -18,6 +18,7 @@ Hieronder vind je een overzicht van de belangrijkste ontwikkelgebieden en hun hu
 | :--- | :---: | :--- |
 | **API Integration (TMDB)** | ✅ `Done` | TMDB API v3 geïntegreerd via één centrale server-side fetch-helper (`fetchFromTmdb`) voor trending films/series, detailpagina's, multi-search (`/search/multi`) en directe IMDb-ID herkenning (`/find/{id}`). |
 | **Data Streaming & Performance** | ✅ `Done` | Server-side data fetching met Partial Prerendering (PPR), React Suspense streaming met skeleton fallbacks en geparalleliseerde database-checks (`Promise.all`). |
+| **Authenticatie & Sessiebeheer** | 🔄 `In Progress` | Supabase SSR auth met PKCE code exchange (`/auth/callback`), Next.js 16 `proxy.ts` sessie-verversing, `React.cache()` request deduplicatie, en open-redirect mitigatie (`lib/redirect.ts`). |
 | **Database & Persistente Opslag (Supabase)** | 🔄 `In Progress` | Integratie van Supabase (PostgreSQL + RLS) voor **Watchlist** en **Recommendations**, met strikte server-actions (`lib/`), expliciete kolomselecties (geen `select('*')`) en non-blocking UI-interacties (`useTransition`). |
 | **Component & Type Architectuur** | 🔄 `In Progress` | Strikte scheiding tussen `types/` (nullable-safe TMDB & database interfaces), `lib/` (`'use server'` data-laag) en modulaire `components/` (`ui/`, `layout/`, `features/`). |
 | **Deployment & CI/CD** | ✅ `Done` | Geautomatiseerde continuous deployment via Vercel en CI kwaliteitscontroles via GitHub Actions. |
@@ -30,6 +31,10 @@ De applicatie is opgezet met een strikte scheiding van verantwoordelijkheden en 
 - **TMDB Server-Side Data Layer (`lib/tmdb.ts`)**: Alle externe API-aanroepen verlopen uitsluitend server-side met Next.js data-caching (`revalidate`), veilige `URLSearchParams`-encoding en strikte nullable TypeScript-interfaces (`types/tmdb.ts`), zodat ontbrekende of niet-vertaalde TMDB-metadata nooit tot runtime crashes leidt.
 - **Supabase Database & Security (`lib/watchlist.ts`, `lib/recommendations.ts`)**: Persistente data-opslag en mutaties (`upsert` / `delete`) lopen via server-side Supabase SSR-clients met Row Level Security (RLS) op PostgreSQL-niveau. Alle queries vragen uitsluitend expliciete kolommen op (geen `select('*')`) voor minimale bandbreedte en 1-op-1 overeenstemming met onze TypeScript-interfaces (`types/watchlist.ts`, `types/recommendations.ts`).
 - **Non-blocking Data Streaming & Parallel Fetching**: Detail- en overzichtspagina's streamen asynchrone data binnen `<Suspense>` boundaries met directe skeleton fallbacks. Meerdere onafhankelijke database-checks (zoals Watchlist- en Recommendation-status) worden parallel uitgevoerd via `Promise.all` om request-waterfalls te voorkomen.
+- **Supabase SSR Authenticatie & PKCE Callback (`app/(auth)/auth/callback/route.ts`)**: E-mailverificaties en OAuth-aanmeldingen verlopen conform de moderne PKCE-standaard (Proof Key for Code Exchange). De route-handler wisselt eenmalige verificatiecodes server-side in voor veilige `HttpOnly` sessie-cookies via `exchangeCodeForSession()`.
+- **Sessiebeheer via Next.js 16 Proxy (`proxy.ts`)**: Sessies worden transparant ververst op elk binnenkomend request via de officiële Next.js 16 `proxy.ts` conventie (de opvolger van `middleware.ts`) met behulp van `@supabase/ssr` cookies-handlers (`getAll`/`setAll`).
+- **Gededupliceerde Server-Side Auth (`lib/auth.ts`)**: Gebruikerssessie en rolbepaling (`AppUser`, `UserRole`) worden opgevraagd via `React.cache()` helpers (`getCurrentUser()`, `getAppUser()`). Hierdoor delen onafhankelijke componenten binnen één SSR-renderpass (`MainNav`, `UserNav`, `Dashboard`) dezelfde gegevens zonder herhaalde Supabase-aanroepen.
+- **Veilige Navigatie & Open-Redirect Beveiliging (`lib/redirect.ts`)**: URL-redirects na inloggen of code-exchange worden strikt gevalideerd met `getSafeRedirectPath` om open-redirect kwetsbaarheden te voorkomen, inclusief bescherming tegen browser-normalisatie van backslashes (`/\evil.com`).
 
 ---
 
@@ -55,6 +60,7 @@ Zorg ervoor dat je [Node.js](https://nodejs.org/) (v20+) hebt geïnstalleerd, sa
    TMDB_API_KEY=jouw_tmdb_api_sleutel
    NEXT_PUBLIC_SUPABASE_URL=jouw_supabase_project_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=jouw_supabase_anon_key
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
    ```
 
 3. **Lokale development server starten:**
