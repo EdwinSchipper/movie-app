@@ -19,9 +19,12 @@ interface WatchlistContentProps {
 
 function WatchlistGridSkeleton() {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 animate-pulse">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="aspect-2/3 rounded-xl bg-gray-200/10" />
+    <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 animate-pulse">
+      {Array.from({ length: 10 }).map((_, i) => (
+        <div key={i} className="space-y-2">
+          <div className="aspect-2/3 w-full rounded-xl bg-gray-200/10" />
+          <div className="h-4 w-3/4 rounded bg-gray-200/10" />
+        </div>
       ))}
     </div>
   )
@@ -70,7 +73,7 @@ export default function WatchlistGrid({
   searchParams,
 }: WatchlistGridProps) {
   return (
-    <section className="max-w-6xl mx-auto px-4 py-20">
+    <section className="w-full max-w-6xl mx-auto px-4 py-20">
       <div className="mb-6">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-300 mb-2">
           {title}

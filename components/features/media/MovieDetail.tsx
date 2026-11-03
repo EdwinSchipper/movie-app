@@ -14,7 +14,7 @@ function MovieDetailSkeleton() {
     <div className="w-full max-w-6xl mx-auto p-6 md:p-12 animate-pulse">
       <div className="h-4 w-32 bg-gray-200/20 rounded mb-6" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="aspect-2/3 bg-gray-200/10 rounded-xl" />
+        <div className="aspect-2/3 w-full bg-gray-200/10 rounded-xl" />
         <div className="md:col-span-2 space-y-4">
           <div className="h-8 w-2/3 bg-gray-200/10 rounded" />
           <div className="h-4 w-1/3 bg-gray-200/10 rounded" />
