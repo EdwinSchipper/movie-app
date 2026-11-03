@@ -71,7 +71,7 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
 
   if (isSuccess) {
     return (
-      <div className={`rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs dark:border-gray-800 dark:bg-gray-900/60 backdrop-blur-xs text-center ${className}`.trim()}>
+      <div className={`w-full max-w-md mx-auto rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs dark:border-gray-800 dark:bg-gray-900/60 backdrop-blur-xs text-center ${className}`.trim()}>
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
           <svg
             className="h-6 w-6"
@@ -111,7 +111,7 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
   }
 
   return (
-    <div className={`rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs dark:border-gray-800 dark:bg-gray-900/60 backdrop-blur-xs ${className}`.trim()}>
+    <div className={`w-full max-w-md mx-auto rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs dark:border-gray-800 dark:bg-gray-900/60 backdrop-blur-xs ${className}`.trim()}>
       <div className="mb-6 text-center">
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
           Account aanmaken
