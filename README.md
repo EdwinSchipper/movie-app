@@ -28,6 +28,7 @@ Hieronder vind je een overzicht van de belangrijkste ontwikkelgebieden en hun hu
 
 De applicatie is opgezet met een strikte scheiding van verantwoordelijkheden en focus op maximale performance, data-integriteit en type-safety tussen back- en front-end:
 
+- **Centrale & Getypeerde Omgevingsconfiguratie (`lib/env.ts`)**: Directe `process.env.*` aanroepen en onveilige non-null assertions (`!`) zijn structureel vervangen door één centrale, type-safe `env` module. Omgevingsvariabelen worden via Zod 4 schema's strikt gevalideerd (gescheiden in server- en publieke runtime variabelen) met fail-fast foutmeldingen. Daarnaast verzorgt `getSiteUrl()` intelligente origin-resolutie met automatische ondersteuning voor localhost, reverse-proxy headers en Vercel preview/productie deployments (`VERCEL_URL`, `VERCEL_PROJECT_PRODUCTION_URL`).
 - **TMDB Server-Side Data Layer (`lib/tmdb.ts`)**: Alle externe API-aanroepen verlopen uitsluitend server-side met Next.js data-caching (`revalidate`), veilige `URLSearchParams`-encoding en strikte nullable TypeScript-interfaces (`types/tmdb.ts`), zodat ontbrekende of niet-vertaalde TMDB-metadata nooit tot runtime crashes leidt.
 - **Supabase Database & Security (`lib/watchlist.ts`, `lib/recommendations.ts`)**: Persistente data-opslag en mutaties (`upsert` / `delete`) lopen via server-side Supabase SSR-clients met Row Level Security (RLS) op PostgreSQL-niveau. Alle queries vragen uitsluitend expliciete kolommen op (geen `select('*')`) voor minimale bandbreedte en 1-op-1 overeenstemming met onze TypeScript-interfaces (`types/watchlist.ts`, `types/recommendations.ts`).
 - **Non-blocking Data Streaming & Parallel Fetching**: Detail- en overzichtspagina's streamen asynchrone data binnen `<Suspense>` boundaries met directe skeleton fallbacks. Meerdere onafhankelijke database-checks (zoals Watchlist- en Recommendation-status) worden parallel uitgevoerd via `Promise.all` om request-waterfalls te voorkomen.
@@ -54,14 +55,29 @@ Zorg ervoor dat je [Node.js](https://nodejs.org/) (v20+) hebt geïnstalleerd, sa
 
 2. **Environment variables configureren:**
 
-   Maak een lokaal omgevingsbestand aan in de root van het project (`.env.development.local`):
+   Maak een lokaal configuratiebestand aan in de root van het project (`.env.local` of `.env.development.local`):
 
    ```env
+   # TMDB API (Server-only)
    TMDB_API_KEY=jouw_tmdb_api_sleutel
-   NEXT_PUBLIC_SUPABASE_URL=jouw_supabase_project_url
+
+   # Supabase SSR (Publiek)
+   NEXT_PUBLIC_SUPABASE_URL=https://jouw-project.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=jouw_supabase_anon_key
+
+   # Optioneel: Site URL (standaard http://localhost:3000 lokaal; automatisch VERCEL_URL op Vercel)
    NEXT_PUBLIC_SITE_URL=http://localhost:3000
    ```
+
+   #### Overzicht Omgevingsvariabelen
+
+   | Variabele | Scope | Type | Verplicht | Toelichting |
+   | :--- | :---: | :---: | :---: | :--- |
+   | `TMDB_API_KEY` | Server | `string` | Ja | API-sleutel voor The Movie Database v3. Nooit publiek zichtbaar. |
+   | `NEXT_PUBLIC_SUPABASE_URL` | Client & Server | `url` | Ja | URL naar het Supabase project. Gevalideerd via Zod in `lib/env.ts`. |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client & Server | `string` | Ja | Publieke Supabase anon sleutel (beveiligd met Row Level Security). |
+   | `NEXT_PUBLIC_SITE_URL` | Client & Server | `url` | Nee | Basis-URL voor redirects en e-mailcallbacks. Fallback via `getSiteUrl()`. |
+   | `VERCEL_URL` / `VERCEL_PROJECT_PRODUCTION_URL` | Server | `string` | Automatisch | Door Vercel automatisch geïnjecteerd; gebruikt voor preview- en productie-URLs. |
 
 3. **Lokale development server starten:**
 
