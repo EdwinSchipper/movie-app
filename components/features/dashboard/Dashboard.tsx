@@ -17,7 +17,7 @@ function DashboardHeroSkeleton() {
 
 function DashboardCardsSkeleton() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
+    <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
       {Array.from({ length: 3 }).map((_, i) => (
         <div key={i} className="h-52 rounded-xl bg-gray-200/10" />
       ))}
@@ -90,7 +90,7 @@ export default function Dashboard({
   subtitle,
 }: DashboardProps) {
   return (
-    <section className="max-w-6xl mx-auto px-4 py-20">
+    <section className="w-full max-w-6xl mx-auto px-4 py-20">
       <Suspense fallback={<DashboardHeroSkeleton />}>
         <DashboardHeroContent />
       </Suspense>

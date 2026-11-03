@@ -2,7 +2,7 @@ import { TrendingTv, TrendingMovies } from '@/components'
 
 export default function Page() {
   return (
-    <section className="max-w-6xl mx-auto px-4 py-20">
+    <section className="w-full max-w-6xl mx-auto px-4 py-20">
       <div className="mb-10">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-300 mb-2">
           Trending
