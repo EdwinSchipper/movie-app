@@ -7,19 +7,19 @@ import {
   updateWatchlistStatus,
   removeFromWatchlist,
 } from '@/lib/watchlist'
-import type { AddWatchlistInput, WatchlistStatus } from '@/types'
+import type { MediaActionPayload, WatchlistStatus } from '@/types'
 
-export interface WatchlistActionsProps {
-  item: AddWatchlistInput
+export interface WatchlistButtonProps {
+  media: MediaActionPayload
   initialStatus?: WatchlistStatus | null
   className?: string
 }
 
-export default function WatchlistActions({
-  item,
+export default function WatchlistButton({
+  media,
   initialStatus = null,
   className = '',
-}: WatchlistActionsProps) {
+}: WatchlistButtonProps) {
   const [status, setStatus] = useState<WatchlistStatus | null>(initialStatus)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
@@ -29,7 +29,7 @@ export default function WatchlistActions({
     setError(null)
     startTransition(async () => {
       const nextStatus: WatchlistStatus = 'want_to_watch'
-      const res = await addToWatchlist({ ...item, status: nextStatus })
+      const res = await addToWatchlist({ ...media, status: nextStatus })
       if (res.success) {
         setStatus(nextStatus)
       } else {
@@ -45,7 +45,7 @@ export default function WatchlistActions({
 
     startTransition(async () => {
       const res = await updateWatchlistStatus(
-        { tmdbId: item.tmdb_id, mediaType: item.media_type },
+        { tmdbId: media.tmdb_id, mediaType: media.media_type },
         nextStatus
       )
       if (res.success) {
@@ -60,8 +60,8 @@ export default function WatchlistActions({
     setError(null)
     startTransition(async () => {
       const res = await removeFromWatchlist({
-        tmdbId: item.tmdb_id,
-        mediaType: item.media_type,
+        tmdbId: media.tmdb_id,
+        mediaType: media.media_type,
       })
       if (res.success) {
         setStatus(null)
@@ -79,7 +79,7 @@ export default function WatchlistActions({
           disabled={isPending}
           onClick={handleAdd}
           className="transition-all duration-200"
-          aria-label={`${item.title} toevoegen aan watchlist`}
+          aria-label={`${media.title} toevoegen aan watchlist`}
         >
           {isPending ? 'Bezig met toevoegen...' : 'Toevoegen aan Watchlist'}
         </UIButton>
@@ -92,8 +92,8 @@ export default function WatchlistActions({
             className="transition-all duration-200"
             aria-label={
               isWatched
-                ? `${item.title} markeren als nog niet gezien`
-                : `${item.title} markeren als gezien`
+                ? `${media.title} markeren als nog niet gezien`
+                : `${media.title} markeren als gezien`
             }
           >
             {isWatched ? '✓ Gezien' : 'Markeer als gezien'}
@@ -104,7 +104,7 @@ export default function WatchlistActions({
             disabled={isPending}
             onClick={handleRemove}
             className="transition-all duration-200"
-            aria-label={`${item.title} verwijderen uit watchlist`}
+            aria-label={`${media.title} verwijderen uit watchlist`}
           >
             Uit Watchlist
           </UIButton>
@@ -119,3 +119,4 @@ export default function WatchlistActions({
     </div>
   )
 }
+

@@ -1,4 +1,4 @@
-import type { MediaType } from './watchlist'
+import type { MediaType } from './media'
 
 export type TimeWindow = 'day' | 'week'
 

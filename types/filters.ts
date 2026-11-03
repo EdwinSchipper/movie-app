@@ -1,4 +1,6 @@
-export type FilterMediaType = 'all' | 'movie' | 'tv'
+import type { MediaType } from './media'
+
+export type FilterMediaType = 'all' | MediaType
 
 export type FilterSortOrder = 'desc' | 'asc'
 
@@ -22,6 +24,6 @@ export interface FilterOption<T extends string = string> {
 }
 
 export interface FilterableMediaItem {
-  media_type: 'movie' | 'tv'
+  media_type: MediaType
   release_date?: string | null
 }
