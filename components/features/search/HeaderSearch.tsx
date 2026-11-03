@@ -4,7 +4,11 @@ import { useState } from 'react'
 import { UIInput } from '@/components/ui'
 import SearchResults from './SearchResults'
 
-export default function HeaderSearch() {
+export interface HeaderSearchProps {
+  className?: string
+}
+
+export default function HeaderSearch({ className = '' }: HeaderSearchProps) {
   const [query, setQuery] = useState('')
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
@@ -20,13 +24,14 @@ export default function HeaderSearch() {
   }
 
   return (
-    <div className="relative w-full max-w-xs sm:max-w-sm">
-      <div className="relative">
+    <div className={`relative w-full ${className}`.trim()}>
+      <div className="relative w-full">
         <UIInput
           type="text"
           value={query}
           onChange={handleInputChange}
           placeholder="Zoek films en series..."
+          className="w-full"
         />
       </div>
 
