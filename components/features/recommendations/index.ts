@@ -1,5 +1,5 @@
-export { default as AddToRecommendationsBtn } from './AddToRecommendationsBtn'
-export type { AddToRecommendationsBtnProps } from './AddToRecommendationsBtn'
+export { default as RecommendationButton } from './RecommendationButton'
+export type { RecommendationButtonProps } from './RecommendationButton'
 
 export { default as RecommendationGrid } from './RecommendationGrid'
 export type { RecommendationGridProps } from './RecommendationGrid'
