@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { MagnifyingGlassIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
+import { UIInput } from '@/components/ui'
+import { AccountRoleBadge } from '@/components/features/account'
 import type { AdminUserSummary } from '@/types'
 
 export interface UserListProps {
@@ -52,15 +54,15 @@ export default function UserList({ users }: UserListProps) {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500 z-10">
             <MagnifyingGlassIcon className="w-4 h-4" />
           </span>
-          <input
+          <UIInput
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Zoek gebruiker op e-mailadres..."
-            className="w-full pl-9 pr-4 py-2 bg-gray-900/80 border border-gray-800 rounded-lg text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+            className="pl-9 w-full"
           />
         </div>
 
@@ -123,17 +125,7 @@ export default function UserList({ users }: UserListProps) {
                       </td>
 
                       <td className="px-6 py-4">
-                        {user.role === 'admin' ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-950/80 text-purple-300 border border-purple-800/60">
-                            <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
-                            Admin
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-800/60 text-gray-300 border border-gray-700/60">
-                            <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
-                            User
-                          </span>
-                        )}
+                        <AccountRoleBadge role={user.role} />
                       </td>
 
                       <td className="px-6 py-4 text-xs text-gray-400 whitespace-nowrap">

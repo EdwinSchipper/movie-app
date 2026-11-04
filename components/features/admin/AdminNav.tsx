@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, type ComponentType } from 'react'
+import type { ComponentType } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
@@ -35,17 +35,7 @@ const tabs: AdminNavTab[] = [
   },
 ]
 
-function AdminNavSkeleton() {
-  return (
-    <div className="flex space-x-2 border-b border-gray-800 pb-2 mb-8 animate-pulse">
-      <div className="h-9 w-24 bg-gray-800/60 rounded-lg" />
-      <div className="h-9 w-40 bg-gray-800/60 rounded-lg" />
-      <div className="h-9 w-44 bg-gray-800/60 rounded-lg" />
-    </div>
-  )
-}
-
-function AdminNavContent() {
+export default function AdminNav() {
   const pathname = usePathname()
 
   return (
@@ -74,13 +64,5 @@ function AdminNavContent() {
         )
       })}
     </nav>
-  )
-}
-
-export default function AdminNav() {
-  return (
-    <Suspense fallback={<AdminNavSkeleton />}>
-      <AdminNavContent />
-    </Suspense>
   )
 }

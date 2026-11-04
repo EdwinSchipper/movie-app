@@ -14,13 +14,14 @@ function AdminRecommendationsSkeleton() {
 }
 
 async function AdminRecommendationsContent() {
-  const isAuthorized = await isAdmin()
+  const [isAuthorized, recommendations] = await Promise.all([
+    isAdmin(),
+    getRecommendations(),
+  ])
 
   if (!isAuthorized) {
     notFound()
   }
-
-  const recommendations = await getRecommendations()
 
   return <AdminRecommendations initialItems={recommendations} />
 }

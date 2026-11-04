@@ -1,11 +1,12 @@
 'use server'
 
+import { cache } from 'react'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { isAdmin } from '@/lib/auth'
 import type { ActionResult, AdminUserSummary, UserProfile, UserRole } from '@/types'
 
-export async function getAdminUsers(): Promise<AdminUserSummary[]> {
+export const getAdminUsers = cache(async (): Promise<AdminUserSummary[]> => {
   const isAuthorized = await isAdmin()
   if (!isAuthorized) {
     return []
@@ -24,9 +25,9 @@ export async function getAdminUsers(): Promise<AdminUserSummary[]> {
   }
 
   return (data as AdminUserSummary[]) || []
-}
+})
 
-export async function getAdminUserById(id: string): Promise<UserProfile | null> {
+export const getAdminUserById = cache(async (id: string): Promise<UserProfile | null> => {
   const isAuthorized = await isAdmin()
   if (!isAuthorized || !id) {
     return null
@@ -46,7 +47,7 @@ export async function getAdminUserById(id: string): Promise<UserProfile | null> 
   }
 
   return (data as UserProfile) ?? null
-}
+})
 
 export async function updateUserRole(
   userId: string,
@@ -96,4 +97,3 @@ export async function updateUserRole(
     success: true,
   }
 }
-

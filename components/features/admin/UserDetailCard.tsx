@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ChevronLeftIcon } from '@heroicons/react/24/outline'
-import { AccountDataList } from '@/components/features/account'
+import { AccountDataList, AccountRoleBadge } from '@/components/features/account'
 import type { UserProfile } from '@/types'
 
 export interface UserDetailCardProps {
@@ -28,17 +28,7 @@ export default function UserDetailCard({ user }: UserDetailCardProps) {
         </div>
 
         <div>
-          {user.role === 'admin' ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-950/80 text-purple-300 border border-purple-800/60">
-              <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
-              Administrator
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-gray-800/80 text-gray-300 border border-gray-700/60">
-              <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
-              Standaard Gebruiker
-            </span>
-          )}
+          <AccountRoleBadge role={user.role} />
         </div>
       </div>
 

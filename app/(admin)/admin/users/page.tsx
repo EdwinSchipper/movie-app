@@ -19,13 +19,14 @@ function UserListSkeleton() {
 }
 
 async function UserListContent() {
-  const isAuthorized = await isAdmin()
+  const [isAuthorized, users] = await Promise.all([
+    isAdmin(),
+    getAdminUsers(),
+  ])
 
   if (!isAuthorized) {
     notFound()
   }
-
-  const users = await getAdminUsers()
 
   return <UserList users={users} />
 }
