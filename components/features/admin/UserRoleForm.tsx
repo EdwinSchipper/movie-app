@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { UIButton, Spinner } from '@/components/ui'
+import { UIButton, UISpinner } from '@/components/ui'
 import { updateUserRole } from '@/lib/admin'
 import type { UserProfile, UserRole } from '@/types'
 
@@ -139,7 +139,7 @@ export default function UserRoleForm({ user }: UserRoleFormProps) {
         >
           {isPending ? (
             <>
-              <Spinner size="sm" className="-ml-1 mr-2 text-white" />
+              <UISpinner size="sm" className="text-white" />
               <span>Bezig met bijwerken...</span>
             </>
           ) : (

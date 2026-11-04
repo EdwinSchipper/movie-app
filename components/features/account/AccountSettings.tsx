@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { UIButton, Spinner } from '@/components/ui'
+import { UIButton, UISpinner } from '@/components/ui'
 import { updateUserSettings } from '@/lib/account'
 import type { UserSettings, TileDisplayMode } from '@/types'
 
@@ -174,7 +174,7 @@ export default function AccountSettings({
           >
             {isPending ? (
               <>
-                <Spinner size="sm" className="text-white" />
+                <UISpinner size="sm" className="text-white" />
                 <span>Bezig met opslaan...</span>
               </>
             ) : (

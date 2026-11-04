@@ -9,16 +9,25 @@ import {
   ListboxOptions,
 } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import type { FilterOption } from '@/types'
+
+export interface UISelectOption<T extends string = string> {
+  value: T
+  label: string
+}
 
 export interface UISelectProps<T extends string = string> {
   value: T
-  options: FilterOption<T>[]
+  options: UISelectOption<T>[]
   onChange: (value: T) => void
   label?: string
   className?: string
   disabled?: boolean
   size?: 'sm' | 'md'
+}
+
+const selectSizes = {
+  sm: 'px-3 py-1.5 text-xs',
+  md: 'px-3.5 py-2 text-sm',
 }
 
 export default function UISelect<T extends string = string>({
@@ -30,26 +39,22 @@ export default function UISelect<T extends string = string>({
   disabled = false,
   size = 'md',
 }: UISelectProps<T>) {
-  const selectedOption = options.find((opt) => opt.value === value) || options[0]
-
-  const sizeClasses =
-    size === 'sm'
-      ? 'px-3 py-1.5 text-xs'
-      : 'px-3.5 py-2 text-sm'
+  const selectedOption =
+    options.find((opt) => opt.value === value) || options[0]
 
   return (
     <Field
       disabled={disabled}
       className={`inline-flex flex-col gap-1.5 ${className}`.trim()}
     >
-      {label && (
+      {label ? (
         <Label className="text-xs font-semibold text-gray-400 tracking-wide">
           {label}
         </Label>
-      )}
+      ) : null}
       <Listbox value={value} onChange={onChange}>
         <ListboxButton
-          className={`relative w-full cursor-pointer rounded-lg border border-gray-700/60 bg-gray-900/60 ${sizeClasses} pr-8 text-left font-medium text-gray-200 shadow-xs transition-colors hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:cursor-not-allowed disabled:opacity-50`}
+          className={`relative w-full cursor-pointer rounded-lg border border-gray-700/80 bg-gray-900/60 ${selectSizes[size]} pr-8 text-left font-medium text-gray-200 shadow-xs transition-colors focus:outline-none data-hover:border-gray-600 data-focus:border-blue-500 data-focus:ring-2 data-focus:ring-blue-500/50 data-disabled:cursor-not-allowed data-disabled:opacity-50`}
         >
           <span className="block truncate">{selectedOption?.label}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-400">

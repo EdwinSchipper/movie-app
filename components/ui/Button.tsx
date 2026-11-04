@@ -9,10 +9,14 @@ export interface UIButtonProps extends ButtonProps {
 }
 
 const buttonVariants = {
-  primary: 'bg-blue-600 text-white data-hover:bg-blue-500 data-active:bg-blue-700',
-  secondary: 'bg-gray-100 text-gray-800 data-hover:bg-gray-200 data-active:bg-gray-300 dark:bg-gray-800 dark:text-gray-200 dark:data-hover:bg-gray-700 dark:data-active:bg-gray-600',
-  outline: 'border border-gray-300 text-gray-700 data-hover:bg-gray-50 data-active:bg-gray-100 dark:border-gray-800 dark:bg-gray-950/60 dark:text-gray-300 dark:data-hover:bg-gray-900 dark:data-hover:text-white dark:data-hover:border-gray-700',
-  danger: 'bg-red-600 text-white data-hover:bg-red-500 data-active:bg-red-700 dark:bg-red-950/40 dark:text-red-300 dark:border dark:border-red-900/50 dark:data-hover:bg-red-950/80',
+  primary:
+    'bg-blue-600 text-white data-hover:bg-blue-500 data-active:bg-blue-700',
+  secondary:
+    'bg-gray-800 text-gray-200 border border-gray-700 data-hover:bg-gray-700 data-active:bg-gray-600',
+  outline:
+    'border border-gray-700/80 bg-gray-900/60 text-gray-300 data-hover:bg-gray-800 data-hover:text-white data-hover:border-gray-600',
+  danger:
+    'bg-red-950/50 text-red-300 border border-red-900/60 data-hover:bg-red-900/60 data-hover:text-red-200 data-active:bg-red-900/80',
 }
 
 const buttonSizes = {
@@ -23,7 +27,7 @@ const buttonSizes = {
 }
 
 export default function UIButton({
-  children = 'Knopje',
+  children,
   className = '',
   variant = 'primary',
   size = 'md',
@@ -32,7 +36,7 @@ export default function UIButton({
   return (
     <HeadlessButton
       {...props}
-      className={`inline-flex items-center justify-center font-medium rounded-lg transition-colors cursor-pointer data-disabled:opacity-50 data-disabled:cursor-not-allowed focus:outline-none data-focus:ring-2 data-focus:ring-blue-500 data-focus:ring-offset-2 ${buttonVariants[variant]} ${buttonSizes[size]} ${className}`.trim()}
+      className={`inline-flex items-center justify-center font-medium rounded-lg transition-colors cursor-pointer data-disabled:opacity-50 data-disabled:cursor-not-allowed focus:outline-none data-focus:ring-2 data-focus:ring-blue-500/50 ${buttonVariants[variant]} ${buttonSizes[size]} ${className}`.trim()}
     >
       {children}
     </HeadlessButton>

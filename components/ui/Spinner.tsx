@@ -1,19 +1,22 @@
-export interface SpinnerProps {
+export interface UISpinnerProps {
   className?: string
   size?: 'xs' | 'sm' | 'md' | 'lg'
 }
 
-const sizeClasses = {
+const spinnerSizes = {
   xs: 'h-3 w-3',
   sm: 'h-4 w-4',
   md: 'h-5 w-5',
   lg: 'h-6 w-6',
 }
 
-export default function Spinner({ className = '', size = 'sm' }: SpinnerProps) {
+export default function UISpinner({
+  className = '',
+  size = 'sm',
+}: UISpinnerProps) {
   return (
     <svg
-      className={`animate-spin ${sizeClasses[size]} ${className}`.trim()}
+      className={`animate-spin ${spinnerSizes[size]} ${className}`.trim()}
       fill="none"
       viewBox="0 0 24 24"
       aria-hidden="true"
@@ -34,4 +37,3 @@ export default function Spinner({ className = '', size = 'sm' }: SpinnerProps) {
     </svg>
   )
 }
-
