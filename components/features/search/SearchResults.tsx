@@ -17,11 +17,15 @@ interface SearchResultItemProps {
 }
 
 function SearchResultItem({ item, onSelect }: SearchResultItemProps) {
-  const isMovieItem = isMovie(item)
-  const title = isMovieItem ? item.title : item.name
-  const date = isMovieItem ? item.release_date : item.first_air_date
+  const isFilm = isMovie(item)
+  const title = isFilm ? item.title : item.name
+  const date = isFilm ? item.release_date : item.first_air_date
   const year = date ? date.split('-')[0] : null
-  const detailHref = isMovieItem ? `/movies/${item.id}` : `/tv/${item.id}`
+  const detailHref = isFilm ? `/movies/${item.id}` : `/tv/${item.id}`
+  const mediaLabel = isFilm ? 'Film' : 'Serie'
+  const badgeColorClass = isFilm
+    ? 'bg-blue-50 text-blue-700'
+    : 'bg-purple-50 text-purple-700'
 
   return (
     <li>
@@ -51,14 +55,8 @@ function SearchResultItem({ item, onSelect }: SearchResultItemProps) {
             {title}
           </p>
           <div className="flex items-center gap-2 mt-0.5">
-            <span
-              className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
-                isMovieItem
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'bg-purple-50 text-purple-700'
-              }`}
-            >
-              {isMovieItem ? 'Film' : 'Serie'}
+            <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${badgeColorClass}`}>
+              {mediaLabel}
             </span>
             {year && (
               <span className="text-xs text-gray-400">
