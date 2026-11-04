@@ -12,6 +12,23 @@ export interface AccountSettingsProps {
 
 const tileCountOptions = [10, 20, 30, 40, 50]
 
+const displayModeOptions: {
+  value: TileDisplayMode
+  label: string
+  description: string
+}[] = [
+  {
+    value: 'grid',
+    label: 'Rasterweergave (Grid)',
+    description: 'Grote filmposters in een dynamisch meer-koloms raster.',
+  },
+  {
+    value: 'row',
+    label: 'Rijweergave (Row / List)',
+    description: 'Horizontale compacte rijen met titel en details per regel.',
+  },
+]
+
 export default function AccountSettings({
   initialSettings,
 }: AccountSettingsProps) {
@@ -111,55 +128,36 @@ export default function AccountSettings({
               Kies of je overzichten bij voorkeur als poster-raster of als compacte rijlijst ziet.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <label
-                className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
-                  displayMode === 'grid'
-                    ? 'bg-blue-950/20 border-blue-500/50 text-white'
-                    : 'bg-gray-950/60 border-gray-800 text-gray-400 hover:border-gray-700'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="displayMode"
-                  value="grid"
-                  checked={displayMode === 'grid'}
-                  onChange={() => setDisplayMode('grid')}
-                  className="mt-1 text-blue-600 focus:ring-blue-500"
-                />
-                <div>
-                  <span className="block text-sm font-semibold text-gray-200">
-                    Rasterweergave (Grid)
-                  </span>
-                  <span className="block text-xs text-gray-400 mt-1">
-                    Grote filmposters in een dynamisch meer-koloms raster.
-                  </span>
-                </div>
-              </label>
-
-              <label
-                className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
-                  displayMode === 'row'
-                    ? 'bg-blue-950/20 border-blue-500/50 text-white'
-                    : 'bg-gray-950/60 border-gray-800 text-gray-400 hover:border-gray-700'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="displayMode"
-                  value="row"
-                  checked={displayMode === 'row'}
-                  onChange={() => setDisplayMode('row')}
-                  className="mt-1 text-blue-600 focus:ring-blue-500"
-                />
-                <div>
-                  <span className="block text-sm font-semibold text-gray-200">
-                    Rijweergave (Row / List)
-                  </span>
-                  <span className="block text-xs text-gray-400 mt-1">
-                    Horizontale compacte rijen met titel en details per regel.
-                  </span>
-                </div>
-              </label>
+              {displayModeOptions.map((option) => {
+                const isSelected = displayMode === option.value
+                return (
+                  <label
+                    key={option.value}
+                    className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
+                      isSelected
+                        ? 'bg-blue-950/20 border-blue-500/50 text-white'
+                        : 'bg-gray-950/60 border-gray-800 text-gray-400 hover:border-gray-700'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="displayMode"
+                      value={option.value}
+                      checked={isSelected}
+                      onChange={() => setDisplayMode(option.value)}
+                      className="mt-1 text-blue-600 focus:ring-blue-500"
+                    />
+                    <div>
+                      <span className="block text-sm font-semibold text-gray-200">
+                        {option.label}
+                      </span>
+                      <span className="block text-xs text-gray-400 mt-1">
+                        {option.description}
+                      </span>
+                    </div>
+                  </label>
+                )
+              })}
             </div>
           </div>
         </div>

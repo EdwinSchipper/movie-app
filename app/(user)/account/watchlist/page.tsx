@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
-import { getCurrentUser } from '@/lib/auth'
 import { getWatchlist } from '@/lib/watchlist'
 import { getUserProfile } from '@/lib/account'
 import { AccountWatchlist } from '@/components/features/account'
@@ -24,22 +23,20 @@ function WatchlistSkeleton() {
 }
 
 async function WatchlistContent() {
-  const user = await getCurrentUser()
+  const [profile, watchlist] = await Promise.all([
+    getUserProfile(),
+    getWatchlist(),
+  ])
 
-  if (!user) {
+  if (!profile) {
     redirect('/login?next=/account/watchlist')
   }
-
-  const [watchlist, profile] = await Promise.all([
-    getWatchlist(),
-    getUserProfile(),
-  ])
 
   return (
     <AccountWatchlist
       initialItems={watchlist}
-      defaultDisplayMode={profile?.tile_display_mode ?? 'grid'}
-      defaultTileLimit={profile?.tile_count_preference ?? 20}
+      defaultDisplayMode={profile.tile_display_mode}
+      defaultTileLimit={profile.tile_count_preference}
     />
   )
 }
@@ -51,4 +48,5 @@ export default function AccountWatchlistPage() {
     </Suspense>
   )
 }
+
 

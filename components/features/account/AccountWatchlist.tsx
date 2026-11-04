@@ -8,14 +8,14 @@ import {
   Bars3Icon,
   TrashIcon,
   BookmarkSlashIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { UIButton, UISelect } from '@/components/ui'
+import { UIButton, UISelect, type UISelectOption } from '@/components/ui'
 import { updateWatchlistStatus, removeFromWatchlist } from '@/lib/watchlist'
 import type {
   WatchlistItem,
   WatchlistStatus,
   TileDisplayMode,
-  FilterOption,
 } from '@/types'
 
 export type WatchlistSegment = 'all' | 'not_watched' | 'watched'
@@ -26,7 +26,7 @@ export interface AccountWatchlistProps {
   defaultTileLimit?: number
 }
 
-const statusOptions: FilterOption<WatchlistStatus>[] = [
+const statusOptions: UISelectOption<WatchlistStatus>[] = [
   { value: 'want_to_watch', label: 'Nog te bekijken' },
   { value: 'watching', label: 'Aan het kijken' },
   { value: 'watched', label: 'Bekeken' },
@@ -41,6 +41,7 @@ export default function AccountWatchlist({
   const [segment, setSegment] = useState<WatchlistSegment>('all')
   const [displayMode, setDisplayMode] = useState<TileDisplayMode>(defaultDisplayMode)
   const [actionItemId, setActionItemId] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
   const allCount = items.length
@@ -48,6 +49,12 @@ export default function AccountWatchlist({
     (item) => item.status === 'want_to_watch' || item.status === 'watching'
   ).length
   const watchedCount = items.filter((item) => item.status === 'watched').length
+
+  const segmentTabs: { value: WatchlistSegment; label: string; count: number }[] = [
+    { value: 'all', label: 'Overzicht (Alle)', count: allCount },
+    { value: 'not_watched', label: 'Nog te bekijken', count: notWatchedCount },
+    { value: 'watched', label: 'Reeds bekeken', count: watchedCount },
+  ]
 
   const filteredItems = items.filter((item) => {
     if (segment === 'watched') {
@@ -65,24 +72,30 @@ export default function AccountWatchlist({
   function handleStatusChange(item: WatchlistItem, newStatus: WatchlistStatus) {
     if (item.status === newStatus) return
 
+    setErrorMessage(null)
     setActionItemId(item.id)
     startTransition(async () => {
-      const result = await updateWatchlistStatus(item.id, newStatus)
+      const result = await updateWatchlistStatus(item.id, newStatus, '/account/watchlist')
       if (result.success) {
         setItems((prev) =>
           prev.map((i) => (i.id === item.id ? { ...i, status: newStatus } : i))
         )
+      } else {
+        setErrorMessage(result.error || 'Kon de status niet bijwerken.')
       }
       setActionItemId(null)
     })
   }
 
   function handleRemove(item: WatchlistItem) {
+    setErrorMessage(null)
     setActionItemId(item.id)
     startTransition(async () => {
-      const result = await removeFromWatchlist(item.id)
+      const result = await removeFromWatchlist(item.id, '/account/watchlist')
       if (result.success) {
         setItems((prev) => prev.filter((i) => i.id !== item.id))
+      } else {
+        setErrorMessage(result.error || 'Kon het item niet verwijderen.')
       }
       setActionItemId(null)
     })
@@ -124,45 +137,29 @@ export default function AccountWatchlist({
         </div>
       </div>
 
+      {errorMessage ? (
+        <div className="p-4 rounded-lg text-sm border flex items-center gap-3 bg-red-950/60 border-red-800/80 text-red-300">
+          <XMarkIcon className="w-5 h-5 shrink-0 text-red-400" />
+          <span>{errorMessage}</span>
+        </div>
+      ) : null}
+
       <div className="flex flex-wrap items-center gap-2">
-        <UIButton
-          type="button"
-          variant={segment === 'all' ? 'primary' : 'outline'}
-          size="sm"
-          onClick={() => setSegment('all')}
-          className="gap-1.5"
-        >
-          <span>Overzicht (Alle)</span>
-          <span className="px-1.5 py-0.5 rounded-full text-2xs bg-gray-950/40 text-gray-200">
-            {allCount}
-          </span>
-        </UIButton>
-
-        <UIButton
-          type="button"
-          variant={segment === 'not_watched' ? 'primary' : 'outline'}
-          size="sm"
-          onClick={() => setSegment('not_watched')}
-          className="gap-1.5"
-        >
-          <span>Nog te bekijken</span>
-          <span className="px-1.5 py-0.5 rounded-full text-2xs bg-gray-950/40 text-gray-200">
-            {notWatchedCount}
-          </span>
-        </UIButton>
-
-        <UIButton
-          type="button"
-          variant={segment === 'watched' ? 'primary' : 'outline'}
-          size="sm"
-          onClick={() => setSegment('watched')}
-          className="gap-1.5"
-        >
-          <span>Reeds bekeken</span>
-          <span className="px-1.5 py-0.5 rounded-full text-2xs bg-gray-950/40 text-gray-200">
-            {watchedCount}
-          </span>
-        </UIButton>
+        {segmentTabs.map((tab) => (
+          <UIButton
+            key={tab.value}
+            type="button"
+            variant={segment === tab.value ? 'primary' : 'outline'}
+            size="sm"
+            onClick={() => setSegment(tab.value)}
+            className="gap-1.5"
+          >
+            <span>{tab.label}</span>
+            <span className="px-1.5 py-0.5 rounded-full text-2xs bg-gray-950/40 text-gray-200">
+              {tab.count}
+            </span>
+          </UIButton>
+        ))}
 
         <span className="ml-auto text-xs text-gray-500">
           {visibleItems.length} van {filteredItems.length} getoond (max. {defaultTileLimit})
@@ -207,8 +204,8 @@ export default function AccountWatchlist({
               <div
                 key={item.id}
                 className={`group bg-gray-900/60 border border-gray-800 rounded-xl overflow-hidden transition-all hover:border-gray-700 ${isRow
-                    ? 'flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4'
-                    : 'flex flex-col'
+                  ? 'flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4'
+                  : 'flex flex-col'
                   } ${isItemBusy ? 'opacity-50 pointer-events-none' : ''}`}
               >
                 <div className={isRow ? 'flex items-center gap-4 min-w-0' : 'contents'}>
