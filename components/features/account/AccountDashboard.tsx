@@ -1,42 +1,25 @@
-import { Suspense } from 'react'
-import { redirect } from 'next/navigation'
 import {
   UserIcon,
   BookmarkIcon,
   Cog6ToothIcon,
   ShieldCheckIcon,
 } from '@heroicons/react/24/outline'
-import { getUserProfile } from '@/lib/account'
-import { getWatchlist } from '@/lib/watchlist'
+import type { UserProfile } from '@/types'
 import AccountSummary from './AccountSummary'
 import AccountCard from './AccountCard'
 
-function AccountDashboardSkeleton() {
-  return (
-    <div className="space-y-8 animate-pulse">
-      <div className="h-36 rounded-2xl bg-gray-900/60 border border-gray-800" />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
-        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
-        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
-      </div>
-    </div>
-  )
+export interface AccountDashboardProps {
+  profile: UserProfile
+  watchlistItemCount: number
 }
 
-async function AccountDashboardContent() {
-  const [profile, watchlist] = await Promise.all([
-    getUserProfile(),
-    getWatchlist(),
-  ])
-
-  if (!profile) {
-    redirect('/login?next=/account')
-  }
-
+export default function AccountDashboard({
+  profile,
+  watchlistItemCount,
+}: AccountDashboardProps) {
   return (
     <div className="space-y-8">
-      <AccountSummary profile={profile} watchlistItemCount={watchlist.length} />
+      <AccountSummary profile={profile} watchlistItemCount={watchlistItemCount} />
 
       <div>
         <div className="mb-6">
@@ -62,7 +45,7 @@ async function AccountDashboardContent() {
             description="Beheer je bewaarde films en series, gesegmenteerd op nog te zien en reeds bekeken."
             href="/account/watchlist"
             buttonText="Watchlist openen"
-            badge={`${watchlist.length} titels`}
+            badge={`${watchlistItemCount} titels`}
             icon={<BookmarkIcon className="w-5 h-5 text-blue-400" />}
           />
 
@@ -92,10 +75,3 @@ async function AccountDashboardContent() {
   )
 }
 
-export default function AccountDashboard() {
-  return (
-    <Suspense fallback={<AccountDashboardSkeleton />}>
-      <AccountDashboardContent />
-    </Suspense>
-  )
-}
