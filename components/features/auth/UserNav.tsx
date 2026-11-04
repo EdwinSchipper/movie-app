@@ -28,7 +28,7 @@ async function UserNavContent() {
           <Link
             href="/account"
             className="px-2.5 py-1 text-xs font-medium text-gray-300 hover:text-white bg-gray-900/80 hover:bg-gray-800 border border-gray-800 rounded-lg transition-colors flex items-center gap-1.5"
-            title={`Account (${user.email})`}
+            title={user.email ? `Account (${user.email})` : 'Account'}
           >
             <UserIcon className="w-3.5 h-3.5 text-gray-400" />
             <span className="hidden sm:inline">Account</span>

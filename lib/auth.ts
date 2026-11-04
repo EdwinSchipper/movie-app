@@ -18,36 +18,40 @@ export const getCurrentUser = cache(async () => {
 
 export const getAppUser = cache(async (): Promise<AppUser | null> => {
   const user = await getCurrentUser()
-  if (!user || !user.email) {
+  if (!user) {
     return null
   }
 
-  let role: UserRole = user.app_metadata?.role === 'admin' ? 'admin' : 'user'
+  const supabase = await createClient()
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role, email')
+    .eq('id', user.id)
+    .maybeSingle()
 
-  if (role !== 'admin') {
-    const supabase = await createClient()
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .maybeSingle()
-
-    if (profile?.role === 'admin') {
-      role = 'admin'
-    }
-  }
+  const role: UserRole = profile?.role
+    ? profile.role === 'admin'
+      ? 'admin'
+      : 'user'
+    : user.app_metadata?.role === 'admin'
+      ? 'admin'
+      : 'user'
 
   return {
     id: user.id,
-    email: user.email,
+    email:
+      profile?.email ||
+      user.email ||
+      (typeof user.user_metadata?.email === 'string' ? user.user_metadata.email : '') ||
+      '',
     role,
   }
 })
 
-export async function isAdmin(): Promise<boolean> {
+export const isAdmin = cache(async (): Promise<boolean> => {
   const appUser = await getAppUser()
   return appUser?.role === 'admin'
-}
+})
 
 export async function login(formData: FormData): Promise<ActionResult> {
   const email = formData.get('email')

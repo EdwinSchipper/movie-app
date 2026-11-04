@@ -4,19 +4,29 @@ export interface AccountDataListProps {
   profile: UserProfile
 }
 
-export default function AccountDataList({ profile }: AccountDataListProps) {
-  const registeredDate = profile.created_at
-    ? new Intl.DateTimeFormat('nl-NL', {
-        dateStyle: 'long',
-      }).format(new Date(profile.created_at))
-    : 'Onbekend'
+export function formatSafeDate(
+  dateString?: string | null,
+  options?: Intl.DateTimeFormatOptions,
+  fallback: string = 'Niet beschikbaar'
+): string {
+  if (!dateString) return fallback
+  const date = new Date(dateString)
+  if (isNaN(date.getTime())) return fallback
+  return new Intl.DateTimeFormat('nl-NL', options).format(date)
+}
 
-  const updatedDate = profile.updated_at
-    ? new Intl.DateTimeFormat('nl-NL', {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-      }).format(new Date(profile.updated_at))
-    : 'Niet beschikbaar'
+export default function AccountDataList({ profile }: AccountDataListProps) {
+  const registeredDate = formatSafeDate(
+    profile.created_at,
+    { dateStyle: 'long' },
+    'Onbekend'
+  )
+
+  const updatedDate = formatSafeDate(
+    profile.updated_at,
+    { dateStyle: 'medium', timeStyle: 'short' },
+    'Niet beschikbaar'
+  )
 
   return (
     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6">
@@ -25,7 +35,7 @@ export default function AccountDataList({ profile }: AccountDataListProps) {
           E-mailadres
         </dt>
         <dd className="text-base font-medium text-gray-200">
-          {profile.email}
+          {profile.email || 'Geen e-mailadres'}
         </dd>
       </div>
 
@@ -58,4 +68,3 @@ export default function AccountDataList({ profile }: AccountDataListProps) {
     </dl>
   )
 }
-

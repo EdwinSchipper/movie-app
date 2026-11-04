@@ -53,7 +53,7 @@ export default function UserRoleForm({ user }: UserRoleFormProps) {
       if (result.success) {
         setFeedback({
           type: 'success',
-          message: `De rol voor ${user.email} is succesvol gewijzigd naar '${selectedRole}'.`,
+          message: `De rol voor ${user.email || 'dit account'} is succesvol gewijzigd naar '${selectedRole}'.`,
         })
       } else {
         setFeedback({

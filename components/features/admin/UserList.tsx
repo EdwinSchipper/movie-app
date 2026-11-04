@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { MagnifyingGlassIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { UIInput } from '@/components/ui'
-import { AccountRoleBadge } from '@/components/features/account'
+import { AccountRoleBadge, formatSafeDate } from '@/components/features/account'
 import type { AdminUserSummary } from '@/types'
 
 export interface UserListProps {
@@ -15,7 +15,7 @@ export default function UserList({ users }: UserListProps) {
   const [searchQuery, setSearchQuery] = useState('')
 
   const filteredUsers = users.filter((u) =>
-    u.email.toLowerCase().includes(searchQuery.toLowerCase().trim())
+    (u.email || '').toLowerCase().includes(searchQuery.toLowerCase().trim())
   )
 
   const adminCount = users.filter((u) => u.role === 'admin').length
@@ -97,11 +97,11 @@ export default function UserList({ users }: UserListProps) {
               </thead>
               <tbody className="divide-y divide-gray-800/60">
                 {filteredUsers.map((user) => {
-                  const registeredDate = user.created_at
-                    ? new Intl.DateTimeFormat('nl-NL', {
-                        dateStyle: 'medium',
-                      }).format(new Date(user.created_at))
-                    : '—'
+                  const registeredDate = formatSafeDate(
+                    user.created_at,
+                    { dateStyle: 'medium' },
+                    '—'
+                  )
 
                   return (
                     <tr
@@ -111,11 +111,11 @@ export default function UserList({ users }: UserListProps) {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 font-semibold text-xs shrink-0">
-                            {user.email.substring(0, 1).toUpperCase()}
+                            {(user.email || '?').charAt(0).toUpperCase()}
                           </div>
                           <div className="min-w-0">
                             <span className="font-medium text-gray-200 block truncate">
-                              {user.email}
+                              {user.email || 'Geen e-mailadres'}
                             </span>
                             <span className="font-mono text-2xs text-gray-500 block truncate">
                               {user.id}
