@@ -18,9 +18,11 @@ Hieronder vind je een overzicht van de belangrijkste ontwikkelgebieden en hun hu
 | :--- | :---: | :--- |
 | **API Integration (TMDB)** | ✅ `Done` | TMDB API v3 geïntegreerd via één centrale server-side fetch-helper (`fetchFromTmdb`) voor trending films/series, detailpagina's, multi-search (`/search/multi`) en directe IMDb-ID herkenning (`/find/{id}`). |
 | **Data Streaming & Performance** | ✅ `Done` | Server-side data fetching met Partial Prerendering (PPR), React Suspense streaming met skeleton fallbacks en geparalleliseerde database-checks (`Promise.all`). |
-| **Authenticatie & Sessiebeheer** | 🔄 `In Progress` | Supabase SSR auth met PKCE code exchange (`/auth/callback`), Next.js 16 `proxy.ts` sessie-verversing, `React.cache()` request deduplicatie, en open-redirect mitigatie (`lib/redirect.ts`). |
-| **Database & Persistente Opslag (Supabase)** | 🔄 `In Progress` | Integratie van Supabase (PostgreSQL + RLS) voor **Watchlist** en **Recommendations**, met strikte server-actions (`lib/`), expliciete kolomselecties (geen `select('*')`) en non-blocking UI-interacties (`useTransition`). |
-| **Component & Type Architectuur** | 🔄 `In Progress` | Strikte scheiding tussen `types/` (nullable-safe TMDB & database interfaces), `lib/` (`'use server'` data-laag) en modulaire `components/` (`ui/`, `layout/`, `features/`). |
+| **Role-Based Access Control (RBAC)** | ✅ `Done` | Strikte scheiding tussen normale gebruikers en administrators via Supabase RLS en Server Actions (`lib/auth.ts`, `lib/admin.ts`). Watchlist-isolatie per `user_id` en admin-only aanbevelingen. |
+| **Authenticatie & Sessiebeheer** | ✅ `Done` | Supabase SSR auth met PKCE code exchange (`/auth/callback`), Next.js 16 `proxy.ts` sessie-verversing, `React.cache()` request deduplicatie, open-redirect mitigatie en router concurrency guard. |
+| **Account & Profielbeheer (`/account`)** | 🔄 `In Progress` | Persoonlijke gebruikerssectie met accountgegevens (`/account/profile`), gesegmenteerde Watchlist (*Watched* / *Not watched*) en persoonlijke weergave-instellingen (*Tiles aantal* en *Row/grid* weergave). |
+| **Admin Beheeromgeving (`/admin`)** | 📋 `To Do` | Beveiligd admin-dashboard met gebruikersoverzicht, rol- en rechtenbeheer (`/admin/users`), en moderatie van publieke aanbevelingen (`/admin/recommendations`). |
+| **Component & Type Architectuur** | 🔄 `In Progress` | Strikte scheiding tussen `types/` (DRY type-overerving, interfaces), `lib/` (`'use server'` data-laag) en modulaire `components/` (`ui/`, `layout/`, `features/`). |
 | **Deployment & CI/CD** | ✅ `Done` | Geautomatiseerde continuous deployment via Vercel en CI kwaliteitscontroles via GitHub Actions. |
 | **Design & Overzichtspagina's** | 📋 `To Do` | Definitief visual theme, dedicated overzichtspagina's voor Watchlist/Recommendations en responsive finetuning. |
 
@@ -36,6 +38,22 @@ De applicatie is opgezet met een strikte scheiding van verantwoordelijkheden en 
 - **Sessiebeheer via Next.js 16 Proxy (`proxy.ts`)**: Sessies worden transparant ververst op elk binnenkomend request via de officiële Next.js 16 `proxy.ts` conventie (de opvolger van `middleware.ts`) met behulp van `@supabase/ssr` cookies-handlers (`getAll`/`setAll`).
 - **Gededupliceerde Server-Side Auth (`lib/auth.ts`)**: Gebruikerssessie en rolbepaling (`AppUser`, `UserRole`) worden opgevraagd via `React.cache()` helpers (`getCurrentUser()`, `getAppUser()`). Hierdoor delen onafhankelijke componenten binnen één SSR-renderpass (`MainNav`, `UserNav`, `Dashboard`) dezelfde gegevens zonder herhaalde Supabase-aanroepen.
 - **Veilige Navigatie & Open-Redirect Beveiliging (`lib/redirect.ts`)**: URL-redirects na inloggen of code-exchange worden strikt gevalideerd met `getSafeRedirectPath` om open-redirect kwetsbaarheden te voorkomen, inclusief bescherming tegen browser-normalisatie van backslashes (`/\evil.com`).
+
+### 👤 Gebruikers- & Admin-architectuur (RBAC)
+
+De applicatie hanteert een strikte scheiding tussen normale gebruikers en administrators via Supabase Row Level Security (RLS) en Server Actions:
+
+- **Publieke Aanbevelingen (Recommendations)**:
+  - **Volledig openbaar**: Iedereen (ook anonieme/niet-ingelogde bezoekers) kan de aanbevelingenlijst inzien via `/recommendations`.
+  - **Admin-only beheer**: Uitsluitend administrators zien de knop "Aanbevelen" op media-detailpagina's en kunnen aanbevelingen toevoegen of verwijderen.
+- **Mijn Account (`/account`)**:
+  - **Gegevens (`/account/profile`)**: Overzicht van accountgegevens, rolbadge (`user` / `admin`) en registratiedatum.
+  - **Watchlist (`/account/watchlist`)**: Persoonlijke watchlist met statussegmentatie (*Alle*, *Nog te bekijken*, *Reeds bekeken*).
+  - **Instellingen (`/account/settings`)**: Persoonlijke weergave-instellingen (aantal tiles per pagina, grid- vs. row-weergave).
+- **Beheer & Admin (`/admin`)**:
+  - Afgeschermde server-side routes met `isAdmin()` verificatie (404/redirect voor niet-admins).
+  - **Gebruikersoverzicht (`/admin/users`)**: Overzichtslijst van alle geregistreerde accounts.
+  - **Rechtenbeheer (`/admin/users/[id]`)**: Detailweergave om gebruikersrollen (`user` / `admin`) toe te kennen en direct te synchroniseren met de database en Supabase Auth metadata.
 
 ---
 
