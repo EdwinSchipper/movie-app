@@ -111,6 +111,7 @@ export async function addToWatchlist(item: AddWatchlistInput): Promise<ActionRes
   }
 
   revalidatePath('/watchlist')
+  revalidatePath('/account/watchlist')
   return { success: true }
 }
 
@@ -152,6 +153,7 @@ export async function updateWatchlistStatus(
   }
 
   revalidatePath('/watchlist')
+  revalidatePath('/account/watchlist')
   return { success: true }
 }
 
@@ -187,5 +189,6 @@ export async function removeFromWatchlist(
   }
 
   revalidatePath('/watchlist')
+  revalidatePath('/account/watchlist')
   return { success: true }
 }
