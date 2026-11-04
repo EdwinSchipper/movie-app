@@ -22,7 +22,20 @@ export const getAppUser = cache(async (): Promise<AppUser | null> => {
     return null
   }
 
-  const role: UserRole = user.app_metadata?.role === 'admin' ? 'admin' : 'user'
+  let role: UserRole = user.app_metadata?.role === 'admin' ? 'admin' : 'user'
+
+  if (role !== 'admin') {
+    const supabase = await createClient()
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle()
+
+    if (profile?.role === 'admin') {
+      role = 'admin'
+    }
+  }
 
   return {
     id: user.id,

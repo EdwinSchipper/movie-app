@@ -57,7 +57,6 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
 
       if (result.data?.needsEmailConfirmation === false) {
         router.push('/')
-        router.refresh()
         return
       }
 

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { getCurrentUser, isAdmin } from '@/lib/auth'
 import type {
   MediaType,
   RecommendationItem,
@@ -9,10 +10,6 @@ import type {
   ActionResult,
 } from '@/types'
 
-/**
- * Haal alle publieke aanbevelingen op uit de database.
- * Let op: we gebruiken ALTIJD expliciete kolomselectie, nooit select('*').
- */
 export async function getRecommendations(): Promise<RecommendationItem[]> {
   const supabase = await createClient()
 
@@ -31,9 +28,6 @@ export async function getRecommendations(): Promise<RecommendationItem[]> {
   return (data as RecommendationItem[]) || []
 }
 
-/**
- * Geeft true terug als de film of serie al in de aanbevelingen staat, anders false
- */
 export async function isInRecommendations(
   tmdbId: number,
   mediaType: MediaType
@@ -59,12 +53,25 @@ export async function isInRecommendations(
   return Boolean(data?.id)
 }
 
-/**
- * Voeg een film of serie toe aan aanbevelingen
- */
 export async function addToRecommendations(
   item: AddRecommendationInput
 ): Promise<ActionResult> {
+  const user = await getCurrentUser()
+  if (!user) {
+    return {
+      success: false,
+      error: 'Toegang geweigerd: je moet ingelogd zijn.',
+    }
+  }
+
+  const admin = await isAdmin()
+  if (!admin) {
+    return {
+      success: false,
+      error: 'Toegang geweigerd: alleen administrators kunnen aanbevelingen toevoegen.',
+    }
+  }
+
   if (!item.tmdb_id || typeof item.tmdb_id !== 'number') {
     return { success: false, error: 'Ongeldig of ontbrekend TMDB ID.' }
   }
@@ -80,6 +87,7 @@ export async function addToRecommendations(
   const supabase = await createClient()
 
   const payload = {
+    user_id: user.id,
     sender_name: item.sender_name?.trim() || 'Aanbeveling',
     receiver_name: item.receiver_name?.trim() || 'Iedereen',
     tmdb_id: item.tmdb_id,
@@ -104,13 +112,17 @@ export async function addToRecommendations(
   return { success: true }
 }
 
-/**
- * Verwijder een film of serie uit de aanbevelingen.
- * Accepteert een Supabase UUID (string) of een TMDB-doel { tmdbId, mediaType }.
- */
 export async function removeFromRecommendations(
   target: string | { tmdbId: number; mediaType: MediaType }
 ): Promise<ActionResult> {
+  const admin = await isAdmin()
+  if (!admin) {
+    return {
+      success: false,
+      error: 'Toegang geweigerd: alleen administrators kunnen aanbevelingen verwijderen.',
+    }
+  }
+
   const supabase = await createClient()
 
   let query = supabase.from('recommendations').delete()

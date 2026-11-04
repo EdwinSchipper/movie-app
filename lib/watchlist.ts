@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { getCurrentUser } from '@/lib/auth'
 import type {
   MediaType,
   WatchlistStatus,
@@ -10,15 +11,18 @@ import type {
   ActionResult,
 } from '@/types'
 
-/**
- * Haal items uit watchlist
- */
 export async function getWatchlist(): Promise<WatchlistItem[]> {
+  const user = await getCurrentUser()
+  if (!user) {
+    return []
+  }
+
   const supabase = await createClient()
 
   const { data, error } = await supabase
     .from('watchlist')
     .select('id, user_id, tmdb_id, media_type, title, poster_path, release_date, vote_average, overview, status, created_at')
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -26,13 +30,9 @@ export async function getWatchlist(): Promise<WatchlistItem[]> {
     return []
   }
 
-  const items = (data as WatchlistItem[]) || []
-  return items
+  return (data as WatchlistItem[]) || []
 }
 
-/**
- * Geeft de actuele watchlist status terug voor een film of serie, of null als deze niet in de watchlist staat
- */
 export async function getWatchlistStatus(
   tmdbId: number,
   mediaType: MediaType
@@ -41,11 +41,17 @@ export async function getWatchlistStatus(
     return null
   }
 
+  const user = await getCurrentUser()
+  if (!user) {
+    return null
+  }
+
   const supabase = await createClient()
 
   const { data, error } = await supabase
     .from('watchlist')
     .select('status')
+    .eq('user_id', user.id)
     .eq('tmdb_id', tmdbId)
     .eq('media_type', mediaType)
     .maybeSingle()
@@ -58,18 +64,17 @@ export async function getWatchlistStatus(
   return (data?.status as WatchlistStatus) ?? null
 }
 
-/**
- * Geeft true terug als de film of serie al in de watchlist staat, anders false
- */
 export async function isInWatchlist(tmdbId: number, mediaType: MediaType): Promise<boolean> {
   const status = await getWatchlistStatus(tmdbId, mediaType)
   return status !== null
 }
 
-/**
- * Voeg een film of serie toe aan de watchlist met runtime type-validatie
- */
 export async function addToWatchlist(item: AddWatchlistInput): Promise<ActionResult> {
+  const user = await getCurrentUser()
+  if (!user) {
+    return { success: false, error: 'Je moet ingelogd zijn om een item aan je watchlist toe te voegen.' }
+  }
+
   if (!item.tmdb_id || typeof item.tmdb_id !== 'number') {
     return { success: false, error: 'Ongeldig of ontbrekend TMDB ID.' }
   }
@@ -85,6 +90,7 @@ export async function addToWatchlist(item: AddWatchlistInput): Promise<ActionRes
   const supabase = await createClient()
 
   const payload = {
+    user_id: user.id,
     tmdb_id: item.tmdb_id,
     media_type: item.media_type,
     title: item.title.trim(),
@@ -108,14 +114,15 @@ export async function addToWatchlist(item: AddWatchlistInput): Promise<ActionRes
   return { success: true }
 }
 
-/**
- * Wijzig de status (bijv. 'want_to_watch' -> 'watched').
- * Accepteert een Supabase UUID (string) of een TMDB-doel { tmdbId, mediaType }.
- */
 export async function updateWatchlistStatus(
   target: string | { tmdbId: number; mediaType: MediaType },
   status: WatchlistStatus
 ): Promise<ActionResult> {
+  const user = await getCurrentUser()
+  if (!user) {
+    return { success: false, error: 'Je moet ingelogd zijn om je watchlist bij te werken.' }
+  }
+
   const validStatuses: WatchlistStatus[] = ['want_to_watch', 'watching', 'watched']
   if (!validStatuses.includes(status)) {
     return { success: false, error: 'Ongeldige watchlist status.' }
@@ -123,7 +130,7 @@ export async function updateWatchlistStatus(
 
   const supabase = await createClient()
 
-  let query = supabase.from('watchlist').update({ status })
+  let query = supabase.from('watchlist').update({ status }).eq('user_id', user.id)
 
   if (typeof target === 'string') {
     if (!target.trim()) {
@@ -148,16 +155,17 @@ export async function updateWatchlistStatus(
   return { success: true }
 }
 
-/**
- * Verwijder een film of serie uit de watchlist.
- * Accepteert een Supabase UUID (string) of een TMDB-doel { tmdbId, mediaType }.
- */
 export async function removeFromWatchlist(
   target: string | { tmdbId: number; mediaType: MediaType }
 ): Promise<ActionResult> {
+  const user = await getCurrentUser()
+  if (!user) {
+    return { success: false, error: 'Je moet ingelogd zijn om een item uit je watchlist te verwijderen.' }
+  }
+
   const supabase = await createClient()
 
-  let query = supabase.from('watchlist').delete()
+  let query = supabase.from('watchlist').delete().eq('user_id', user.id)
 
   if (typeof target === 'string') {
     if (!target.trim()) {

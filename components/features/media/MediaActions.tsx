@@ -33,17 +33,21 @@ async function MediaActionsContent({ media, className = '' }: MediaActionsProps)
         <Link
           href={`/login?next=${destinationPath}`}
           className="inline-flex items-center justify-center font-medium rounded-lg transition-colors cursor-pointer bg-blue-600 text-white hover:bg-blue-500 active:bg-blue-700 px-4 py-2 text-sm"
-          aria-label={`Inloggen om ${media.title} te bewaren of aan te bevelen`}
+          aria-label={`Inloggen om ${media.title} te bewaren op je watchlist`}
         >
-          Inloggen om te bewaren of aan te bevelen
+          Inloggen om te bewaren
         </Link>
       </div>
     )
   }
 
+  const isUserAdmin = user.role === 'admin'
+
   const [initialWatchlistStatus, initialInRecommendations] = await Promise.all([
     getWatchlistStatus(media.tmdb_id, media.media_type),
-    isInRecommendations(media.tmdb_id, media.media_type),
+    isUserAdmin
+      ? isInRecommendations(media.tmdb_id, media.media_type)
+      : Promise.resolve(false),
   ])
 
   return (
@@ -52,10 +56,12 @@ async function MediaActionsContent({ media, className = '' }: MediaActionsProps)
         media={media}
         initialStatus={initialWatchlistStatus}
       />
-      <RecommendationButton
-        media={media}
-        initialInRecommendations={initialInRecommendations}
-      />
+      {isUserAdmin ? (
+        <RecommendationButton
+          media={media}
+          initialInRecommendations={initialInRecommendations}
+        />
+      ) : null}
     </div>
   )
 }
