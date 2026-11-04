@@ -3,7 +3,7 @@
 import { Suspense, useState, type FormEvent } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { UIButton } from '@/components/ui'
 import { login } from '@/lib/auth'
 import { getSafeRedirectPath } from '@/lib/redirect'
@@ -44,7 +44,6 @@ function LoginFormContent({
   posterQuote = 'Mankind was born on Earth. It was never meant to die here.',
   posterRating = '8.7',
 }: LoginFormProps) {
-  const router = useRouter()
   const urlParams = useSearchParams()
   const destinationPath = getSafeRedirectPath(urlParams.get('next'))
 
@@ -76,8 +75,7 @@ function LoginFormContent({
         return
       }
 
-      router.push(destinationPath)
-      router.refresh()
+      window.location.assign(destinationPath)
     } catch {
       setError('Er is een onverwachte fout opgetreden. Probeer het later opnieuw.')
       setIsPending(false)
