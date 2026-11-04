@@ -8,6 +8,7 @@ export { default as AccountWatchlist } from './AccountWatchlist'
 export { default as AccountSettings } from './AccountSettings'
 export { default as AccountNav } from './AccountNav'
 
+export type { AccountDashboardProps } from './AccountDashboard'
 export type { AccountSummaryProps } from './AccountSummary'
 export type { AccountCardProps } from './AccountCard'
 export type { AccountProfileProps } from './AccountProfile'

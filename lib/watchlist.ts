@@ -1,5 +1,6 @@
 'use server'
 
+import { cache } from 'react'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentUser } from '@/lib/auth'
@@ -11,7 +12,7 @@ import type {
   ActionResult,
 } from '@/types'
 
-export async function getWatchlist(): Promise<WatchlistItem[]> {
+export const getWatchlist = cache(async (): Promise<WatchlistItem[]> => {
   const user = await getCurrentUser()
   if (!user) {
     return []
@@ -31,7 +32,7 @@ export async function getWatchlist(): Promise<WatchlistItem[]> {
   }
 
   return (data as WatchlistItem[]) || []
-}
+})
 
 export async function getWatchlistStatus(
   tmdbId: number,
@@ -69,7 +70,10 @@ export async function isInWatchlist(tmdbId: number, mediaType: MediaType): Promi
   return status !== null
 }
 
-export async function addToWatchlist(item: AddWatchlistInput): Promise<ActionResult> {
+export async function addToWatchlist(
+  item: AddWatchlistInput,
+  pathToRevalidate: string = '/watchlist'
+): Promise<ActionResult> {
   const user = await getCurrentUser()
   if (!user) {
     return { success: false, error: 'Je moet ingelogd zijn om een item aan je watchlist toe te voegen.' }
@@ -110,14 +114,14 @@ export async function addToWatchlist(item: AddWatchlistInput): Promise<ActionRes
     return { success: false, error: error.message }
   }
 
-  revalidatePath('/watchlist')
-  revalidatePath('/account/watchlist')
+  revalidatePath(pathToRevalidate)
   return { success: true }
 }
 
 export async function updateWatchlistStatus(
   target: string | { tmdbId: number; mediaType: MediaType },
-  status: WatchlistStatus
+  status: WatchlistStatus,
+  pathToRevalidate: string = '/watchlist'
 ): Promise<ActionResult> {
   const user = await getCurrentUser()
   if (!user) {
@@ -152,13 +156,13 @@ export async function updateWatchlistStatus(
     return { success: false, error: error.message }
   }
 
-  revalidatePath('/watchlist')
-  revalidatePath('/account/watchlist')
+  revalidatePath(pathToRevalidate)
   return { success: true }
 }
 
 export async function removeFromWatchlist(
-  target: string | { tmdbId: number; mediaType: MediaType }
+  target: string | { tmdbId: number; mediaType: MediaType },
+  pathToRevalidate: string = '/watchlist'
 ): Promise<ActionResult> {
   const user = await getCurrentUser()
   if (!user) {
@@ -188,7 +192,6 @@ export async function removeFromWatchlist(
     return { success: false, error: error.message }
   }
 
-  revalidatePath('/watchlist')
-  revalidatePath('/account/watchlist')
+  revalidatePath(pathToRevalidate)
   return { success: true }
 }
