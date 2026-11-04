@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
+import { UIButton } from '@/components/ui'
 
 export interface AdminCardProps {
   title: string
@@ -19,7 +20,7 @@ export default function AdminCard({
   icon,
 }: AdminCardProps) {
   return (
-    <div className="flex flex-col justify-between rounded-xl border border-gray-800 bg-gray-900/60 p-6 backdrop-blur-xs transition-all hover:border-gray-700 hover:bg-gray-900/90">
+    <article className="flex flex-col justify-between rounded-xl border border-gray-800 bg-gray-900/60 p-6 backdrop-blur-xs transition-all hover:border-gray-700 hover:bg-gray-900/90">
       <div>
         <div className="flex items-center justify-between gap-3 mb-3">
           <div className="flex items-center gap-3">
@@ -42,14 +43,12 @@ export default function AdminCard({
       </div>
 
       <div>
-        <Link
-          href={href}
-          className="inline-flex items-center justify-center w-full px-4 py-2 text-xs font-semibold rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition-colors"
-        >
-          {buttonText}
+        <Link href={href}>
+          <UIButton variant="primary" size="sm" className="w-full">
+            {buttonText}
+          </UIButton>
         </Link>
       </div>
-    </div>
+    </article>
   )
 }
-

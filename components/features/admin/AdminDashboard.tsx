@@ -1,39 +1,16 @@
-import { Suspense } from 'react'
-import { notFound } from 'next/navigation'
 import { UsersIcon, SparklesIcon } from '@heroicons/react/24/outline'
-import { isAdmin } from '@/lib/auth'
-import { getAdminUsers } from '@/lib/admin'
-import { getRecommendations } from '@/lib/recommendations'
+import type { AdminUserSummary, RecommendationItem } from '@/types'
 import AdminCard from './AdminCard'
 
-function AdminDashboardSkeleton() {
-  return (
-    <div className="space-y-8 animate-pulse">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="h-24 bg-gray-900/60 rounded-xl" />
-        <div className="h-24 bg-gray-900/60 rounded-xl" />
-        <div className="h-24 bg-gray-900/60 rounded-xl" />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
-        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
-      </div>
-    </div>
-  )
+export interface AdminDashboardProps {
+  users: AdminUserSummary[]
+  recommendations: RecommendationItem[]
 }
 
-async function AdminDashboardContent() {
-  const isAuthorized = await isAdmin()
-
-  if (!isAuthorized) {
-    notFound()
-  }
-
-  const [users, recommendations] = await Promise.all([
-    getAdminUsers(),
-    getRecommendations(),
-  ])
-
+export default function AdminDashboard({
+  users,
+  recommendations,
+}: AdminDashboardProps) {
   const adminCount = users.filter((u) => u.role === 'admin').length
 
   return (
@@ -98,13 +75,5 @@ async function AdminDashboardContent() {
         </div>
       </div>
     </div>
-  )
-}
-
-export default function AdminDashboard() {
-  return (
-    <Suspense fallback={<AdminDashboardSkeleton />}>
-      <AdminDashboardContent />
-    </Suspense>
   )
 }

@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { MagnifyingGlassIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
+import { UIInput } from '@/components/ui'
+import { AccountRoleBadge, formatSafeDate } from '@/components/features/account'
 import type { AdminUserSummary } from '@/types'
 
 export interface UserListProps {
@@ -13,7 +15,7 @@ export default function UserList({ users }: UserListProps) {
   const [searchQuery, setSearchQuery] = useState('')
 
   const filteredUsers = users.filter((u) =>
-    u.email.toLowerCase().includes(searchQuery.toLowerCase().trim())
+    (u.email || '').toLowerCase().includes(searchQuery.toLowerCase().trim())
   )
 
   const adminCount = users.filter((u) => u.role === 'admin').length
@@ -52,15 +54,15 @@ export default function UserList({ users }: UserListProps) {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500 z-10">
             <MagnifyingGlassIcon className="w-4 h-4" />
           </span>
-          <input
+          <UIInput
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Zoek gebruiker op e-mailadres..."
-            className="w-full pl-9 pr-4 py-2 bg-gray-900/80 border border-gray-800 rounded-lg text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+            className="pl-9 w-full"
           />
         </div>
 
@@ -95,11 +97,11 @@ export default function UserList({ users }: UserListProps) {
               </thead>
               <tbody className="divide-y divide-gray-800/60">
                 {filteredUsers.map((user) => {
-                  const registeredDate = user.created_at
-                    ? new Intl.DateTimeFormat('nl-NL', {
-                        dateStyle: 'medium',
-                      }).format(new Date(user.created_at))
-                    : '—'
+                  const registeredDate = formatSafeDate(
+                    user.created_at,
+                    { dateStyle: 'medium' },
+                    '—'
+                  )
 
                   return (
                     <tr
@@ -109,11 +111,11 @@ export default function UserList({ users }: UserListProps) {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 font-semibold text-xs shrink-0">
-                            {user.email.substring(0, 1).toUpperCase()}
+                            {(user.email || '?').charAt(0).toUpperCase()}
                           </div>
                           <div className="min-w-0">
                             <span className="font-medium text-gray-200 block truncate">
-                              {user.email}
+                              {user.email || 'Geen e-mailadres'}
                             </span>
                             <span className="font-mono text-2xs text-gray-500 block truncate">
                               {user.id}
@@ -123,17 +125,7 @@ export default function UserList({ users }: UserListProps) {
                       </td>
 
                       <td className="px-6 py-4">
-                        {user.role === 'admin' ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-950/80 text-purple-300 border border-purple-800/60">
-                            <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
-                            Admin
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-800/60 text-gray-300 border border-gray-700/60">
-                            <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
-                            User
-                          </span>
-                        )}
+                        <AccountRoleBadge role={user.role} />
                       </td>
 
                       <td className="px-6 py-4 text-xs text-gray-400 whitespace-nowrap">

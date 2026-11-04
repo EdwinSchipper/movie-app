@@ -1,11 +1,12 @@
 'use server'
 
+import { cache } from 'react'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { isAdmin } from '@/lib/auth'
 import type { ActionResult, AdminUserSummary, UserProfile, UserRole } from '@/types'
 
-export async function getAdminUsers(): Promise<AdminUserSummary[]> {
+export const getAdminUsers = cache(async (): Promise<AdminUserSummary[]> => {
   const isAuthorized = await isAdmin()
   if (!isAuthorized) {
     return []
@@ -23,10 +24,15 @@ export async function getAdminUsers(): Promise<AdminUserSummary[]> {
     return []
   }
 
-  return (data as AdminUserSummary[]) || []
-}
+  return ((data as AdminUserSummary[]) || []).map((user) => ({
+    id: user.id,
+    email: user.email || '',
+    role: user.role === 'admin' ? 'admin' : 'user',
+    created_at: user.created_at || '',
+  }))
+})
 
-export async function getAdminUserById(id: string): Promise<UserProfile | null> {
+export const getAdminUserById = cache(async (id: string): Promise<UserProfile | null> => {
   const isAuthorized = await isAdmin()
   if (!isAuthorized || !id) {
     return null
@@ -45,8 +51,20 @@ export async function getAdminUserById(id: string): Promise<UserProfile | null> 
     return null
   }
 
-  return (data as UserProfile) ?? null
-}
+  if (!data) {
+    return null
+  }
+
+  return {
+    id: data.id,
+    email: data.email || '',
+    role: data.role === 'admin' ? 'admin' : 'user',
+    tile_count_preference: data.tile_count_preference ?? 20,
+    tile_display_mode: data.tile_display_mode === 'row' ? 'row' : 'grid',
+    created_at: data.created_at || '',
+    updated_at: data.updated_at || '',
+  }
+})
 
 export async function updateUserRole(
   userId: string,
@@ -75,10 +93,12 @@ export async function updateUserRole(
   })
 
   if (rpcError) {
-    const { error: updateError } = await supabase
+    const { data: updatedRow, error: updateError } = await supabase
       .from('profiles')
       .update({ role: newRole, updated_at: new Date().toISOString() })
       .eq('id', userId)
+      .select('id')
+      .maybeSingle()
 
     if (updateError) {
       console.error('Fout bij bijwerken gebruikersrol:', updateError.message)
@@ -87,13 +107,18 @@ export async function updateUserRole(
         error: updateError.message,
       }
     }
+
+    if (!updatedRow) {
+      return {
+        success: false,
+        error: 'Gebruikersprofiel kon niet worden bijgewerkt.',
+      }
+    }
   }
 
-  revalidatePath('/admin/users')
-  revalidatePath(`/admin/users/${userId}`)
+  revalidatePath('/admin', 'layout')
 
   return {
     success: true,
   }
 }
-

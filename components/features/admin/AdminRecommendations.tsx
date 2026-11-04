@@ -7,7 +7,7 @@ import {
   MagnifyingGlassIcon,
   ArrowTopRightOnSquareIcon,
 } from '@heroicons/react/24/outline'
-import { UIButton } from '@/components/ui'
+import { UIButton, UIInput } from '@/components/ui'
 import { removeFromRecommendations } from '@/lib/recommendations'
 import type { RecommendationItem } from '@/types'
 
@@ -62,15 +62,15 @@ export default function AdminRecommendations({
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500 z-10">
             <MagnifyingGlassIcon className="w-4 h-4" />
           </span>
-          <input
+          <UIInput
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Zoek in aanbevelingen op titel..."
-            className="w-full pl-9 pr-4 py-2 bg-gray-900/80 border border-gray-800 rounded-lg text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+            className="pl-9 w-full"
           />
         </div>
 
@@ -133,13 +133,12 @@ export default function AdminRecommendations({
                   <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
                     <UIButton
                       type="button"
-                      variant="outline"
+                      variant="danger"
                       size="sm"
                       onClick={() => handleRemove(item)}
                       disabled={isItemBusy}
-                      className="border-red-900/50 text-red-400 hover:bg-red-950/40 hover:text-red-300"
                     >
-                      Verwijderen uit aanbevelingen
+                      Verwijderen
                     </UIButton>
                   </div>
                 </div>

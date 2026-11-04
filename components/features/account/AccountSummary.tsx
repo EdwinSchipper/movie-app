@@ -1,4 +1,5 @@
 import type { UserProfile } from '@/types'
+import { formatSafeDate } from './AccountDataList'
 import AccountRoleBadge from './AccountRoleBadge'
 
 export interface AccountSummaryProps {
@@ -10,13 +11,13 @@ export default function AccountSummary({
   profile,
   watchlistItemCount,
 }: AccountSummaryProps) {
-  const registeredDate = profile.created_at
-    ? new Intl.DateTimeFormat('nl-NL', {
-        dateStyle: 'long',
-      }).format(new Date(profile.created_at))
-    : 'Onbekend'
+  const registeredDate = formatSafeDate(
+    profile.created_at,
+    { dateStyle: 'long' },
+    'Onbekend'
+  )
 
-  const initial = profile.email.charAt(0).toUpperCase()
+  const initial = (profile.email || '?').charAt(0).toUpperCase()
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-gray-800 bg-linear-to-r from-gray-900 via-gray-900/90 to-gray-950 p-6 sm:p-8 backdrop-blur-xs">
@@ -28,12 +29,12 @@ export default function AccountSummary({
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-1">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-100">
-                {profile.email}
+                {profile.email || 'Geen e-mailadres'}
               </h2>
               <AccountRoleBadge role={profile.role} />
             </div>
             <p className="text-xs text-gray-400">
-              Lid sinds {registeredDate} • Voorkeur: {profile.tile_count_preference || 20} tiles ({profile.tile_display_mode === 'row' ? 'Lijst' : 'Raster'})
+              Lid sinds {registeredDate} • Voorkeur: {profile.tile_count_preference ?? 20} tiles ({profile.tile_display_mode === 'row' ? 'Lijst' : 'Raster'})
             </p>
           </div>
         </div>
@@ -52,4 +53,3 @@ export default function AccountSummary({
     </div>
   )
 }
-

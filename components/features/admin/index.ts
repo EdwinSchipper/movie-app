@@ -6,6 +6,7 @@ export { default as UserDetailCard } from './UserDetailCard'
 export { default as UserRoleForm } from './UserRoleForm'
 export { default as AdminRecommendations } from './AdminRecommendations'
 
+export type { AdminDashboardProps } from './AdminDashboard'
 export type { AdminCardProps } from './AdminCard'
 export type { UserListProps } from './UserList'
 export type { UserDetailCardProps } from './UserDetailCard'

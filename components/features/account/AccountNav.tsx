@@ -1,6 +1,6 @@
 'use client'
 
-import type { ComponentType } from 'react'
+import { Suspense, type ComponentType } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
@@ -41,7 +41,18 @@ const tabs: NavTab[] = [
   },
 ]
 
-export default function AccountNav() {
+function AccountNavSkeleton() {
+  return (
+    <div className="flex space-x-2 border-b border-gray-800 pb-2 mb-8 animate-pulse">
+      <div className="h-9 w-24 bg-gray-800/60 rounded-lg" />
+      <div className="h-9 w-28 bg-gray-800/60 rounded-lg" />
+      <div className="h-9 w-28 bg-gray-800/60 rounded-lg" />
+      <div className="h-9 w-32 bg-gray-800/60 rounded-lg" />
+    </div>
+  )
+}
+
+function AccountNavContent() {
   const pathname = usePathname()
 
   return (
@@ -73,3 +84,10 @@ export default function AccountNav() {
   )
 }
 
+export default function AccountNav() {
+  return (
+    <Suspense fallback={<AccountNavSkeleton />}>
+      <AccountNavContent />
+    </Suspense>
+  )
+}

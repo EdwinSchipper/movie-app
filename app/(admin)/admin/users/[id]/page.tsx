@@ -24,13 +24,12 @@ async function UserDetailContent({
 }) {
   const { id } = await paramsPromise
 
-  const isAuthorized = await isAdmin()
-  if (!isAuthorized) {
-    notFound()
-  }
+  const [isAuthorized, user] = await Promise.all([
+    isAdmin(),
+    getAdminUserById(id),
+  ])
 
-  const user = await getAdminUserById(id)
-  if (!user) {
+  if (!isAuthorized || !user) {
     notFound()
   }
 
