@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { searchMulti } from '@/lib/tmdb'
-import type { SearchItem } from '@/types'
+import { isMovie, type SearchItem } from '@/types'
 
 export interface SearchResultsProps {
   query: string
@@ -17,11 +17,11 @@ interface SearchResultItemProps {
 }
 
 function SearchResultItem({ item, onSelect }: SearchResultItemProps) {
-  const isMovie = item.media_type === 'movie'
-  const title = isMovie ? item.title : item.name
-  const date = isMovie ? item.release_date : item.first_air_date
+  const isMovieItem = isMovie(item)
+  const title = isMovieItem ? item.title : item.name
+  const date = isMovieItem ? item.release_date : item.first_air_date
   const year = date ? date.split('-')[0] : null
-  const detailHref = isMovie ? `/movies/${item.id}` : `/tv/${item.id}`
+  const detailHref = isMovieItem ? `/movies/${item.id}` : `/tv/${item.id}`
 
   return (
     <li>
@@ -53,12 +53,12 @@ function SearchResultItem({ item, onSelect }: SearchResultItemProps) {
           <div className="flex items-center gap-2 mt-0.5">
             <span
               className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
-                isMovie
+                isMovieItem
                   ? 'bg-blue-50 text-blue-700'
                   : 'bg-purple-50 text-purple-700'
               }`}
             >
-              {isMovie ? 'Film' : 'Serie'}
+              {isMovieItem ? 'Film' : 'Serie'}
             </span>
             {year && (
               <span className="text-xs text-gray-400">

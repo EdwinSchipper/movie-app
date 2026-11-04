@@ -7,12 +7,14 @@ import type {
   MovieDetails,
   TvShowDetails,
   SearchItem,
+  SearchMovieItem,
+  SearchTvItem,
 } from '@/types'
 import { env } from '@/lib/env'
 
 interface FindByIdResponse {
-  movie_results?: SearchItem[]
-  tv_results?: SearchItem[]
+  movie_results?: SearchMovieItem[]
+  tv_results?: SearchTvItem[]
 }
 
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3'
@@ -93,6 +95,6 @@ export async function searchMulti(query: string): Promise<SearchItem[]> {
   )
 
   return (data.results || []).filter(
-    (item) => item.media_type === 'movie' || item.media_type === 'tv'
+    (item): item is SearchItem => item.media_type === 'movie' || item.media_type === 'tv'
   )
 }

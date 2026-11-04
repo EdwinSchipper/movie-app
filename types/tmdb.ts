@@ -1,5 +1,3 @@
-import type { MediaType } from './media'
-
 export type TimeWindow = 'day' | 'week'
 
 export interface TvShow {
@@ -23,23 +21,14 @@ export interface Genre {
   name: string
 }
 
-export interface MovieDetails {
-  id: number
-  title: string
-  overview?: string | null
-  poster_path?: string | null
-  release_date?: string | null
+export interface MovieDetails extends Movie {
   runtime?: number | null
-  vote_average?: number | null
   tagline?: string | null
   genres?: Genre[]
 }
 
-export interface TvShowDetails {
-  id: number
-  name: string
+export interface TvShowDetails extends TvShow {
   overview?: string | null
-  poster_path?: string | null
   first_air_date?: string | null
   number_of_seasons?: number | null
   number_of_episodes?: number | null
@@ -48,13 +37,30 @@ export interface TvShowDetails {
   genres?: Genre[]
 }
 
-export interface SearchItem {
+export interface SearchMovieItem {
   id: number
-  media_type: MediaType
-  title?: string
-  name?: string
+  media_type: 'movie'
+  title: string
   poster_path?: string | null
   release_date?: string | null
+  vote_average?: number | null
+}
+
+export interface SearchTvItem {
+  id: number
+  media_type: 'tv'
+  name: string
+  poster_path?: string | null
   first_air_date?: string | null
   vote_average?: number | null
+}
+
+export type SearchItem = SearchMovieItem | SearchTvItem
+
+export function isMovie(item: SearchItem): item is SearchMovieItem {
+  return item.media_type === 'movie'
+}
+
+export function isTvShow(item: SearchItem): item is SearchTvItem {
+  return item.media_type === 'tv'
 }
