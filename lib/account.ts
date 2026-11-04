@@ -1,11 +1,12 @@
 'use server'
 
+import { cache } from 'react'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentUser } from '@/lib/auth'
 import type { ActionResult, UserProfile, UserSettings } from '@/types'
 
-export async function getUserProfile(): Promise<UserProfile | null> {
+export const getUserProfile = cache(async (): Promise<UserProfile | null> => {
   const user = await getCurrentUser()
   if (!user) {
     return null
@@ -38,7 +39,7 @@ export async function getUserProfile(): Promise<UserProfile | null> {
   }
 
   return data as UserProfile
-}
+})
 
 export async function updateUserSettings(
   settings: Partial<UserSettings>
@@ -73,8 +74,12 @@ export async function updateUserSettings(
 
   const { error } = await supabase
     .from('profiles')
-    .update(updates)
-    .eq('id', user.id)
+    .upsert({
+      id: user.id,
+      email: user.email || '',
+      ...updates,
+      updated_at: new Date().toISOString(),
+    })
 
   if (error) {
     console.error('Fout bij bijwerken gebruikersinstellingen:', error.message)
@@ -90,4 +95,3 @@ export async function updateUserSettings(
     success: true,
   }
 }
-

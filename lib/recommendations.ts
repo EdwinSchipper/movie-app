@@ -109,6 +109,7 @@ export async function addToRecommendations(
   }
 
   revalidatePath('/recommendations')
+  revalidatePath('/admin/recommendations')
   return { success: true }
 }
 
@@ -147,5 +148,6 @@ export async function removeFromRecommendations(
   }
 
   revalidatePath('/recommendations')
+  revalidatePath('/admin/recommendations')
   return { success: true }
 }

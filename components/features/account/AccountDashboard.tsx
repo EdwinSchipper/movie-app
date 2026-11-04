@@ -1,0 +1,101 @@
+import { Suspense } from 'react'
+import { redirect } from 'next/navigation'
+import {
+  UserIcon,
+  BookmarkIcon,
+  Cog6ToothIcon,
+  ShieldCheckIcon,
+} from '@heroicons/react/24/outline'
+import { getUserProfile } from '@/lib/account'
+import { getWatchlist } from '@/lib/watchlist'
+import AccountSummary from './AccountSummary'
+import AccountCard from './AccountCard'
+
+function AccountDashboardSkeleton() {
+  return (
+    <div className="space-y-8 animate-pulse">
+      <div className="h-36 rounded-2xl bg-gray-900/60 border border-gray-800" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
+        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
+        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
+      </div>
+    </div>
+  )
+}
+
+async function AccountDashboardContent() {
+  const [profile, watchlist] = await Promise.all([
+    getUserProfile(),
+    getWatchlist(),
+  ])
+
+  if (!profile) {
+    redirect('/login?next=/account')
+  }
+
+  return (
+    <div className="space-y-8">
+      <AccountSummary profile={profile} watchlistItemCount={watchlist.length} />
+
+      <div>
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-gray-100">
+            Account Dashboard
+          </h2>
+          <p className="text-sm text-gray-400 mt-1">
+            Overzicht van jouw persoonlijke functies, lijsten en voorkeuren.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <AccountCard
+            title="Mijn Gegevens"
+            description="Bekijk je accountprofiel, e-mailadres, unieke identificatie en autorisatiestatus."
+            href="/account/profile"
+            buttonText="Gegevens bekijken"
+            icon={<UserIcon className="w-5 h-5 text-blue-400" />}
+          />
+
+          <AccountCard
+            title="Mijn Watchlist"
+            description="Beheer je bewaarde films en series, gesegmenteerd op nog te zien en reeds bekeken."
+            href="/account/watchlist"
+            buttonText="Watchlist openen"
+            badge={`${watchlist.length} titels`}
+            icon={<BookmarkIcon className="w-5 h-5 text-blue-400" />}
+          />
+
+          <AccountCard
+            title="Instellingen"
+            description="Pas het aantal getoonde posters per overzicht aan en kies tussen grid- of rijweergave."
+            href="/account/settings"
+            buttonText="Instellingen beheren"
+            icon={<Cog6ToothIcon className="w-5 h-5 text-blue-400" />}
+          />
+
+          {profile.role === 'admin' ? (
+            <div className="md:col-span-3">
+              <AccountCard
+                title="Beheerderspaneel (Admin)"
+                description="Als administrator heb je toegang tot het centrale beheersysteem om gebruikersrechten toe te kennen en publieke aanbevelingen te beheren."
+                href="/admin"
+                buttonText="Naar Beheeromgeving"
+                badge="Admin Alleen"
+                icon={<ShieldCheckIcon className="w-5 h-5 text-purple-400" />}
+              />
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function AccountDashboard() {
+  return (
+    <Suspense fallback={<AccountDashboardSkeleton />}>
+      <AccountDashboardContent />
+    </Suspense>
+  )
+}

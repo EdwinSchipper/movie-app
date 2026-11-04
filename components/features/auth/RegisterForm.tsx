@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { EnvelopeIcon } from '@heroicons/react/24/outline'
 import { UIButton } from '@/components/ui'
 import { registerSchema } from '@/types'
 import { signup } from '@/lib/auth'
@@ -72,20 +73,7 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
     return (
       <div className={`w-full max-w-md mx-auto rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs dark:border-gray-800 dark:bg-gray-900/60 backdrop-blur-xs text-center ${className}`.trim()}>
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
-          <svg
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
-            />
-          </svg>
+          <EnvelopeIcon className="h-6 w-6" />
         </div>
 
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">

@@ -8,6 +8,7 @@ import {
   ListboxOption,
   ListboxOptions,
 } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import type { FilterOption } from '@/types'
 
 export interface UISelectProps<T extends string = string> {
@@ -52,19 +53,7 @@ export default function UISelect<T extends string = string>({
         >
           <span className="block truncate">{selectedOption?.label}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-400">
-            <svg
-              className="h-4 w-4"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <path
-                d="M6 8l4 4 4-4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <ChevronDownIcon className="h-4 w-4" />
           </span>
         </ListboxButton>
 
