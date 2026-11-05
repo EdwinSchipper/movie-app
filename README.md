@@ -1,6 +1,11 @@
 # Movie App (Movie for Friends)
 
 > **Status:** 🚧 In ontwikkeling (Work in Progress)
+>
+> **Huidige werkzaamheden:**
+> - 📐 **Flowchart & Architectuur:** Flowcharts en navigatiestructuren uitwerken en visualiseren (Figma & Draw.io).
+> - 🧩 **Pages & Components Audit:** Pages, componenthiërarchie en koppelingen controleren.
+> - 📦 **Props, Promises & TypeScript:** Props, asynchrone Promise-afhandeling (`params`, `searchParams`) en de algehele TypeScript-opbouw controleren en bijwerken op kwaliteit.
 
 Een moderne webapplicatie voor het ontdekken, bekijken en delen van films en series met vrienden, gebouwd met [Next.js](https://nextjs.org) (App Router), React 19, [Supabase](https://supabase.com) en Tailwind CSS.
 
@@ -22,7 +27,7 @@ Hieronder vind je een overzicht van de belangrijkste ontwikkelgebieden en hun hu
 | **Authenticatie & Sessiebeheer** | ✅ `Done` | Supabase SSR auth met PKCE code exchange (`/auth/callback`), Next.js 16 `proxy.ts` sessie-verversing, `React.cache()` request deduplicatie, open-redirect mitigatie en router concurrency guard. |
 | **Account & Profielbeheer (`/account`)** | ✅ `Done` | Persoonlijke gebruikerssectie met accountgegevens (`/account/profile`), gesegmenteerde Watchlist (*Watched* / *Not watched*) en persoonlijke weergave-instellingen (*Tiles aantal* en *Row/grid* weergave). |
 | **Admin Beheeromgeving (`/admin`)** | ✅ `Done` | Beveiligd admin-dashboard met gebruikersoverzicht, rol- en rechtenbeheer (`/admin/users`), en moderatie van publieke aanbevelingen (`/admin/recommendations`). |
-| **Component & Type Architectuur** | 🔄 `In Progress` | Strikte scheiding tussen `types/` (DRY type-overerving, interfaces), `lib/` (`'use server'` data-laag) en modulaire `components/` (`ui/`, `layout/`, `features/`). |
+| **Component & Type Architectuur** | 🔄 `In Progress` | Flowcharts uitwerken, pages, componenten, props en promises (`params`/`searchParams`) en TypeScript-opbouw controleren en bijwerken op kwaliteit. |
 | **Deployment & CI/CD** | ✅ `Done` | Geautomatiseerde continuous deployment via Vercel en CI kwaliteitscontroles via GitHub Actions. |
 | **Design & Overzichtspagina's** | 📋 `To Do` | Definitief visual theme, dedicated overzichtspagina's voor Watchlist/Recommendations en responsive finetuning. |
 
