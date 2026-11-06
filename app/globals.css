@@ -1,26 +1,143 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #141414;
+  --foreground: #f5f5f5;
+  --surface: #242424;
+  --surface-hover: #2e2e2e;
+  --surface-glass: rgba(255, 255, 255, 0.1);
+  --fg-primary: #f5f5f5;
+  --fg-secondary: #d4d4d8;
+  --fg-muted: #8e8e93;
+  --brand: #e2ff32;
+  --brand-hover: #d4f21c;
+  --brand-fg: #111111;
+  --accent-coral: #ff4d2d;
+  --accent-emerald: #12b76a;
+  --accent-violet: #8b5cf6;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-default: rgba(255, 255, 255, 0.16);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-canvas: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-glass: var(--surface-glass);
+  --color-fg-primary: var(--fg-primary);
+  --color-fg-secondary: var(--fg-secondary);
+  --color-fg-muted: var(--fg-muted);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-fg: var(--brand-fg);
+  --color-accent-coral: var(--accent-coral);
+  --color-accent-emerald: var(--accent-emerald);
+  --color-accent-violet: var(--accent-violet);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+
+  --radius-hero: 1.5rem;
+  --radius-card: 1.25rem;
+  --radius-tile: 1rem;
+  --radius-control: 0.75rem;
+  --radius-pill: 9999px;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@utility h1 {
+  @apply text-4xl md:text-5xl font-extrabold tracking-tight text-fg-primary;
+}
+
+@utility h2 {
+  @apply text-2xl md:text-3xl font-bold tracking-tight text-fg-primary;
+}
+
+@utility h3 {
+  @apply text-lg md:text-xl font-bold tracking-tight text-fg-primary;
+}
+
+@utility h4 {
+  @apply text-base font-semibold leading-snug text-fg-primary;
+}
+
+@utility h5 {
+  @apply text-sm font-semibold text-fg-primary;
+}
+
+@utility h6 {
+  @apply text-xs font-mono uppercase tracking-widest text-fg-muted;
+}
+
+@utility text-highlight {
+  @apply bg-brand text-brand-fg px-1.5 py-0.5 rounded-xs;
+}
+
+@utility label-tech {
+  @apply text-xs font-mono uppercase tracking-widest text-fg-muted;
+}
+
+@utility label-form {
+  @apply text-xs font-semibold uppercase tracking-wider text-fg-secondary;
+}
+
+@utility label-meta {
+  @apply text-xs text-fg-muted;
+}
+
+@utility badge {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-xs font-semibold transition-colors;
+}
+
+@utility badge-brand {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-xs font-semibold bg-brand text-brand-fg;
+}
+
+@utility badge-coral {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-xs font-semibold bg-accent-coral text-white;
+}
+
+@utility badge-emerald {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-xs font-semibold bg-accent-emerald text-white;
+}
+
+@utility badge-violet {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-xs font-semibold bg-accent-violet/20 text-accent-violet border border-accent-violet/40;
+}
+
+@utility badge-surface {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-xs font-semibold bg-surface text-fg-secondary border border-border-subtle;
+}
+
+@utility icon-xs {
+  @apply w-3.5 h-3.5 shrink-0;
+}
+
+@utility icon-sm {
+  @apply w-4 h-4 shrink-0;
+}
+
+@utility icon-md {
+  @apply w-5 h-5 shrink-0;
+}
+
+@utility icon-lg {
+  @apply w-6 h-6 shrink-0;
+}
+
+@utility icon-tile {
+  @apply inline-flex items-center justify-center p-2.5 rounded-tile bg-surface text-fg-primary border border-border-subtle transition-colors;
+}
+
+@utility icon-pill-active {
+  @apply inline-flex items-center justify-center p-2.5 rounded-pill bg-brand text-brand-fg shadow-xs transition-transform;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
