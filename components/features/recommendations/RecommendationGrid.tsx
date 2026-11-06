@@ -6,8 +6,8 @@ import type { MediaSearchParams } from '@/types'
 import RecommendationCard from './RecommendationCard'
 
 export interface RecommendationGridProps {
-  title: string
-  subtitle?: string
+  heading: string
+  subheading?: string
   searchParams?: MediaSearchParams
 }
 
@@ -63,17 +63,17 @@ async function RecommendationGridContent({ searchParams }: RecommendationContent
 }
 
 export default function RecommendationGrid({
-  title,
-  subtitle,
+  heading,
+  subheading,
   searchParams,
 }: RecommendationGridProps) {
   return (
     <section className="w-full max-w-6xl mx-auto px-4 py-20">
       <div className="mb-6">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-300 mb-2">
-          {title}
+          {heading}
         </h1>
-        {subtitle && <p className="text-gray-500">{subtitle}</p>}
+        {subheading && <p className="text-gray-500">{subheading}</p>}
       </div>
 
       <FilterBar className="mb-8" />

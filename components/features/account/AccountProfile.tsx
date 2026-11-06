@@ -31,7 +31,7 @@ export default function AccountProfile({ profile }: AccountProfileProps) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <AccountCard
-          title="Watchlist bekijken"
+          heading="Watchlist bekijken"
           description="Beheer je bewaarde films en series, gefilterd op bekeken of nog te bekijken."
           href="/account/watchlist"
           buttonText="Naar Watchlist"
@@ -39,7 +39,7 @@ export default function AccountProfile({ profile }: AccountProfileProps) {
         />
 
         <AccountCard
-          title="Weergave instellen"
+          heading="Weergave instellen"
           description="Pas het aantal getoonde tiles en de layout (grid of lijst) aan naar wens."
           href="/account/settings"
           buttonText="Naar Instellingen"

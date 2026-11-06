@@ -7,12 +7,12 @@ import type { TimeWindow, TvShow } from '@/types'
 import TrendingTvCard from './TrendingTvCard'
 
 export interface TrendingTvClientProps {
-  title: string
+  heading: string
   initialShows?: TvShow[]
 }
 
 export default function TrendingTvClient({
-  title,
+  heading,
   initialShows = [],
 }: TrendingTvClientProps) {
   const [range, setRange] = useState<TimeWindow>('day')
@@ -30,7 +30,7 @@ export default function TrendingTvClient({
   return (
     <div>
       <div className="flex items-center justify-between gap-5 pb-6">
-        <h2 className="text-2xl font-bold text-gray-200">{title}</h2>
+        <h2 className="text-2xl font-bold text-gray-200">{heading}</h2>
         <UISwitch
           value={range}
           onChange={handleToggle}

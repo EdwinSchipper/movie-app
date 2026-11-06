@@ -5,8 +5,8 @@ import DashboardCard, { type DashboardCardProps } from './DashboardCard'
 import DashboardHero from './DashboardHero'
 
 export interface DashboardProps {
-  title: string
-  subtitle?: string
+  heading: string
+  subheading?: string
 }
 
 function DashboardHeroSkeleton() {
@@ -51,19 +51,19 @@ async function DashboardCardsContent() {
 
   const dashboardItems: DashboardCardProps[] = [
     {
-      title: 'Trending',
+      heading: 'Trending',
       description: 'Ontdek welke films en series vandaag en deze week het populairst zijn.',
       href: '/trending',
       buttonText: 'Bekijk Trending',
     },
     {
-      title: 'Aanbevelingen',
+      heading: 'Aanbevelingen',
       description: 'Bekijk de gedeelde lijst met film- en serie-aanraders voor vrienden.',
       href: '/recommendations',
       buttonText: 'Bekijk Aanbevelingen',
     },
     {
-      title: 'Watchlist',
+      heading: 'Watchlist',
       description: 'Beheer jouw persoonlijke lijst met films en series die je nog wilt zien.',
       href: user ? '/watchlist' : '/login?next=/watchlist',
       buttonText: user ? 'Open Watchlist' : 'Inloggen voor Watchlist',
@@ -75,7 +75,7 @@ async function DashboardCardsContent() {
       {dashboardItems.map((item) => (
         <DashboardCard
           key={item.href}
-          title={item.title}
+          heading={item.heading}
           description={item.description}
           href={item.href}
           buttonText={item.buttonText}
@@ -86,8 +86,8 @@ async function DashboardCardsContent() {
 }
 
 export default function Dashboard({
-  title,
-  subtitle,
+  heading,
+  subheading,
 }: DashboardProps) {
   return (
     <section className="w-full max-w-6xl mx-auto px-4 py-20">
@@ -97,9 +97,9 @@ export default function Dashboard({
 
       <div className="mb-10">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-300 mb-2">
-          {title}
+          {heading}
         </h1>
-        {subtitle && <p className="text-gray-500">{subtitle}</p>}
+        {subheading && <p className="text-gray-500">{subheading}</p>}
       </div>
 
       <Suspense fallback={<DashboardCardsSkeleton />}>

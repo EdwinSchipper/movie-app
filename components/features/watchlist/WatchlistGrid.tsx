@@ -6,8 +6,8 @@ import type { MediaSearchParams, WatchlistStatus } from '@/types'
 import WatchlistCard from './WatchlistCard'
 
 export interface WatchlistGridProps {
-  title: string
-  subtitle?: string
+  heading: string
+  subheading?: string
   watchlistStatus?: WatchlistStatus
   searchParams?: MediaSearchParams
 }
@@ -67,8 +67,8 @@ async function WatchlistGridContent({ watchlistStatus, searchParams }: Watchlist
 }
 
 export default function WatchlistGrid({
-  title,
-  subtitle,
+  heading,
+  subheading,
   watchlistStatus = 'want_to_watch',
   searchParams,
 }: WatchlistGridProps) {
@@ -76,9 +76,9 @@ export default function WatchlistGrid({
     <section className="w-full max-w-6xl mx-auto px-4 py-20">
       <div className="mb-6">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-300 mb-2">
-          {title}
+          {heading}
         </h1>
-        {subtitle && <p className="text-gray-500">{subtitle}</p>}
+        {subheading && <p className="text-gray-500">{subheading}</p>}
       </div>
 
       <FilterBar className="mb-8" />

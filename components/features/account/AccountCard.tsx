@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { UIButton } from '@/components/ui'
 
 export interface AccountCardProps {
-  title: string
+  heading: string
   description: string
   href: string
   buttonText: string
@@ -12,7 +12,7 @@ export interface AccountCardProps {
 }
 
 export default function AccountCard({
-  title,
+  heading,
   description,
   href,
   buttonText,
@@ -29,7 +29,7 @@ export default function AccountCard({
                 {icon}
               </div>
             ) : null}
-            <h2 className="text-lg font-bold text-gray-100">{title}</h2>
+            <h2 className="text-lg font-bold text-gray-100">{heading}</h2>
           </div>
           {badge ? (
             <span className="px-2 py-0.5 rounded-full text-2xs font-semibold bg-gray-800 text-gray-300 border border-gray-700">

@@ -8,8 +8,8 @@ interface PageProps {
 export default function Page({ searchParams }: PageProps) {
   return (
     <RecommendationGrid
-      title="Aanbevolen voor jou"
-      subtitle="Ontdek de beste films en series die bij jouw smaak passen."
+      heading="Aanbevolen voor jou"
+      subheading="Ontdek de beste films en series die bij jouw smaak passen."
       searchParams={searchParams}
     />
   )

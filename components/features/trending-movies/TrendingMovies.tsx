@@ -3,14 +3,14 @@ import { getTrendingMovies } from '@/lib/tmdb'
 import TrendingMoviesClient from './TrendingMoviesClient'
 
 export interface TrendingMoviesProps {
-  title: string
+  heading: string
 }
 
-function TrendingMoviesSkeleton({ title }: TrendingMoviesProps) {
+function TrendingMoviesSkeleton({ heading }: TrendingMoviesProps) {
   return (
     <div className="w-full animate-pulse">
       <div className="flex items-center justify-between gap-5 pb-6">
-        <h2 className="text-2xl font-bold text-gray-200">{title}</h2>
+        <h2 className="text-2xl font-bold text-gray-200">{heading}</h2>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
         {Array.from({ length: 10 }).map((_, i) => (
@@ -24,16 +24,16 @@ function TrendingMoviesSkeleton({ title }: TrendingMoviesProps) {
   )
 }
 
-async function TrendingMoviesContent({ title }: TrendingMoviesProps) {
+async function TrendingMoviesContent({ heading }: TrendingMoviesProps) {
   const initialMovies = await getTrendingMovies('day')
 
-  return <TrendingMoviesClient title={title} initialMovies={initialMovies} />
+  return <TrendingMoviesClient heading={heading} initialMovies={initialMovies} />
 }
 
-export default function TrendingMovies({ title }: TrendingMoviesProps) {
+export default function TrendingMovies({ heading }: TrendingMoviesProps) {
   return (
-    <Suspense fallback={<TrendingMoviesSkeleton title={title} />}>
-      <TrendingMoviesContent title={title} />
+    <Suspense fallback={<TrendingMoviesSkeleton heading={heading} />}>
+      <TrendingMoviesContent heading={heading} />
     </Suspense>
   )
 }

@@ -3,14 +3,14 @@ import { getTrendingTv } from '@/lib/tmdb'
 import TrendingTvClient from './TrendingTvClient'
 
 export interface TrendingTvProps {
-  title: string
+  heading: string
 }
 
-function TrendingTvSkeleton({ title }: TrendingTvProps) {
+function TrendingTvSkeleton({ heading }: TrendingTvProps) {
   return (
     <div className="w-full animate-pulse">
       <div className="flex items-center justify-between gap-5 pb-6">
-        <h2 className="text-2xl font-bold text-gray-200">{title}</h2>
+        <h2 className="text-2xl font-bold text-gray-200">{heading}</h2>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
         {Array.from({ length: 10 }).map((_, i) => (
@@ -24,16 +24,16 @@ function TrendingTvSkeleton({ title }: TrendingTvProps) {
   )
 }
 
-async function TrendingTvContent({ title }: TrendingTvProps) {
+async function TrendingTvContent({ heading }: TrendingTvProps) {
   const initialShows = await getTrendingTv('day')
 
-  return <TrendingTvClient title={title} initialShows={initialShows} />
+  return <TrendingTvClient heading={heading} initialShows={initialShows} />
 }
 
-export default function TrendingTv({ title }: TrendingTvProps) {
+export default function TrendingTv({ heading }: TrendingTvProps) {
   return (
-    <Suspense fallback={<TrendingTvSkeleton title={title} />}>
-      <TrendingTvContent title={title} />
+    <Suspense fallback={<TrendingTvSkeleton heading={heading} />}>
+      <TrendingTvContent heading={heading} />
     </Suspense>
   )
 }

@@ -33,7 +33,7 @@ export default function AccountDashboard({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <AccountCard
-            title="Mijn Gegevens"
+            heading="Mijn Gegevens"
             description="Bekijk je accountprofiel, e-mailadres, unieke identificatie en autorisatiestatus."
             href="/account/profile"
             buttonText="Gegevens bekijken"
@@ -41,7 +41,7 @@ export default function AccountDashboard({
           />
 
           <AccountCard
-            title="Mijn Watchlist"
+            heading="Mijn Watchlist"
             description="Beheer je bewaarde films en series, gesegmenteerd op nog te zien en reeds bekeken."
             href="/account/watchlist"
             buttonText="Watchlist openen"
@@ -50,7 +50,7 @@ export default function AccountDashboard({
           />
 
           <AccountCard
-            title="Instellingen"
+            heading="Instellingen"
             description="Pas het aantal getoonde posters per overzicht aan en kies tussen grid- of rijweergave."
             href="/account/settings"
             buttonText="Instellingen beheren"
@@ -60,7 +60,7 @@ export default function AccountDashboard({
           {profile.role === 'admin' ? (
             <div className="md:col-span-3">
               <AccountCard
-                title="Beheerderspaneel (Admin)"
+                heading="Beheerderspaneel (Admin)"
                 description="Als administrator heb je toegang tot het centrale beheersysteem om gebruikersrechten toe te kennen en publieke aanbevelingen te beheren."
                 href="/admin"
                 buttonText="Naar Beheeromgeving"
