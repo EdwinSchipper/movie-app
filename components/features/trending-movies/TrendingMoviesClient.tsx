@@ -7,12 +7,12 @@ import type { TimeWindow, Movie } from '@/types'
 import TrendingMovieCard from './TrendingMovieCard'
 
 export interface TrendingMoviesClientProps {
-  title: string
+  heading: string
   initialMovies?: Movie[]
 }
 
 export default function TrendingMoviesClient({
-  title,
+  heading,
   initialMovies = [],
 }: TrendingMoviesClientProps) {
   const [range, setRange] = useState<TimeWindow>('day')
@@ -30,7 +30,7 @@ export default function TrendingMoviesClient({
   return (
     <div>
       <div className="flex items-center justify-between gap-5 pb-6">
-        <h2 className="text-2xl font-bold text-gray-200">{title}</h2>
+        <h2 className="text-2xl font-bold text-gray-200">{heading}</h2>
         <UISwitch
           value={range}
           onChange={handleToggle}

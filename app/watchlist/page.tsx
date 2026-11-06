@@ -8,8 +8,8 @@ interface PageProps {
 export default function Page({ searchParams }: PageProps) {
   return (
     <WatchlistGrid
-      title="Watchlist"
-      subtitle="Ontdek de beste films en series die bij jouw smaak passen."
+      heading="Watchlist"
+      subheading="Ontdek de beste films en series die bij jouw smaak passen."
       searchParams={searchParams}
     />
   )

@@ -13,8 +13,8 @@ export default function Page() {
       </div>
 
       <div className="flex flex-col space-y-20">
-        <TrendingMovies title="Trending Movies" />
-        <TrendingTv title="Trending TV Series" />
+        <TrendingMovies heading="Trending Movies" />
+        <TrendingTv heading="Trending TV Series" />
       </div>
     </section>
   )

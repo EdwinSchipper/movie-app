@@ -56,7 +56,7 @@ export default function AdminDashboard({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <AdminCard
-            title="Gebruikers & Rechten"
+            heading="Gebruikers & Rechten"
             description="Bekijk alle geregistreerde accounts, inspecteer accountdetails en wijs beheerdersrechten toe."
             href="/admin/users"
             buttonText="Gebruikers beheren"
@@ -65,7 +65,7 @@ export default function AdminDashboard({
           />
 
           <AdminCard
-            title="Publieke Aanbevelingen"
+            heading="Publieke Aanbevelingen"
             description="Beheer de gecureerde titels die publiek getoond worden aan alle bezoekers van de Movie App."
             href="/admin/recommendations"
             buttonText="Aanbevelingen beheren"
