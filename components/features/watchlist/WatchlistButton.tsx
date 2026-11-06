@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { UIButton } from '@/components/ui'
+import { UIButton, useToast } from '@/components/ui'
 import {
   addToWatchlist,
   updateWatchlistStatus,
@@ -23,6 +23,7 @@ export default function WatchlistButton({
   const [status, setStatus] = useState<WatchlistStatus | null>(initialStatus)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const toast = useToast()
   const isWatched = status === 'watched'
 
   const handleAdd = () => {
@@ -32,8 +33,11 @@ export default function WatchlistButton({
       const res = await addToWatchlist({ ...media, status: nextStatus })
       if (res.success) {
         setStatus(nextStatus)
+        toast.success(`'${media.title}' toegevoegd aan watchlist`)
       } else {
-        setError(res.error || 'Kon niet toevoegen aan watchlist.')
+        const errorMsg = res.error || 'Kon niet toevoegen aan watchlist.'
+        setError(errorMsg)
+        toast.error(errorMsg)
       }
     })
   }
@@ -50,8 +54,15 @@ export default function WatchlistButton({
       )
       if (res.success) {
         setStatus(nextStatus)
+        toast.info(
+          nextStatus === 'watched'
+            ? `'${media.title}' gemarkeerd als gezien`
+            : `'${media.title}' gemarkeerd als nog te bekijken`
+        )
       } else {
-        setError(res.error || 'Kon watchlist status niet bijwerken.')
+        const errorMsg = res.error || 'Kon watchlist status niet bijwerken.'
+        setError(errorMsg)
+        toast.error(errorMsg)
       }
     })
   }
@@ -65,8 +76,11 @@ export default function WatchlistButton({
       })
       if (res.success) {
         setStatus(null)
+        toast.info(`'${media.title}' verwijderd uit watchlist`)
       } else {
-        setError(res.error || 'Kon niet verwijderen uit watchlist.')
+        const errorMsg = res.error || 'Kon niet verwijderen uit watchlist.'
+        setError(errorMsg)
+        toast.error(errorMsg)
       }
     })
   }
@@ -119,4 +133,3 @@ export default function WatchlistButton({
     </div>
   )
 }
-

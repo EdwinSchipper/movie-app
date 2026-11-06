@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { UIButton } from '@/components/ui'
+import { UIButton, useToast } from '@/components/ui'
 import {
   addToRecommendations,
   removeFromRecommendations,
@@ -22,6 +22,7 @@ export default function RecommendationButton({
   const [inRecommendations, setInRecommendations] = useState(initialInRecommendations)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const toast = useToast()
 
   const handleToggle = () => {
     setError(null)
@@ -33,15 +34,21 @@ export default function RecommendationButton({
         })
         if (res.success) {
           setInRecommendations(false)
+          toast.info(`'${media.title}' verwijderd uit aanbevelingen`)
         } else {
-          setError(res.error || 'Kon niet verwijderen uit aanbevelingen.')
+          const errorMsg = res.error || 'Kon niet verwijderen uit aanbevelingen.'
+          setError(errorMsg)
+          toast.error(errorMsg)
         }
       } else {
         const res = await addToRecommendations(media)
         if (res.success) {
           setInRecommendations(true)
+          toast.success(`'${media.title}' toegevoegd aan aanbevelingen`)
         } else {
-          setError(res.error || 'Kon niet toevoegen aan aanbevelingen.')
+          const errorMsg = res.error || 'Kon niet toevoegen aan aanbevelingen.'
+          setError(errorMsg)
+          toast.error(errorMsg)
         }
       }
     })
@@ -78,4 +85,3 @@ export default function RecommendationButton({
     </div>
   )
 }
-
