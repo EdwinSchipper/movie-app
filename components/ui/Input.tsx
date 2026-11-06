@@ -1,8 +1,10 @@
 import { Input as HeadlessInput, type InputProps } from '@headlessui/react'
+import type { Ref } from 'react'
 
 export interface UIInputProps extends Omit<InputProps, 'size'> {
   className?: string
   size?: 'sm' | 'md'
+  ref?: Ref<HTMLInputElement>
 }
 
 const inputSizes = {
