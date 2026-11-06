@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { getTmdbImageUrl, getMediaDetailHref } from '@/lib/utils'
 import type { Movie } from '@/types'
 
 export interface TrendingMovieCardProps {
@@ -7,12 +8,15 @@ export interface TrendingMovieCardProps {
 }
 
 export default function TrendingMovieCard({ movie }: TrendingMovieCardProps) {
+  const detailHref = getMediaDetailHref('movie', movie.id)
+  const posterUrl = getTmdbImageUrl(movie.poster_path, 'w500')
+
   return (
-    <Link href={`/movies/${movie.id}`} className="group block">
-      <div className="relative aspect-2/3 w-full overflow-hidden rounded-xl bg-gray-200/10 shadow-xs">
-        {movie.poster_path ? (
+    <Link href={detailHref} className="group block">
+      <div className="relative aspect-2/3 w-full overflow-hidden rounded-tile bg-surface-hover shadow-xs">
+        {posterUrl ? (
           <Image
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            src={posterUrl}
             alt={movie.title}
             fill
             sizes="(max-width: 768px) 50vw, 20vw"
@@ -20,16 +24,15 @@ export default function TrendingMovieCard({ movie }: TrendingMovieCardProps) {
             loading="eager"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-xs text-gray-500">
+          <div className="flex h-full items-center justify-center text-xs text-fg-muted">
             Geen afbeelding
           </div>
         )}
       </div>
 
-      <h3 className="mt-2 text-sm font-semibold text-gray-200 line-clamp-1 group-hover:text-blue-500 transition-colors">
+      <h3 className="mt-2 h5 line-clamp-1 group-hover:text-brand transition-colors">
         {movie.title}
       </h3>
     </Link>
   )
 }
-

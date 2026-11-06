@@ -4,6 +4,7 @@ import { cache } from 'react'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentUser } from '@/lib/auth'
+import { normalizeUserProfile } from '@/lib/utils'
 import type { ActionResult, UserProfile, UserSettings } from '@/types'
 
 export const getUserProfile = cache(async (): Promise<UserProfile | null> => {
@@ -26,27 +27,20 @@ export const getUserProfile = cache(async (): Promise<UserProfile | null> => {
   }
 
   if (!data) {
-    const fallbackProfile: UserProfile = {
-      id: user.id,
-      email: user.email || '',
-      role: user.app_metadata?.role === 'admin' ? 'admin' : 'user',
-      tile_count_preference: 20,
-      tile_display_mode: 'grid',
-      created_at: user.created_at || '',
-      updated_at: user.created_at || '',
-    }
-    return fallbackProfile
+    return normalizeUserProfile(
+      { id: user.id },
+      {
+        email: user.email,
+        role: user.app_metadata?.role,
+        created_at: user.created_at,
+      }
+    )
   }
 
-  return {
-    id: data.id,
-    email: data.email || user.email || '',
-    role: data.role === 'admin' ? 'admin' : 'user',
-    tile_count_preference: data.tile_count_preference ?? 20,
-    tile_display_mode: data.tile_display_mode === 'row' ? 'row' : 'grid',
-    created_at: data.created_at || user.created_at || '',
-    updated_at: data.updated_at || user.created_at || '',
-  }
+  return normalizeUserProfile(data, {
+    email: user.email,
+    created_at: user.created_at,
+  })
 })
 
 export async function updateUserSettings(

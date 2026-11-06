@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getMovieDetails } from '@/lib/tmdb'
+import { getTmdbImageUrl, formatDate, formatRating, formatRuntime } from '@/lib/utils'
 import MediaActions from './MediaActions'
 
 export interface MovieDetailProps {
@@ -12,13 +13,13 @@ export interface MovieDetailProps {
 function MovieDetailSkeleton() {
   return (
     <div className="w-full max-w-6xl mx-auto p-6 md:p-12 animate-pulse">
-      <div className="h-4 w-32 bg-gray-200/20 rounded mb-6" />
+      <div className="h-4 w-32 bg-surface-hover rounded-control mb-6" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="aspect-2/3 w-full bg-gray-200/10 rounded-xl" />
+        <div className="aspect-2/3 w-full bg-surface-hover rounded-tile" />
         <div className="md:col-span-2 space-y-4">
-          <div className="h-8 w-2/3 bg-gray-200/10 rounded" />
-          <div className="h-4 w-1/3 bg-gray-200/10 rounded" />
-          <div className="h-24 w-full bg-gray-200/10 rounded" />
+          <div className="h-8 w-2/3 bg-surface-hover rounded-control" />
+          <div className="h-4 w-1/3 bg-surface-hover rounded-control" />
+          <div className="h-24 w-full bg-surface-hover rounded-control" />
         </div>
       </div>
     </div>
@@ -35,20 +36,29 @@ async function MovieDetailContent({ params }: MovieDetailProps) {
     notFound()
   }
 
+  const posterUrl = getTmdbImageUrl(movie.poster_path, 'w500')
+  const releaseFormatted = formatDate(movie.release_date, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+  const ratingFormatted = formatRating(movie.vote_average)
+  const runtimeFormatted = formatRuntime(movie.runtime)
+
   return (
     <article className="w-full max-w-6xl mx-auto p-6 md:p-12">
       <Link
         href="/trending"
-        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 mb-6 transition-colors"
+        className="inline-flex items-center gap-2 text-sm text-fg-muted hover:text-brand mb-6 transition-colors"
       >
         ← Terug naar overzicht
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="relative aspect-2/3 w-full rounded-xl overflow-hidden shadow-lg bg-gray-100/10">
-          {movie.poster_path ? (
+        <div className="relative aspect-2/3 w-full rounded-tile overflow-hidden shadow-lg bg-surface border border-border-subtle">
+          {posterUrl ? (
             <Image
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              src={posterUrl}
               alt={movie.title}
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
@@ -56,40 +66,35 @@ async function MovieDetailContent({ params }: MovieDetailProps) {
               priority
             />
           ) : (
-            <div className="flex items-center justify-center h-full text-gray-400">
+            <div className="flex items-center justify-center h-full text-fg-muted">
               Geen afbeelding
             </div>
           )}
         </div>
 
         <div className="md:col-span-2 flex flex-col justify-start">
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">
+          <h1 className="h1 mb-2">
             {movie.title}
           </h1>
 
           {movie.tagline && (
-            <p className="text-lg italic text-gray-500 mb-4">&ldquo;{movie.tagline}&rdquo;</p>
+            <p className="text-lg italic text-fg-muted mb-4">&ldquo;{movie.tagline}&rdquo;</p>
           )}
 
-          <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mb-6">
-            {movie.release_date && (
+          <div className="flex flex-wrap items-center gap-3 text-sm text-fg-muted mb-6">
+            {releaseFormatted !== 'Niet beschikbaar' && (
               <span>
-                📅{' '}
-                {new Date(movie.release_date).toLocaleDateString('nl-NL', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+                📅 {releaseFormatted}
               </span>
             )}
-            {movie.runtime && (
+            {runtimeFormatted && (
               <span>
-                ⏱️ {Math.floor(movie.runtime / 60)}u {movie.runtime % 60}m
+                ⏱️ {runtimeFormatted}
               </span>
             )}
-            {movie.vote_average && movie.vote_average > 0 ? (
-              <span className="font-semibold text-yellow-600">
-                ⭐ {movie.vote_average.toFixed(1)} / 10
+            {ratingFormatted !== '—' ? (
+              <span className="font-semibold text-brand">
+                ★ {ratingFormatted} / 10
               </span>
             ) : null}
           </div>
@@ -112,7 +117,7 @@ async function MovieDetailContent({ params }: MovieDetailProps) {
               {movie.genres.map((genre) => (
                 <span
                   key={genre.id}
-                  className="px-3 py-1 bg-gray-100/10 text-gray-700 text-xs font-medium rounded-full"
+                  className="badge-surface"
                 >
                   {genre.name}
                 </span>
@@ -121,8 +126,8 @@ async function MovieDetailContent({ params }: MovieDetailProps) {
           )}
 
           <div className="mt-2">
-            <h2 className="text-xl font-semibold mb-2">Synopsis</h2>
-            <p className="text-gray-700 leading-relaxed">
+            <h2 className="h3 mb-2">Synopsis</h2>
+            <p className="text-fg-secondary leading-relaxed">
               {movie.overview || 'Geen samenvatting beschikbaar.'}
             </p>
           </div>
@@ -139,4 +144,3 @@ export default function MovieDetail({ params }: MovieDetailProps) {
     </Suspense>
   )
 }
-

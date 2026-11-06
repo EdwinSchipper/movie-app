@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { UIButton } from '@/components/ui'
+import { getTmdbImageUrl, formatReleaseYear, formatRating } from '@/lib/utils'
 
 export interface DashboardHeroProps {
   title: string
@@ -21,13 +22,15 @@ export default function DashboardHero({
   voteAverage,
   releaseDate,
 }: DashboardHeroProps) {
-  const releaseYear = releaseDate ? new Date(releaseDate).getFullYear() : null
+  const backdropUrl = getTmdbImageUrl(backdropPath, 'w1280')
+  const releaseYear = formatReleaseYear(releaseDate, '')
+  const formattedVote = formatRating(voteAverage, '')
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl bg-gray-900 text-white shadow-lg mb-10 min-h-80 md:min-h-96 flex items-end">
-      {backdropPath && (
+    <div className="relative w-full overflow-hidden rounded-hero bg-surface text-fg-primary shadow-lg mb-10 min-h-80 md:min-h-96 flex items-end border border-border-subtle">
+      {backdropUrl && (
         <Image
-          src={`https://image.tmdb.org/t/p/w1280${backdropPath}`}
+          src={backdropUrl}
           alt={title}
           fill
           sizes="(max-width: 1200px) 100vw, 1152px"
@@ -36,28 +39,28 @@ export default function DashboardHero({
         />
       )}
 
-      <div className="absolute inset-0 bg-linear-to-t from-gray-950/95 via-gray-950/60 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-canvas/95 via-canvas/60 to-transparent" />
 
       <div className="relative z-10 p-6 md:p-10 max-w-2xl">
         <div className="flex flex-wrap items-center gap-3 text-xs font-medium mb-3">
-          <span className="px-2.5 py-1 rounded-full bg-blue-600 text-white">
+          <span className="badge-brand">
             🔥 #1 Trending Vandaag
           </span>
           {releaseYear && (
-            <span className="text-gray-300">{releaseYear}</span>
+            <span className="label-meta">{releaseYear}</span>
           )}
-          {voteAverage && voteAverage > 0 ? (
-            <span className="text-yellow-400 font-semibold">
-              ⭐ {voteAverage.toFixed(1)}
+          {formattedVote && (
+            <span className="text-brand font-semibold">
+              ★ {formattedVote}
             </span>
-          ) : null}
+          )}
         </div>
 
-        <h2 className="text-2xl md:text-4xl font-bold tracking-tight mb-3">
+        <h2 className="h1 mb-3">
           {title}
         </h2>
 
-        <p className="text-sm md:text-base text-gray-200 leading-relaxed line-clamp-3 mb-6">
+        <p className="text-sm md:text-base text-fg-secondary leading-relaxed line-clamp-3 mb-6">
           {description}
         </p>
 

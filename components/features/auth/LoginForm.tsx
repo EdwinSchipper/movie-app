@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { UIButton } from '@/components/ui'
 import { login } from '@/lib/auth'
-import { getSafeRedirectPath } from '@/lib/redirect'
+import { getSafeRedirectPath, getTmdbImageUrl } from '@/lib/utils'
 
 export interface LoginFormProps {
   className?: string
@@ -88,7 +88,7 @@ function LoginFormContent({
     >
       <div className="relative hidden md:flex flex-col justify-between overflow-hidden bg-gray-950 p-8 text-white min-h-[540px]">
         <Image
-          src={`https://image.tmdb.org/t/p/w780${posterPath}`}
+          src={getTmdbImageUrl(posterPath, 'w780')}
           alt={posterTitle}
           fill
           priority

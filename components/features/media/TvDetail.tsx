@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getTvDetails } from '@/lib/tmdb'
+import { getTmdbImageUrl, formatDate, formatRating } from '@/lib/utils'
 import MediaActions from './MediaActions'
 
 export interface TvDetailProps {
@@ -12,13 +13,13 @@ export interface TvDetailProps {
 function TvDetailSkeleton() {
   return (
     <div className="w-full max-w-6xl mx-auto p-6 md:p-12 animate-pulse">
-      <div className="h-4 w-32 bg-gray-200/20 rounded mb-6" />
+      <div className="h-4 w-32 bg-surface-hover rounded-control mb-6" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="aspect-2/3 w-full bg-gray-200/10 rounded-xl" />
+        <div className="aspect-2/3 w-full bg-surface-hover rounded-tile" />
         <div className="md:col-span-2 space-y-4">
-          <div className="h-8 w-2/3 bg-gray-200/10 rounded" />
-          <div className="h-4 w-1/3 bg-gray-200/10 rounded" />
-          <div className="h-24 w-full bg-gray-200/10 rounded" />
+          <div className="h-8 w-2/3 bg-surface-hover rounded-control" />
+          <div className="h-4 w-1/3 bg-surface-hover rounded-control" />
+          <div className="h-24 w-full bg-surface-hover rounded-control" />
         </div>
       </div>
     </div>
@@ -35,20 +36,28 @@ async function TvDetailContent({ params }: TvDetailProps) {
     notFound()
   }
 
+  const posterUrl = getTmdbImageUrl(show.poster_path, 'w500')
+  const airDateFormatted = formatDate(show.first_air_date, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+  const ratingFormatted = formatRating(show.vote_average)
+
   return (
     <article className="w-full max-w-6xl mx-auto p-6 md:p-12">
       <Link
         href="/trending"
-        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 mb-6 transition-colors"
+        className="inline-flex items-center gap-2 text-sm text-fg-muted hover:text-brand mb-6 transition-colors"
       >
         ← Terug naar overzicht
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="relative aspect-2/3 w-full rounded-xl overflow-hidden shadow-lg bg-gray-100/10">
-          {show.poster_path ? (
+        <div className="relative aspect-2/3 w-full rounded-tile overflow-hidden shadow-lg bg-surface border border-border-subtle">
+          {posterUrl ? (
             <Image
-              src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
+              src={posterUrl}
               alt={show.name}
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
@@ -56,30 +65,25 @@ async function TvDetailContent({ params }: TvDetailProps) {
               priority
             />
           ) : (
-            <div className="flex items-center justify-center h-full text-gray-400">
+            <div className="flex items-center justify-center h-full text-fg-muted">
               Geen afbeelding
             </div>
           )}
         </div>
 
         <div className="md:col-span-2 flex flex-col justify-start">
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">
+          <h1 className="h1 mb-2">
             {show.name}
           </h1>
 
           {show.tagline && (
-            <p className="text-lg italic text-gray-500 mb-4">&ldquo;{show.tagline}&rdquo;</p>
+            <p className="text-lg italic text-fg-muted mb-4">&ldquo;{show.tagline}&rdquo;</p>
           )}
 
-          <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mb-6">
-            {show.first_air_date && (
+          <div className="flex flex-wrap items-center gap-3 text-sm text-fg-muted mb-6">
+            {airDateFormatted !== 'Niet beschikbaar' && (
               <span>
-                📅{' '}
-                {new Date(show.first_air_date).toLocaleDateString('nl-NL', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+                📅 {airDateFormatted}
               </span>
             )}
             {show.number_of_seasons && (
@@ -91,9 +95,9 @@ async function TvDetailContent({ params }: TvDetailProps) {
             {show.number_of_episodes && (
               <span>🎬 {show.number_of_episodes} afleveringen</span>
             )}
-            {show.vote_average && show.vote_average > 0 ? (
-              <span className="font-semibold text-yellow-600">
-                ⭐ {show.vote_average.toFixed(1)} / 10
+            {ratingFormatted !== '—' ? (
+              <span className="font-semibold text-brand">
+                ★ {ratingFormatted} / 10
               </span>
             ) : null}
           </div>
@@ -116,7 +120,7 @@ async function TvDetailContent({ params }: TvDetailProps) {
               {show.genres.map((genre) => (
                 <span
                   key={genre.id}
-                  className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full"
+                  className="badge-surface"
                 >
                   {genre.name}
                 </span>
@@ -125,8 +129,8 @@ async function TvDetailContent({ params }: TvDetailProps) {
           )}
 
           <div className="mt-2">
-            <h2 className="text-xl font-semibold mb-2">Synopsis</h2>
-            <p className="text-gray-700 leading-relaxed">
+            <h2 className="h3 mb-2">Synopsis</h2>
+            <p className="text-fg-secondary leading-relaxed">
               {show.overview || 'Geen samenvatting beschikbaar.'}
             </p>
           </div>
@@ -143,4 +147,3 @@ export default function TvDetail({ params }: TvDetailProps) {
     </Suspense>
   )
 }
-

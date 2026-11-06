@@ -7,6 +7,7 @@ import type {
   MediaFilters,
   RawMediaFilterParams,
 } from '@/types'
+import { formatReleaseYear } from './format'
 
 export const DEFAULT_MEDIA_FILTERS: MediaFilters = {
   type: 'all',
@@ -87,15 +88,15 @@ export function filterAndSortMedia<T extends FilterableMediaItem>(
       }
 
       if (activeFilters.period === 'this_year') {
-        if (!item.release_date || item.release_date.length < 4) return false
-        const year = parseInt(item.release_date.slice(0, 4), 10)
-        return year === currentYear
+        const yearStr = formatReleaseYear(item.release_date, '')
+        if (!yearStr) return false
+        return Number(yearStr) === currentYear
       }
 
       if (activeFilters.period === 'last_year') {
-        if (!item.release_date || item.release_date.length < 4) return false
-        const year = parseInt(item.release_date.slice(0, 4), 10)
-        return year === currentYear - 1
+        const yearStr = formatReleaseYear(item.release_date, '')
+        if (!yearStr) return false
+        return Number(yearStr) === currentYear - 1
       }
 
       return true
@@ -120,3 +121,4 @@ export function filterAndSortMedia<T extends FilterableMediaItem>(
 
   return result
 }
+
