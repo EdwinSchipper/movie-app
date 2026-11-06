@@ -39,7 +39,8 @@ export default function DashboardHero({
         />
       )}
 
-      <div className="absolute inset-0 bg-linear-to-t from-canvas/95 via-canvas/60 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
+      <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-black/90 via-black/40 to-transparent" />
 
       <div className="relative z-10 p-6 md:p-10 max-w-2xl">
         <div className="flex flex-wrap items-center gap-3 text-xs font-medium mb-3">
