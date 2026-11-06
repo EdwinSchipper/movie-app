@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentUser, isAdmin } from '@/lib/auth'
+import { validateMediaActionPayload, validateMediaTarget } from '@/lib/utils'
 import type {
   MediaType,
   RecommendationItem,
@@ -72,16 +73,9 @@ export async function addToRecommendations(
     }
   }
 
-  if (!item.tmdb_id || typeof item.tmdb_id !== 'number') {
-    return { success: false, error: 'Ongeldig of ontbrekend TMDB ID.' }
-  }
-
-  if (item.media_type !== 'movie' && item.media_type !== 'tv') {
-    return { success: false, error: 'Ongeldig mediatype. Moet movie of tv zijn.' }
-  }
-
-  if (!item.title || typeof item.title !== 'string' || item.title.trim() === '') {
-    return { success: false, error: 'Titel mag niet leeg zijn.' }
+  const validationError = validateMediaActionPayload(item)
+  if (validationError) {
+    return { success: false, error: validationError }
   }
 
   const supabase = await createClient()
@@ -124,19 +118,18 @@ export async function removeFromRecommendations(
     }
   }
 
+  const targetError = validateMediaTarget(target, 'Ontbrekend ID om te verwijderen.')
+  if (targetError) {
+    return { success: false, error: targetError }
+  }
+
   const supabase = await createClient()
 
   let query = supabase.from('recommendations').delete()
 
   if (typeof target === 'string') {
-    if (!target.trim()) {
-      return { success: false, error: 'Ontbrekend ID om te verwijderen.' }
-    }
     query = query.eq('id', target)
   } else {
-    if (!target.tmdbId || (target.mediaType !== 'movie' && target.mediaType !== 'tv')) {
-      return { success: false, error: 'Ongeldig TMDB ID of mediatype.' }
-    }
     query = query.eq('tmdb_id', target.tmdbId).eq('media_type', target.mediaType)
   }
 

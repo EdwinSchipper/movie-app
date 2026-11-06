@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getSiteUrl } from '@/lib/env'
-import { getSafeRedirectPath } from '@/lib/redirect'
+import { getSafeRedirectPath } from '@/lib/utils'
 
 export async function GET(request: NextRequest) {
   const urlParams = new URL(request.url).searchParams

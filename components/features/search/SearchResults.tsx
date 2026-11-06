@@ -1,10 +1,17 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { searchMulti } from '@/lib/tmdb'
-import { isMovie, type SearchItem } from '@/types'
+import {
+  getTmdbImageUrl,
+  getMediaDetailHref,
+  formatRating,
+  formatReleaseYear,
+  formatMediaType,
+} from '@/lib/utils'
+import type { SearchItem, SearchMovieItem } from '@/types'
 
 export interface SearchResultsProps {
   query: string
@@ -16,58 +23,61 @@ interface SearchResultItemProps {
   onSelect: (item: SearchItem) => void
 }
 
+function isMovie(item: SearchItem): item is SearchMovieItem {
+  return item.media_type === 'movie'
+}
+
 function SearchResultItem({ item, onSelect }: SearchResultItemProps) {
   const isFilm = isMovie(item)
   const title = isFilm ? item.title : item.name
   const date = isFilm ? item.release_date : item.first_air_date
-  const year = date ? date.split('-')[0] : null
-  const detailHref = isFilm ? `/movies/${item.id}` : `/tv/${item.id}`
-  const mediaLabel = isFilm ? 'Film' : 'Serie'
-  const badgeColorClass = isFilm
-    ? 'bg-blue-50 text-blue-700'
-    : 'bg-purple-50 text-purple-700'
+  const year = formatReleaseYear(date, '')
+  const detailHref = getMediaDetailHref(item.media_type, item.id)
+  const mediaLabel = formatMediaType(item.media_type)
+  const posterUrl = getTmdbImageUrl(item.poster_path, 'w200')
+  const rating = formatRating(item.vote_average, '')
 
   return (
     <li>
       <Link
         href={detailHref}
         onClick={() => onSelect(item)}
-        className="flex items-center gap-3 p-2.5 hover:bg-gray-50 transition-colors group"
+        className="flex items-center gap-3 p-2.5 hover:bg-surface-hover transition-colors group"
       >
-        <div className="relative w-10 h-14 bg-gray-100 rounded overflow-hidden shrink-0">
-          {item.poster_path ? (
+        <div className="relative w-10 h-14 bg-canvas rounded-control overflow-hidden shrink-0 border border-border-subtle">
+          {posterUrl ? (
             <Image
-              src={`https://image.tmdb.org/t/p/w200${item.poster_path}`}
+              src={posterUrl}
               alt={title || 'Poster'}
               fill
               sizes="40px"
               className="object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-400">
+            <div className="w-full h-full flex items-center justify-center text-[10px] text-fg-muted">
               Geen
             </div>
           )}
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-900 truncate group-hover:text-blue-600 transition-colors">
+          <p className="text-sm font-medium text-fg-primary truncate group-hover:text-brand transition-colors">
             {title}
           </p>
           <div className="flex items-center gap-2 mt-0.5">
-            <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${badgeColorClass}`}>
+            <span className={isFilm ? 'badge-brand text-2xs' : 'badge-violet text-2xs'}>
               {mediaLabel}
             </span>
             {year && (
-              <span className="text-xs text-gray-400">
+              <span className="label-meta">
                 {year}
               </span>
             )}
-            {item.vote_average && item.vote_average > 0 ? (
-              <span className="text-xs text-yellow-600 font-medium">
-                ⭐ {item.vote_average.toFixed(1)}
+            {rating && (
+              <span className="text-xs text-brand font-medium">
+                ★ {rating}
               </span>
-            ) : null}
+            )}
           </div>
         </div>
       </Link>
@@ -98,9 +108,8 @@ export default function SearchResults({
         if (!isCancelled) {
           setResults(data)
         }
-      } catch (err) {
+      } catch {
         if (!isCancelled) {
-          console.error('Zoekfout:', err)
           setError('Er is een fout opgetreden bij het ophalen van resultaten.')
           setResults([])
         }
@@ -122,24 +131,24 @@ export default function SearchResults({
   }
 
   return (
-    <div className="absolute left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-100 max-h-96 overflow-y-auto z-50">
+    <div className="absolute left-0 right-0 mt-2 bg-surface rounded-card shadow-xl border border-border-subtle max-h-96 overflow-y-auto z-50">
       {isLoading && results.length > 0 && (
-        <div className="px-3 py-1 bg-gray-50 text-[11px] text-gray-400 border-b border-gray-100 flex items-center justify-between">
+        <div className="px-3 py-1 bg-canvas text-[11px] text-fg-muted border-b border-border-subtle flex items-center justify-between">
           <span>Zoeken wordt bijgewerkt...</span>
           <span className="animate-spin text-xs">⏳</span>
         </div>
       )}
 
       {error ? (
-        <div className="p-4 text-center text-sm text-red-500">
+        <div className="p-4 text-center text-sm text-accent-coral">
           {error}
         </div>
       ) : isLoading && results.length === 0 ? (
-        <div className="p-4 text-center text-sm text-gray-500 animate-pulse">
+        <div className="p-4 text-center text-sm text-fg-muted animate-pulse">
           Zoeken naar &ldquo;{query}&rdquo;...
         </div>
       ) : results.length > 0 ? (
-        <ul className={`divide-y divide-gray-100 transition-opacity ${isLoading ? 'opacity-60' : 'opacity-100'}`}>
+        <ul className={`divide-y divide-border-subtle transition-opacity ${isLoading ? 'opacity-60' : 'opacity-100'}`}>
           {results.map((item) => (
             <SearchResultItem
               key={`${item.media_type}-${item.id}`}
@@ -149,7 +158,7 @@ export default function SearchResults({
           ))}
         </ul>
       ) : !isLoading ? (
-        <div className="p-4 text-center text-sm text-gray-500">
+        <div className="p-4 text-center text-sm text-fg-muted">
           Geen films of series gevonden voor &ldquo;{query}&rdquo;
         </div>
       ) : null}

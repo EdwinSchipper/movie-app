@@ -5,8 +5,9 @@ import { headers } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getSiteUrl } from '@/lib/env'
+import { normalizeUserRole } from '@/lib/utils'
 import { registerSchema } from '@/types'
-import type { ActionResult, AppUser, LoginInput, UserRole } from '@/types'
+import type { ActionResult, AppUser, LoginInput } from '@/types'
 
 export const getCurrentUser = cache(async () => {
   const supabase = await createClient()
@@ -29,13 +30,7 @@ export const getAppUser = cache(async (): Promise<AppUser | null> => {
     .eq('id', user.id)
     .maybeSingle()
 
-  const role: UserRole = profile?.role
-    ? profile.role === 'admin'
-      ? 'admin'
-      : 'user'
-    : user.app_metadata?.role === 'admin'
-      ? 'admin'
-      : 'user'
+  const role = normalizeUserRole(profile?.role ?? user.app_metadata?.role)
 
   return {
     id: user.id,

@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { getRecommendations } from '@/lib/recommendations'
-import { filterAndSortMedia, parseMediaFilters } from '@/lib/filters'
+import { filterAndSortMedia, parseMediaFilters } from '@/lib/utils'
 import { FilterBar } from '@/components/features/filtering'
 import type { MediaSearchParams } from '@/types'
 import RecommendationCard from './RecommendationCard'

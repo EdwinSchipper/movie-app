@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { getWatchlist } from '@/lib/watchlist'
-import { filterAndSortMedia, parseMediaFilters } from '@/lib/filters'
+import { filterAndSortMedia, parseMediaFilters } from '@/lib/utils'
 import { FilterBar } from '@/components/features/filtering'
 import type { MediaSearchParams, WatchlistStatus } from '@/types'
 import WatchlistCard from './WatchlistCard'

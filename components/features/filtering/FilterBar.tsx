@@ -9,7 +9,7 @@ import {
   PERIOD_OPTIONS,
   DEFAULT_MEDIA_FILTERS,
   parseMediaFilters,
-} from '@/lib/filters'
+} from '@/lib/utils'
 import type {
   FilterMediaType,
   FilterPeriod,

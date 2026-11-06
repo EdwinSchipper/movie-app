@@ -4,6 +4,7 @@ import { cache } from 'react'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentUser } from '@/lib/auth'
+import { validateMediaActionPayload, validateMediaTarget } from '@/lib/utils'
 import type {
   MediaType,
   WatchlistStatus,
@@ -79,16 +80,9 @@ export async function addToWatchlist(
     return { success: false, error: 'Je moet ingelogd zijn om een item aan je watchlist toe te voegen.' }
   }
 
-  if (!item.tmdb_id || typeof item.tmdb_id !== 'number') {
-    return { success: false, error: 'Ongeldig of ontbrekend TMDB ID.' }
-  }
-
-  if (item.media_type !== 'movie' && item.media_type !== 'tv') {
-    return { success: false, error: 'Ongeldig mediatype. Moet movie of tv zijn.' }
-  }
-
-  if (!item.title || typeof item.title !== 'string' || item.title.trim() === '') {
-    return { success: false, error: 'Titel mag niet leeg zijn.' }
+  const validationError = validateMediaActionPayload(item)
+  if (validationError) {
+    return { success: false, error: validationError }
   }
 
   const supabase = await createClient()
@@ -133,19 +127,18 @@ export async function updateWatchlistStatus(
     return { success: false, error: 'Ongeldige watchlist status.' }
   }
 
+  const targetError = validateMediaTarget(target, 'Ontbrekend ID voor status update.')
+  if (targetError) {
+    return { success: false, error: targetError }
+  }
+
   const supabase = await createClient()
 
   let query = supabase.from('watchlist').update({ status }).eq('user_id', user.id)
 
   if (typeof target === 'string') {
-    if (!target.trim()) {
-      return { success: false, error: 'Ontbrekend ID voor status update.' }
-    }
     query = query.eq('id', target)
   } else {
-    if (!target.tmdbId || (target.mediaType !== 'movie' && target.mediaType !== 'tv')) {
-      return { success: false, error: 'Ongeldig TMDB ID of mediatype.' }
-    }
     query = query.eq('tmdb_id', target.tmdbId).eq('media_type', target.mediaType)
   }
 
@@ -169,19 +162,18 @@ export async function removeFromWatchlist(
     return { success: false, error: 'Je moet ingelogd zijn om een item uit je watchlist te verwijderen.' }
   }
 
+  const targetError = validateMediaTarget(target, 'Ontbrekend ID om te verwijderen.')
+  if (targetError) {
+    return { success: false, error: targetError }
+  }
+
   const supabase = await createClient()
 
   let query = supabase.from('watchlist').delete().eq('user_id', user.id)
 
   if (typeof target === 'string') {
-    if (!target.trim()) {
-      return { success: false, error: 'Ontbrekend ID om te verwijderen.' }
-    }
     query = query.eq('id', target)
   } else {
-    if (!target.tmdbId || (target.mediaType !== 'movie' && target.mediaType !== 'tv')) {
-      return { success: false, error: 'Ongeldig TMDB ID of mediatype.' }
-    }
     query = query.eq('tmdb_id', target.tmdbId).eq('media_type', target.mediaType)
   }
 

@@ -4,7 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { MagnifyingGlassIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { UIInput } from '@/components/ui'
-import { AccountRoleBadge, formatSafeDate } from '@/components/features/account'
+import { AccountRoleBadge } from '@/components/features/account'
+import { formatDate, getUserInitial } from '@/lib/utils'
 import type { AdminUserSummary } from '@/types'
 
 export interface UserListProps {
@@ -24,29 +25,29 @@ export default function UserList({ users }: UserListProps) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-4 bg-gray-900/60 border border-gray-800 rounded-xl">
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">
+        <div className="p-4 bg-surface border border-border-subtle rounded-card">
+          <span className="label-tech block">
             Totaal geregistreerd
           </span>
-          <span className="text-2xl font-bold text-gray-100 mt-1 block">
+          <span className="h2 mt-1 block">
             {users.length}
           </span>
         </div>
 
-        <div className="p-4 bg-gray-900/60 border border-gray-800 rounded-xl">
-          <span className="text-xs font-semibold text-purple-400 uppercase tracking-wider block">
+        <div className="p-4 bg-surface border border-border-subtle rounded-card">
+          <span className="label-tech text-accent-violet block">
             Administrators
           </span>
-          <span className="text-2xl font-bold text-purple-300 mt-1 block">
+          <span className="h2 text-accent-violet mt-1 block">
             {adminCount}
           </span>
         </div>
 
-        <div className="p-4 bg-gray-900/60 border border-gray-800 rounded-xl">
-          <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider block">
+        <div className="p-4 bg-surface border border-border-subtle rounded-card">
+          <span className="label-tech text-brand block">
             Standaard Gebruikers
           </span>
-          <span className="text-2xl font-bold text-blue-300 mt-1 block">
+          <span className="h2 text-brand mt-1 block">
             {regularCount}
           </span>
         </div>
@@ -54,8 +55,8 @@ export default function UserList({ users }: UserListProps) {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500 z-10">
-            <MagnifyingGlassIcon className="w-4 h-4" />
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-fg-muted z-10">
+            <MagnifyingGlassIcon className="icon-sm" />
           </span>
           <UIInput
             type="text"
@@ -66,20 +67,20 @@ export default function UserList({ users }: UserListProps) {
           />
         </div>
 
-        <span className="text-xs text-gray-400">
+        <span className="label-meta">
           {filteredUsers.length} van de {users.length} gebruikers getoond
         </span>
       </div>
 
-      <div className="bg-gray-900/40 border border-gray-800 rounded-xl overflow-hidden">
+      <div className="bg-surface border border-border-subtle rounded-card overflow-hidden">
         {filteredUsers.length === 0 ? (
-          <div className="p-8 text-center text-gray-500 text-sm">
+          <div className="p-8 text-center text-fg-muted text-sm">
             Geen gebruikers gevonden die overeenkomen met je zoekopdracht.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-gray-950/60 text-xs uppercase tracking-wider text-gray-400 border-b border-gray-800">
+              <thead className="bg-canvas label-tech border-b border-border-subtle">
                 <tr>
                   <th scope="col" className="px-6 py-3.5 font-semibold">
                     Gebruiker
@@ -95,9 +96,9 @@ export default function UserList({ users }: UserListProps) {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800/60">
+              <tbody className="divide-y divide-border-subtle">
                 {filteredUsers.map((user) => {
-                  const registeredDate = formatSafeDate(
+                  const registeredDate = formatDate(
                     user.created_at,
                     { dateStyle: 'medium' },
                     '—'
@@ -106,18 +107,18 @@ export default function UserList({ users }: UserListProps) {
                   return (
                     <tr
                       key={user.id}
-                      className="hover:bg-gray-800/30 transition-colors"
+                      className="hover:bg-surface-hover transition-colors"
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 font-semibold text-xs shrink-0">
-                            {(user.email || '?').charAt(0).toUpperCase()}
+                          <div className="w-8 h-8 rounded-pill bg-surface-hover border border-border-subtle flex items-center justify-center text-fg-primary font-semibold text-xs shrink-0">
+                            {getUserInitial(user.email)}
                           </div>
                           <div className="min-w-0">
-                            <span className="font-medium text-gray-200 block truncate">
+                            <span className="font-medium text-fg-primary block truncate">
                               {user.email || 'Geen e-mailadres'}
                             </span>
-                            <span className="font-mono text-2xs text-gray-500 block truncate">
+                            <span className="font-mono text-2xs text-fg-muted block truncate">
                               {user.id}
                             </span>
                           </div>
@@ -128,17 +129,17 @@ export default function UserList({ users }: UserListProps) {
                         <AccountRoleBadge role={user.role} />
                       </td>
 
-                      <td className="px-6 py-4 text-xs text-gray-400 whitespace-nowrap">
+                      <td className="px-6 py-4 text-xs text-fg-muted whitespace-nowrap">
                         {registeredDate}
                       </td>
 
                       <td className="px-6 py-4 text-right whitespace-nowrap">
                         <Link
                           href={`/admin/users/${user.id}`}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors bg-blue-950/30 hover:bg-blue-950/60 border border-blue-900/50 px-3 py-1.5 rounded-lg"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-fg-primary hover:text-brand transition-colors bg-surface-hover border border-border-default px-3 py-1.5 rounded-control"
                         >
                           <span>Rechten instellen</span>
-                          <ChevronRightIcon className="w-3.5 h-3.5" />
+                          <ChevronRightIcon className="icon-xs" />
                         </Link>
                       </td>
                     </tr>

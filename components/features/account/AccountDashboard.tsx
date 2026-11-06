@@ -23,10 +23,10 @@ export default function AccountDashboard({
 
       <div>
         <div className="mb-6">
-          <h2 className="text-xl font-bold text-gray-100">
+          <h2 className="h2">
             Account Dashboard
           </h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-fg-muted mt-1">
             Overzicht van jouw persoonlijke functies, lijsten en voorkeuren.
           </p>
         </div>
@@ -37,7 +37,7 @@ export default function AccountDashboard({
             description="Bekijk je accountprofiel, e-mailadres, unieke identificatie en autorisatiestatus."
             href="/account/profile"
             buttonText="Gegevens bekijken"
-            icon={<UserIcon className="w-5 h-5 text-blue-400" />}
+            icon={<UserIcon className="icon-md text-brand" />}
           />
 
           <AccountCard
@@ -46,7 +46,7 @@ export default function AccountDashboard({
             href="/account/watchlist"
             buttonText="Watchlist openen"
             badge={`${watchlistItemCount} titels`}
-            icon={<BookmarkIcon className="w-5 h-5 text-blue-400" />}
+            icon={<BookmarkIcon className="icon-md text-brand" />}
           />
 
           <AccountCard
@@ -54,7 +54,7 @@ export default function AccountDashboard({
             description="Pas het aantal getoonde posters per overzicht aan en kies tussen grid- of rijweergave."
             href="/account/settings"
             buttonText="Instellingen beheren"
-            icon={<Cog6ToothIcon className="w-5 h-5 text-blue-400" />}
+            icon={<Cog6ToothIcon className="icon-md text-brand" />}
           />
 
           {profile.role === 'admin' ? (
@@ -65,7 +65,7 @@ export default function AccountDashboard({
                 href="/admin"
                 buttonText="Naar Beheeromgeving"
                 badge="Admin Alleen"
-                icon={<ShieldCheckIcon className="w-5 h-5 text-purple-400" />}
+                icon={<ShieldCheckIcon className="icon-md text-accent-violet" />}
               />
             </div>
           ) : null}
@@ -74,4 +74,3 @@ export default function AccountDashboard({
     </div>
   )
 }
-

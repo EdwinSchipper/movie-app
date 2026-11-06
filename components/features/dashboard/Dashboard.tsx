@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { getTrendingMovies } from '@/lib/tmdb'
 import { getAppUser } from '@/lib/auth'
+import { getMediaDetailHref } from '@/lib/utils'
 import DashboardCard, { type DashboardCardProps } from './DashboardCard'
 import DashboardHero from './DashboardHero'
 
@@ -37,7 +38,7 @@ async function DashboardHeroContent() {
     <DashboardHero
       title={featuredMovie.title}
       description={featuredMovie.overview || 'Bekijk nu de populairste film van vandaag.'}
-      href={`/movies/${featuredMovie.id}`}
+      href={getMediaDetailHref('movie', featuredMovie.id)}
       buttonText="Bekijk film"
       backdropPath={featuredMovie.backdrop_path}
       voteAverage={featuredMovie.vote_average}

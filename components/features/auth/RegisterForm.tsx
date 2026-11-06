@@ -1,19 +1,37 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { Suspense, useState, type FormEvent } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { EnvelopeIcon } from '@heroicons/react/24/outline'
-import { UIButton } from '@/components/ui'
+import { UIButton, UIInput } from '@/components/ui'
 import { registerSchema } from '@/types'
 import { signup } from '@/lib/auth'
+import { getSafeRedirectPath } from '@/lib/utils'
 
 export interface RegisterFormProps {
   className?: string
 }
 
-export default function RegisterForm({ className = '' }: RegisterFormProps) {
+function RegisterFormSkeleton({ className = '' }: RegisterFormProps) {
+  return (
+    <div className={`w-full max-w-md mx-auto rounded-card border border-border-subtle bg-surface p-6 sm:p-8 animate-pulse ${className}`.trim()}>
+      <div className="h-8 w-44 bg-surface-hover rounded-control mx-auto mb-2" />
+      <div className="h-4 w-64 bg-surface-hover rounded-control mx-auto mb-6" />
+      <div className="space-y-4">
+        <div className="h-10 bg-surface-hover rounded-control" />
+        <div className="h-10 bg-surface-hover rounded-control" />
+        <div className="h-10 bg-surface-hover rounded-control" />
+      </div>
+    </div>
+  )
+}
+
+function RegisterFormContent({ className = '' }: RegisterFormProps) {
   const router = useRouter()
+  const urlParams = useSearchParams()
+  const destinationPath = getSafeRedirectPath(urlParams.get('next'))
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -24,6 +42,9 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
   const hasMinLength = password.length >= 8
   const hasUppercase = /[A-Z]/.test(password)
   const hasNumber = /[0-9]/.test(password)
+
+  const loginHref =
+    destinationPath !== '/' ? `/login?next=${destinationPath}` : '/login'
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -57,7 +78,7 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
       }
 
       if (result.data?.needsEmailConfirmation === false) {
-        router.push('/')
+        router.push(destinationPath)
         return
       }
 
@@ -71,23 +92,23 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
 
   if (isSuccess) {
     return (
-      <div className={`w-full max-w-md mx-auto rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs dark:border-gray-800 dark:bg-gray-900/60 backdrop-blur-xs text-center ${className}`.trim()}>
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
-          <EnvelopeIcon className="h-6 w-6" />
+      <div className={`w-full max-w-md mx-auto rounded-card border border-border-subtle bg-surface p-6 sm:p-8 text-center ${className}`.trim()}>
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-pill bg-brand/10 text-brand">
+          <EnvelopeIcon className="icon-md" />
         </div>
 
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+        <h1 className="h2 mb-2">
           Bevestig je e-mailadres
         </h1>
 
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-fg-muted">
           We hebben een verificatielink gestuurd naar{' '}
-          <strong className="text-gray-900 dark:text-gray-200">{email}</strong>.
+          <strong className="text-fg-primary">{email}</strong>.
           Klik op de link in de e-mail om je registratie te voltooien.
         </p>
 
         <div className="mt-6">
-          <Link href="/login" className="block w-full">
+          <Link href={loginHref} className="block w-full">
             <UIButton variant="outline" size="md" className="w-full justify-center">
               Naar inloggen
             </UIButton>
@@ -98,12 +119,12 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
   }
 
   return (
-    <div className={`w-full max-w-md mx-auto rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs dark:border-gray-800 dark:bg-gray-900/60 backdrop-blur-xs ${className}`.trim()}>
+    <div className={`w-full max-w-md mx-auto rounded-card border border-border-subtle bg-surface p-6 sm:p-8 ${className}`.trim()}>
       <div className="mb-6 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+        <h1 className="h2 mb-1.5">
           Account aanmaken
         </h1>
-        <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-fg-muted">
           Registreer gratis om je eigen watchlist en aanbevelingen bij te houden.
         </p>
       </div>
@@ -112,11 +133,11 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
         <div>
           <label
             htmlFor="register-email"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+            className="label-form block mb-1.5"
           >
             E-mailadres
           </label>
-          <input
+          <UIInput
             id="register-email"
             name="email"
             type="email"
@@ -125,18 +146,18 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="jouw.naam@voorbeeld.nl"
-            className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:placeholder:text-gray-500"
+            className="w-full"
           />
         </div>
 
         <div>
           <label
             htmlFor="register-password"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+            className="label-form block mb-1.5"
           >
             Wachtwoord
           </label>
-          <input
+          <UIInput
             id="register-password"
             name="password"
             type="password"
@@ -145,20 +166,20 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Minimaal 8 tekens"
-            className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:placeholder:text-gray-500"
+            className="w-full"
           />
 
           <div className="mt-2 space-y-1 text-xs">
-            <div className={`flex items-center gap-1.5 ${hasMinLength ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-400'}`}>
-              <span className={`inline-block h-1.5 w-1.5 rounded-full ${hasMinLength ? 'bg-emerald-500' : 'bg-gray-400 dark:bg-gray-600'}`} />
+            <div className={`flex items-center gap-1.5 ${hasMinLength ? 'text-accent-emerald' : 'text-fg-muted'}`}>
+              <span className={`inline-block h-1.5 w-1.5 rounded-pill ${hasMinLength ? 'bg-accent-emerald' : 'bg-fg-muted/40'}`} />
               Minimaal 8 tekens
             </div>
-            <div className={`flex items-center gap-1.5 ${hasUppercase ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-400'}`}>
-              <span className={`inline-block h-1.5 w-1.5 rounded-full ${hasUppercase ? 'bg-emerald-500' : 'bg-gray-400 dark:bg-gray-600'}`} />
+            <div className={`flex items-center gap-1.5 ${hasUppercase ? 'text-accent-emerald' : 'text-fg-muted'}`}>
+              <span className={`inline-block h-1.5 w-1.5 rounded-pill ${hasUppercase ? 'bg-accent-emerald' : 'bg-fg-muted/40'}`} />
               Minimaal 1 hoofdletter (A-Z)
             </div>
-            <div className={`flex items-center gap-1.5 ${hasNumber ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-400'}`}>
-              <span className={`inline-block h-1.5 w-1.5 rounded-full ${hasNumber ? 'bg-emerald-500' : 'bg-gray-400 dark:bg-gray-600'}`} />
+            <div className={`flex items-center gap-1.5 ${hasNumber ? 'text-accent-emerald' : 'text-fg-muted'}`}>
+              <span className={`inline-block h-1.5 w-1.5 rounded-pill ${hasNumber ? 'bg-accent-emerald' : 'bg-fg-muted/40'}`} />
               Minimaal 1 cijfer (0-9)
             </div>
           </div>
@@ -167,11 +188,11 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
         <div>
           <label
             htmlFor="register-confirm-password"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+            className="label-form block mb-1.5"
           >
             Bevestig wachtwoord
           </label>
-          <input
+          <UIInput
             id="register-confirm-password"
             name="confirmPassword"
             type="password"
@@ -180,14 +201,14 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Herhaal je wachtwoord"
-            className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:placeholder:text-gray-500"
+            className="w-full"
           />
         </div>
 
         {error && (
           <div
             role="alert"
-            className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400"
+            className="p-3 rounded-control text-sm border bg-accent-coral/10 border-accent-coral/30 text-accent-coral"
           >
             {error}
           </div>
@@ -204,15 +225,23 @@ export default function RegisterForm({ className = '' }: RegisterFormProps) {
         </UIButton>
       </form>
 
-      <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+      <div className="mt-6 text-center text-sm text-fg-muted">
         Al een account?{' '}
         <Link
-          href="/login"
-          className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+          href={loginHref}
+          className="font-medium text-fg-primary hover:text-brand transition-colors"
         >
           Direct inloggen
         </Link>
       </div>
     </div>
+  )
+}
+
+export default function RegisterForm(props: RegisterFormProps) {
+  return (
+    <Suspense fallback={<RegisterFormSkeleton {...props} />}>
+      <RegisterFormContent {...props} />
+    </Suspense>
   )
 }
