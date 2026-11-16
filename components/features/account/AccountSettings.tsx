@@ -70,28 +70,28 @@ export default function AccountSettings({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-6 sm:p-8 backdrop-blur-xs">
-        <div className="pb-6 border-b border-gray-800">
-          <h2 className="text-xl font-bold text-gray-100">
+      <div className="bg-surface border border-border-subtle rounded-card p-6 sm:p-8">
+        <div className="pb-6 border-b border-border-subtle">
+          <h2 className="h3">
             Weergave-instellingen
           </h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-fg-secondary mt-1">
             Personaliseer hoe overzichtslijsten en media-tegels standaard aan jou getoond worden.
           </p>
         </div>
 
         {feedback ? (
           <div
-            className={`mt-6 p-4 rounded-lg text-sm border flex items-center gap-3 ${
+            className={`mt-6 p-4 rounded-control text-sm border flex items-center gap-3 ${
               feedback.type === 'success'
-                ? 'bg-emerald-950/60 border-emerald-800/80 text-emerald-300'
-                : 'bg-red-950/60 border-red-800/80 text-red-300'
+                ? 'bg-accent-emerald/15 border-accent-emerald/40 text-accent-emerald'
+                : 'bg-accent-coral/15 border-accent-coral/40 text-accent-coral'
             }`}
           >
             {feedback.type === 'success' ? (
-              <CheckIcon className="w-5 h-5 shrink-0 text-emerald-400" />
+              <CheckIcon className="icon-md shrink-0 text-accent-emerald" />
             ) : (
-              <XMarkIcon className="w-5 h-5 shrink-0 text-red-400" />
+              <XMarkIcon className="icon-md shrink-0 text-accent-coral" />
             )}
             <span>{feedback.message}</span>
           </div>
@@ -99,10 +99,10 @@ export default function AccountSettings({
 
         <div className="space-y-8 pt-6">
           <div>
-            <span className="block text-sm font-semibold text-gray-200 mb-1">
+            <span className="block text-sm font-semibold text-fg-primary mb-1">
               Aantal tiles per overzichtspagina
             </span>
-            <p className="text-xs text-gray-400 mb-3">
+            <p className="text-xs text-fg-secondary mb-3">
               Stel in hoeveel media-items (films/series) standaard geladen worden.
             </p>
             <div className="flex flex-wrap gap-2">
@@ -120,11 +120,11 @@ export default function AccountSettings({
             </div>
           </div>
 
-          <div className="pt-6 border-t border-gray-800/80">
-            <span className="block text-sm font-semibold text-gray-200 mb-1">
+          <div className="pt-6 border-t border-border-subtle">
+            <span className="block text-sm font-semibold text-fg-primary mb-1">
               Standaard weergavetype
             </span>
-            <p className="text-xs text-gray-400 mb-3">
+            <p className="text-xs text-fg-secondary mb-3">
               Kies of je overzichten bij voorkeur als poster-raster of als compacte rijlijst ziet.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -133,10 +133,10 @@ export default function AccountSettings({
                 return (
                   <label
                     key={option.value}
-                    className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
+                    className={`flex items-start gap-3 p-4 rounded-card border cursor-pointer transition-all ${
                       isSelected
-                        ? 'bg-blue-950/20 border-blue-500/50 text-white'
-                        : 'bg-gray-950/60 border-gray-800 text-gray-400 hover:border-gray-700'
+                        ? 'bg-accent-blue/15 border-accent-blue/50 text-fg-primary'
+                        : 'bg-canvas/60 border-border-subtle text-fg-secondary hover:border-border-default'
                     }`}
                   >
                     <input
@@ -145,13 +145,13 @@ export default function AccountSettings({
                       value={option.value}
                       checked={isSelected}
                       onChange={() => setDisplayMode(option.value)}
-                      className="mt-1 text-blue-600 focus:ring-blue-500"
+                      className="mt-1 accent-accent-blue"
                     />
                     <div>
-                      <span className="block text-sm font-semibold text-gray-200">
+                      <span className="block text-sm font-semibold text-fg-primary">
                         {option.label}
                       </span>
-                      <span className="block text-xs text-gray-400 mt-1">
+                      <span className="block text-xs text-fg-muted mt-1">
                         {option.description}
                       </span>
                     </div>
@@ -162,17 +162,16 @@ export default function AccountSettings({
           </div>
         </div>
 
-        <div className="pt-8 mt-8 border-t border-gray-800 flex justify-end">
+        <div className="pt-8 mt-8 border-t border-border-subtle flex justify-end">
           <UIButton
             type="submit"
             variant="primary"
             size="md"
             disabled={isPending}
-            className="gap-2"
           >
             {isPending ? (
               <>
-                <UISpinner size="sm" className="text-white" />
+                <UISpinner size="sm" />
                 <span>Bezig met opslaan...</span>
               </>
             ) : (

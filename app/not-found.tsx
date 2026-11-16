@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { FilmIcon, FireIcon, HomeIcon } from '@heroicons/react/24/outline'
+import { UIButton } from '@/components/ui'
 
 export const metadata: Metadata = {
   title: '404 — Scène niet gevonden | Movie App',
@@ -56,21 +56,15 @@ export default function NotFoundPage() {
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/"
-            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
-          >
+          <UIButton href="/" variant="primary" size="sm" className="min-h-10">
             <HomeIcon className="icon-sm" aria-hidden="true" />
             Terug naar home
-          </Link>
+          </UIButton>
 
-          <Link
-            href="/trending"
-            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-border-default bg-canvas/70 px-4 py-2 text-sm font-medium text-fg-secondary transition-colors hover:bg-surface-hover hover:text-fg-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
-          >
+          <UIButton href="/trending" variant="outline" size="sm" className="min-h-10">
             <FireIcon className="icon-sm" aria-hidden="true" />
             Bekijk trending
-          </Link>
+          </UIButton>
         </div>
       </div>
     </section>

@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import { UIButton } from '@/components/ui'
 import { getTmdbImageUrl, formatReleaseYear, formatRating } from '@/lib/utils'
 
@@ -65,11 +64,9 @@ export default function DashboardHero({
           {description}
         </p>
 
-        <Link href={href}>
-          <UIButton variant="primary" size="lg">
-            {buttonText}
-          </UIButton>
-        </Link>
+        <UIButton href={href} variant="primary" size="lg">
+          {buttonText}
+        </UIButton>
       </div>
     </div>
   )

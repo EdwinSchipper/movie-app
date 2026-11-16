@@ -1,5 +1,4 @@
 import { Suspense } from 'react'
-import Link from 'next/link'
 import { getAppUser } from '@/lib/auth'
 import { getWatchlistStatus } from '@/lib/watchlist'
 import { isInRecommendations } from '@/lib/recommendations'
@@ -31,14 +30,14 @@ async function MediaActionsContent({ media, className = '' }: MediaActionsProps)
 
     return (
       <div className={`inline-flex items-center gap-3 ${className}`}>
-        <Link
+        <UIButton
           href={`/login?next=${destinationPath}`}
+          variant="primary"
+          size="md"
           aria-label={`Inloggen om ${media.title} te bewaren op je watchlist`}
         >
-          <UIButton variant="primary" size="md">
-            Inloggen om te bewaren
-          </UIButton>
-        </Link>
+          Inloggen om te bewaren
+        </UIButton>
       </div>
     )
   }

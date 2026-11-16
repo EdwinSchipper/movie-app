@@ -46,7 +46,7 @@ export default function TrendingTvClient({
   return (
     <div>
       <div className="flex items-center justify-between gap-5 pb-6">
-        <h2 className="text-2xl font-bold text-gray-200">{heading}</h2>
+        <h2 className="h2">{heading}</h2>
         <UISwitch
           value={range}
           onChange={handleToggle}

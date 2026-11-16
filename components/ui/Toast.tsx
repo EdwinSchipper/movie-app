@@ -51,7 +51,7 @@ function ToastCloseButton({ closeToast }: { closeToast: () => void }) {
         closeToast()
       }}
       aria-label="Melding sluiten"
-      className="absolute top-2 right-2 inline-flex size-6 items-center justify-center rounded-control text-fg-muted transition-colors data-hover:bg-white/10 data-hover:text-fg-primary focus:outline-none data-focus:ring-2 data-focus:ring-brand"
+      className="absolute top-2 right-2 inline-flex size-6 items-center justify-center rounded-control text-fg-muted transition-colors data-hover:bg-surface-glass data-hover:text-fg-primary focus:outline-none data-focus:ring-2 data-focus:ring-brand"
     >
       <XMarkIcon className="size-4" aria-hidden="true" />
     </HeadlessButton>

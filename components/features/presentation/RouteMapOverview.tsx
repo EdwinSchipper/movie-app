@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import {
   ArrowDownIcon,
   ArrowRightIcon,
@@ -150,14 +149,13 @@ export default function RouteMapOverview() {
                           variant={isSelected ? 'primary' : 'outline'}
                           size="xs"
                           onClick={() => setSelectedPath(route.path)}
-                          className={`w-full justify-between gap-2 px-2.5 py-2 text-left ${isSelected
-                              ? 'bg-brand! text-brand-fg! ring-2 ring-brand/40 font-semibold'
-                              : 'bg-surface! text-fg-secondary! border-border-subtle! data-hover:border-border-default! data-hover:text-fg-primary!'
-                            }`}
+                          className={`w-full justify-between px-2.5 py-2 text-left ${
+                            isSelected ? 'ring-2 ring-brand/40' : 'border-border-subtle bg-surface'
+                          }`}
                         >
                           <span className="truncate font-mono text-xs">{route.path}</span>
                           <span
-                            className={`shrink-0 text-[10px] font-mono ${isSelected ? 'text-brand-fg/80' : 'text-fg-muted'
+                            className={`shrink-0 text-[10px] font-mono ${isSelected ? 'text-white/80' : 'text-fg-muted'
                               }`}
                           >
                             {route.renderMode === 'PPR + Suspense' ? 'PPR' : route.renderMode}
@@ -192,13 +190,14 @@ export default function RouteMapOverview() {
             </div>
 
             {activeRoute.navigableHref && (
-              <Link
+              <UIButton
                 href={activeRoute.navigableHref}
-                className="inline-flex min-h-9 items-center gap-1.5 rounded-control bg-brand px-3.5 py-1.5 text-xs font-semibold text-brand-fg transition-colors hover:bg-brand-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+                variant="primary"
+                size="sm"
               >
                 Open live route
                 <ArrowTopRightOnSquareIcon className="icon-xs" aria-hidden="true" />
-              </Link>
+              </UIButton>
             )}
           </div>
 

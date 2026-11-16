@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { UIButton } from '@/components/ui'
 
 export interface DashboardCardProps {
@@ -15,20 +14,18 @@ export default function DashboardCard({
   buttonText,
 }: DashboardCardProps) {
   return (
-    <div className="flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-6 shadow-xs transition-shadow hover:shadow-md">
+    <div className="flex flex-col justify-between rounded-card border border-border-subtle bg-surface p-6 transition-all hover:border-border-default hover:bg-surface-hover">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-2">{heading}</h2>
-        <p className="text-sm text-gray-600 leading-relaxed mb-6">
+        <h2 className="h3 mb-2">{heading}</h2>
+        <p className="text-sm text-fg-secondary leading-relaxed mb-6">
           {description}
         </p>
       </div>
 
       <div>
-        <Link href={href}>
-          <UIButton variant="primary" size="md" className="w-full">
-            {buttonText}
-          </UIButton>
-        </Link>
+        <UIButton href={href} variant="primary" size="md" className="w-full">
+          {buttonText}
+        </UIButton>
       </div>
     </div>
   )

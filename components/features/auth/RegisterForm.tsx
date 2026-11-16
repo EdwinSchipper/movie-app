@@ -108,11 +108,9 @@ function RegisterFormContent({ className = '' }: RegisterFormProps) {
         </p>
 
         <div className="mt-6">
-          <Link href={loginHref} className="block w-full">
-            <UIButton variant="outline" size="md" className="w-full justify-center">
-              Naar inloggen
-            </UIButton>
-          </Link>
+          <UIButton href={loginHref} variant="outline" size="md" className="w-full">
+            Naar inloggen
+          </UIButton>
         </div>
       </div>
     )

@@ -17,11 +17,11 @@ interface RecommendationContentProps {
 
 function RecommendationGridSkeleton() {
   return (
-    <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 animate-pulse">
+    <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 animate-pulse motion-reduce:animate-none">
       {Array.from({ length: 10 }).map((_, i) => (
         <div key={i} className="space-y-2">
-          <div className="aspect-2/3 w-full rounded-xl bg-gray-200/10" />
-          <div className="h-4 w-3/4 rounded bg-gray-200/10" />
+          <div className="aspect-2/3 w-full rounded-tile bg-surface border border-border-subtle" />
+          <div className="h-4 w-3/4 rounded-control bg-surface-hover" />
         </div>
       ))}
     </div>
@@ -36,7 +36,7 @@ async function RecommendationGridContent({ searchParams }: RecommendationContent
 
   if (recommendations.length === 0) {
     return (
-      <p className="text-gray-500">
+      <p className="text-fg-secondary">
         Er staan nog geen aanbevelingen in de lijst.
       </p>
     )
@@ -47,7 +47,7 @@ async function RecommendationGridContent({ searchParams }: RecommendationContent
 
   if (displayItems.length === 0) {
     return (
-      <p className="text-gray-500">
+      <p className="text-fg-secondary">
         Geen aanbevelingen gevonden die voldoen aan de geselecteerde filters.
       </p>
     )
@@ -70,10 +70,10 @@ export default function RecommendationGrid({
   return (
     <section className="w-full max-w-6xl mx-auto px-4 py-20">
       <div className="mb-6">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-300 mb-2">
+        <h1 className="h1 mb-2">
           {heading}
         </h1>
-        {subheading && <p className="text-gray-500">{subheading}</p>}
+        {subheading && <p className="text-fg-secondary">{subheading}</p>}
       </div>
 
       <FilterBar className="mb-8" />

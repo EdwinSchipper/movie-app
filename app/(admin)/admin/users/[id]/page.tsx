@@ -11,8 +11,8 @@ export interface AdminUserDetailPageProps {
 function UserDetailSkeleton() {
   return (
     <div className="space-y-6 animate-pulse">
-      <div className="h-60 bg-gray-900/60 rounded-xl" />
-      <div className="h-72 bg-gray-900/60 rounded-xl" />
+      <div className="h-60 bg-surface border border-border-subtle rounded-card" />
+      <div className="h-72 bg-surface border border-border-subtle rounded-card" />
     </div>
   )
 }

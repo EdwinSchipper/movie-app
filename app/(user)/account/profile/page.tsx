@@ -6,14 +6,14 @@ import { AccountProfile } from '@/components/features/account'
 function ProfileSkeleton() {
   return (
     <div className="space-y-6 animate-pulse">
-      <div className="bg-gray-900/40 border border-gray-800 rounded-xl p-6 sm:p-8">
-        <div className="h-6 w-48 bg-gray-800 rounded mb-4" />
-        <div className="h-4 w-72 bg-gray-800/60 rounded mb-8" />
+      <div className="bg-surface border border-border-subtle rounded-card p-6 sm:p-8">
+        <div className="h-6 w-48 bg-surface-hover rounded-control mb-4" />
+        <div className="h-4 w-72 bg-surface-hover rounded-control mb-8" />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="h-12 bg-gray-800/40 rounded" />
-          <div className="h-12 bg-gray-800/40 rounded" />
-          <div className="h-12 bg-gray-800/40 rounded" />
-          <div className="h-12 bg-gray-800/40 rounded" />
+          <div className="h-12 bg-surface-hover rounded-control" />
+          <div className="h-12 bg-surface-hover rounded-control" />
+          <div className="h-12 bg-surface-hover rounded-control" />
+          <div className="h-12 bg-surface-hover rounded-control" />
         </div>
       </div>
     </div>

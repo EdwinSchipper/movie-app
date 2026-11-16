@@ -4,10 +4,10 @@ export default function Page() {
   return (
     <section className="w-full max-w-6xl mx-auto px-4 py-20">
       <div className="mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-300 mb-2">
+        <h1 className="h1 mb-2">
           Trending
         </h1>
-        <p className="text-gray-500">
+        <p className="text-fg-secondary">
           Ontdek de populairste films en series van vandaag en deze week.
         </p>
       </div>

@@ -4,7 +4,7 @@ import { Suspense, useState, type FormEvent } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { UIButton } from '@/components/ui'
+import { UIButton, UIInput } from '@/components/ui'
 import { login } from '@/lib/auth'
 import { getSafeRedirectPath, getTmdbImageUrl } from '@/lib/utils'
 
@@ -19,18 +19,18 @@ export interface LoginFormProps {
 function LoginFormSkeleton({ className = '' }: LoginFormProps) {
   return (
     <div
-      className={`w-full max-w-4xl overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-gray-800 dark:bg-gray-900/60 animate-pulse grid grid-cols-1 md:grid-cols-2 ${className}`.trim()}
+      className={`w-full max-w-4xl overflow-hidden rounded-hero border border-border-subtle bg-surface shadow-xl animate-pulse grid grid-cols-1 md:grid-cols-2 ${className}`.trim()}
     >
-      <div className="hidden md:block bg-gray-200/50 dark:bg-gray-800/60 min-h-[540px]" />
+      <div className="hidden md:block bg-surface-hover min-h-[540px]" />
       <div className="p-6 sm:p-10 flex flex-col justify-center space-y-6">
         <div>
-          <div className="h-8 w-44 rounded bg-gray-200/50 dark:bg-gray-700/40 mb-2" />
-          <div className="h-4 w-72 rounded bg-gray-200/30 dark:bg-gray-700/30" />
+          <div className="h-8 w-44 rounded-control bg-surface-hover mb-2" />
+          <div className="h-4 w-72 rounded-control bg-surface-hover" />
         </div>
         <div className="space-y-4">
-          <div className="h-10 rounded-lg bg-gray-200/40 dark:bg-gray-700/40" />
-          <div className="h-10 rounded-lg bg-gray-200/40 dark:bg-gray-700/40" />
-          <div className="h-10 rounded-lg bg-gray-200/40 dark:bg-gray-700/40" />
+          <div className="h-10 rounded-control bg-surface-hover" />
+          <div className="h-10 rounded-control bg-surface-hover" />
+          <div className="h-10 rounded-control bg-surface-hover" />
         </div>
       </div>
     </div>
@@ -84,9 +84,9 @@ function LoginFormContent({
 
   return (
     <div
-      className={`w-full max-w-4xl overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-900/60 backdrop-blur-xs grid grid-cols-1 md:grid-cols-2 ${className}`.trim()}
+      className={`w-full max-w-4xl overflow-hidden rounded-hero border border-border-subtle bg-surface shadow-2xl grid grid-cols-1 md:grid-cols-2 ${className}`.trim()}
     >
-      <div className="relative hidden md:flex flex-col justify-between overflow-hidden bg-gray-950 p-8 text-white min-h-[540px]">
+      <div className="relative hidden md:flex flex-col justify-between overflow-hidden bg-canvas p-8 text-fg-primary min-h-[540px]">
         <Image
           src={getTmdbImageUrl(posterPath, 'w780')}
           alt={posterTitle}
@@ -95,25 +95,25 @@ function LoginFormContent({
           sizes="(max-width: 768px) 0vw, 50vw"
           className="object-cover object-center"
         />
-        <div className="absolute inset-0 bg-linear-to-t from-gray-950 via-gray-950/45 to-gray-950/20" />
+        <div className="absolute inset-0 bg-linear-to-t from-canvas via-canvas/45 to-canvas/20" />
 
         <div className="relative z-10">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-600/90 backdrop-blur-md px-3 py-1 text-xs font-semibold tracking-wide text-white shadow-xs">
+          <span className="badge-brand backdrop-blur-md shadow-xs">
             🎬 Movie App
           </span>
         </div>
 
         <div className="relative z-10 space-y-3">
-          <blockquote className="text-base font-medium leading-snug text-gray-100">
+          <blockquote className="text-base font-medium leading-snug text-fg-primary">
             &ldquo;{posterQuote}&rdquo;
           </blockquote>
-          <div className="flex items-center justify-between text-xs text-gray-300 border-t border-white/10 pt-3">
-            <span className="font-semibold text-white">{posterTitle}</span>
-            <span className="flex items-center gap-1 text-yellow-400 font-medium">
-              ★ {posterRating}
+          <div className="flex items-center justify-between text-xs text-fg-secondary border-t border-border-default pt-3">
+            <span className="font-semibold text-fg-primary">{posterTitle}</span>
+            <span className="flex items-center gap-1 text-brand font-semibold">
+              <span aria-hidden="true">★</span> {posterRating}
             </span>
           </div>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-fg-muted">
             Jouw persoonlijke film- en seriecollectie, altijd binnen handbereik.
           </p>
         </div>
@@ -121,10 +121,10 @@ function LoginFormContent({
 
       <div className="flex flex-col justify-center p-6 sm:p-10">
         <div className="mb-6 text-center md:text-left">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+          <h1 className="h2">
             Welkom terug
           </h1>
-          <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400 text-balance">
+          <p className="mt-1.5 text-sm text-fg-secondary text-balance">
             Log in op je account om je watchlist en aanbevelingen te beheren.
           </p>
         </div>
@@ -133,11 +133,11 @@ function LoginFormContent({
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+              className="label-form block mb-1.5"
             >
               E-mailadres
             </label>
-            <input
+            <UIInput
               id="email"
               name="email"
               type="email"
@@ -146,7 +146,6 @@ function LoginFormContent({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="jouw.naam@voorbeeld.nl"
-              className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:placeholder:text-gray-500"
             />
           </div>
 
@@ -154,12 +153,12 @@ function LoginFormContent({
             <div className="flex items-center justify-between mb-1.5">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                className="label-form block"
               >
                 Wachtwoord
               </label>
             </div>
-            <input
+            <UIInput
               id="password"
               name="password"
               type="password"
@@ -168,14 +167,13 @@ function LoginFormContent({
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:placeholder:text-gray-500"
             />
           </div>
 
           {error && (
             <div
               role="alert"
-              className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400"
+              className="rounded-control border border-accent-coral/40 bg-accent-coral/15 p-3 text-sm text-accent-coral"
             >
               {error}
             </div>
@@ -186,17 +184,17 @@ function LoginFormContent({
             variant="primary"
             size="md"
             disabled={isPending}
-            className="w-full justify-center py-2.5 text-sm font-medium"
+            className="w-full"
           >
             {isPending ? 'Bezig met inloggen...' : 'Inloggen'}
           </UIButton>
         </form>
 
-        <div className="mt-6 text-center md:text-left text-sm text-gray-500 dark:text-gray-400">
+        <div className="mt-6 text-center md:text-left text-sm text-fg-secondary">
           Nog geen account?{' '}
           <Link
             href="/register"
-            className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+            className="font-semibold text-brand hover:text-brand-hover transition-colors"
           >
             Account registreren
           </Link>
