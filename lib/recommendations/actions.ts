@@ -3,56 +3,16 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentUser, isAdmin } from '@/lib/auth'
-import { validateMediaActionPayload, validateMediaTarget } from '@/lib/utils'
+import {
+  normalizeMediaActionPayload,
+  validateMediaActionPayload,
+  validateMediaTarget,
+} from '@/lib/utils'
 import type {
-  MediaType,
-  RecommendationItem,
-  AddRecommendationInput,
   ActionResult,
+  AddRecommendationInput,
+  MediaType,
 } from '@/types'
-
-export async function getRecommendations(): Promise<RecommendationItem[]> {
-  const supabase = await createClient()
-
-  const { data, error } = await supabase
-    .from('recommendations')
-    .select(
-      'id, user_id, sender_name, receiver_name, tmdb_id, media_type, title, poster_path, release_date, vote_average, overview, created_at'
-    )
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('Fout bij ophalen aanbevelingen:', error.message)
-    return []
-  }
-
-  return (data as RecommendationItem[]) || []
-}
-
-export async function isInRecommendations(
-  tmdbId: number,
-  mediaType: MediaType
-): Promise<boolean> {
-  if (!tmdbId || (mediaType !== 'movie' && mediaType !== 'tv')) {
-    return false
-  }
-
-  const supabase = await createClient()
-
-  const { data, error } = await supabase
-    .from('recommendations')
-    .select('id')
-    .eq('tmdb_id', tmdbId)
-    .eq('media_type', mediaType)
-    .maybeSingle()
-
-  if (error) {
-    console.error('Fout bij controleren isInRecommendations:', error.message)
-    return false
-  }
-
-  return Boolean(data?.id)
-}
 
 export async function addToRecommendations(
   item: AddRecommendationInput
@@ -84,13 +44,7 @@ export async function addToRecommendations(
     user_id: user.id,
     sender_name: item.sender_name?.trim() || 'Aanbeveling',
     receiver_name: item.receiver_name?.trim() || 'Iedereen',
-    tmdb_id: item.tmdb_id,
-    media_type: item.media_type,
-    title: item.title.trim(),
-    poster_path: item.poster_path ?? null,
-    release_date: item.release_date ?? null,
-    vote_average: typeof item.vote_average === 'number' ? item.vote_average : null,
-    overview: item.overview ?? null,
+    ...normalizeMediaActionPayload(item),
   }
 
   const { error } = await supabase

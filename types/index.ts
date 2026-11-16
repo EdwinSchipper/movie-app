@@ -1,7 +1,10 @@
-export type {
-  MediaType,
-  MediaActionPayload,
-  ActionResult,
+export {
+  mediaTypeSchema,
+  mediaActionPayloadSchema,
+  mediaTargetSchema,
+  type MediaType,
+  type MediaActionPayload,
+  type ActionResult,
 } from './media'
 
 export {
@@ -18,10 +21,12 @@ export {
   type SearchItem,
 } from './tmdb'
 
-export type {
-  WatchlistStatus,
-  WatchlistItem,
-  AddWatchlistInput,
+export {
+  watchlistStatusSchema,
+  addWatchlistInputSchema,
+  type WatchlistStatus,
+  type WatchlistItem,
+  type AddWatchlistInput,
 } from './watchlist'
 
 export type {
@@ -41,7 +46,12 @@ export type {
 } from './filters'
 
 export {
+  userRoleSchema,
+  tileDisplayModeSchema,
+  userSettingsSchema,
   registerSchema,
+  loginSchema,
+  updateUserRoleSchema,
   type UserRole,
   type TileDisplayMode,
   type AppUser,

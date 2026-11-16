@@ -28,11 +28,9 @@ function TvDetailSkeleton() {
 
 async function TvDetailContent({ params }: TvDetailProps) {
   const { id } = await params
+  const show = await getTvDetails(id)
 
-  let show
-  try {
-    show = await getTvDetails(id)
-  } catch {
+  if (!show) {
     notFound()
   }
 

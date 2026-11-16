@@ -1,72 +1,32 @@
 'use server'
 
-import { cache } from 'react'
 import { headers } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getSiteUrl } from '@/lib/env'
-import { normalizeUserRole } from '@/lib/utils'
-import { registerSchema } from '@/types'
-import type { ActionResult, AppUser, LoginInput } from '@/types'
-
-export const getCurrentUser = cache(async () => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  return user
-})
-
-export const getAppUser = cache(async (): Promise<AppUser | null> => {
-  const user = await getCurrentUser()
-  if (!user) {
-    return null
-  }
-
-  const supabase = await createClient()
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, email')
-    .eq('id', user.id)
-    .maybeSingle()
-
-  const role = normalizeUserRole(profile?.role ?? user.app_metadata?.role)
-
-  return {
-    id: user.id,
-    email:
-      profile?.email ||
-      user.email ||
-      (typeof user.user_metadata?.email === 'string' ? user.user_metadata.email : '') ||
-      '',
-    role,
-  }
-})
-
-export const isAdmin = cache(async (): Promise<boolean> => {
-  const appUser = await getAppUser()
-  return appUser?.role === 'admin'
-})
+import { loginSchema, registerSchema, type ActionResult } from '@/types'
 
 export async function login(formData: FormData): Promise<ActionResult> {
-  const email = formData.get('email')
+  const rawEmail = formData.get('email')
   const password = formData.get('password')
 
-  if (typeof email !== 'string' || typeof password !== 'string' || !email.trim() || !password) {
+  const parseResult = loginSchema.safeParse({
+    email: typeof rawEmail === 'string' ? rawEmail.trim() : rawEmail,
+    password,
+  })
+
+  if (!parseResult.success) {
     return {
       success: false,
-      error: 'Vul zowel een geldig e-mailadres als wachtwoord in.',
+      error:
+        parseResult.error.issues[0]?.message ||
+        'Vul zowel een geldig e-mailadres als wachtwoord in.',
     }
   }
 
-  const credentials: LoginInput = {
-    email: email.trim(),
-    password,
-  }
-
   const supabase = await createClient()
 
-  const { error } = await supabase.auth.signInWithPassword(credentials)
+  const { error } = await supabase.auth.signInWithPassword(parseResult.data)
 
   if (error) {
     if (error.message.includes('Invalid login credentials')) {
