@@ -1,3 +1,5 @@
 export { default as PresentationOverview } from './PresentationOverview'
 export { default as PresentationClient } from './PresentationClient'
 export { default as RouteMapOverview } from './RouteMapOverview'
+export { default as ArchitectureTimeline } from './ArchitectureTimeline'
+export { default as TimelineClient } from './TimelineClient'

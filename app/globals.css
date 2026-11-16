@@ -189,3 +189,14 @@ body {
     animation-duration: 0.01ms !important;
   }
 }
+
+.react-flow.dark {
+  --xy-background-color-default: var(--background);
+  --xy-node-background-color-default: var(--surface);
+  --xy-controls-button-background-color-default: var(--surface);
+  --xy-controls-button-background-color-hover-default: var(--surface-hover);
+  --xy-controls-button-color-default: var(--fg-primary);
+  --xy-controls-button-border-color-default: var(--border-default);
+  --xy-edge-stroke-default: var(--border-default);
+  --xy-attribution-background-color-default: rgba(20, 20, 20, 0.75);
+}

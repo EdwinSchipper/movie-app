@@ -47,7 +47,7 @@ async function MovieDetailContent({ params }: MovieDetailProps) {
     <article className="w-full max-w-6xl mx-auto p-6 md:p-12">
       <Link
         href="/trending"
-        className="inline-flex items-center gap-2 text-sm text-fg-muted hover:text-brand mb-6 transition-colors"
+        className="inline-flex items-center gap-2 text-sm text-fg-muted hover:text-accent-blue-hover mb-6 transition-colors"
       >
         ← Terug naar overzicht
       </Link>

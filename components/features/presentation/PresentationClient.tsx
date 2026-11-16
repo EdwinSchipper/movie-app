@@ -127,20 +127,28 @@ export default function PresentationClient() {
       className="w-full max-w-6xl mx-auto px-4 py-12 md:py-16 space-y-10"
     >
       <div className="rounded-hero border border-border-subtle bg-surface p-6 md:p-10 shadow-2xl space-y-8">
-        <div className="space-y-4">
-          <span className="badge-brand">
-            Architectuur &amp; Presentatie
-          </span>
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <div className="space-y-4">
+            <span className="badge-brand">
+              Architectuur &amp; Presentatie
+            </span>
 
-          <h1 id="presentation-heading" className="h1">
-            Movie App — Projectscope &amp; Koppelingen
-          </h1>
+            <h1 id="presentation-heading" className="h1">
+              Movie App — Projectscope &amp; Koppelingen
+            </h1>
 
-          <p className="max-w-3xl text-sm md:text-base leading-relaxed text-fg-secondary">
-            Volledig overzicht van de Next.js 16 App Router applicatie: van routes,
-            toegangsscopes en UI-contracten tot parallelle Promises, React.cache(),
-            Supabase RLS en TMDB API v3 integratie.
-          </p>
+            <p className="max-w-3xl text-sm md:text-base leading-relaxed text-fg-secondary">
+              Volledig overzicht van de Next.js 16 App Router applicatie: van routes,
+              toegangsscopes en UI-contracten tot parallelle Promises, React.cache(),
+              Supabase RLS en TMDB API v3 integratie.
+            </p>
+          </div>
+
+          <div className="shrink-0">
+            <UIButton href="/tijdlijn" variant="outline" size="sm">
+              Bekijk Data stroom
+            </UIButton>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -287,7 +295,7 @@ export default function PresentationClient() {
                           {route.navigableHref && (
                             <Link
                               href={route.navigableHref}
-                              className="inline-flex min-h-7 items-center gap-1 rounded-pill border border-border-default bg-canvas/60 px-2.5 py-0.5 text-xs font-medium text-fg-secondary transition-colors hover:border-brand hover:text-brand focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                              className="inline-flex min-h-7 items-center gap-1 rounded-pill border border-border-default bg-canvas/60 px-2.5 py-0.5 text-xs font-medium text-fg-secondary transition-colors hover:border-accent-blue-hover hover:text-accent-blue-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60"
                             >
                               Open
                               <ArrowTopRightOnSquareIcon className="icon-xs" aria-hidden="true" />
