@@ -64,7 +64,7 @@ const TABS: {
   { id: 'routes', label: 'Routes', count: ROUTE_SPECS.length, icon: ListBulletIcon },
   {
     id: 'ui',
-    label: 'UI & Props',
+    label: 'Componenten & Props',
     count: UI_PRIMITIVE_SPECS.length + FEATURE_MODULE_SPECS.length,
     icon: Squares2X2Icon,
   },
@@ -150,14 +150,14 @@ export default function PresentationClient() {
             <p className="label-meta mt-0.5">Paginas, callback, error &amp; 404</p>
           </div>
           <div className="rounded-tile border border-border-subtle bg-canvas/70 p-4">
-            <span className="label-tech block">UI &amp; Feature Modules</span>
+            <span className="label-tech block">Componenten</span>
             <p className="mt-1 text-2xl font-bold text-fg-primary">
               {UI_PRIMITIVE_SPECS.length}{' '}
               <span className="text-base font-normal text-fg-muted">+</span>{' '}
               {FEATURE_MODULE_SPECS.length}
             </p>
             <p className="label-meta mt-0.5">
-              {UI_PRIMITIVE_SPECS.length} UI primitives &bull; {FEATURE_MODULE_SPECS.length} features
+              {UI_PRIMITIVE_SPECS.length} UI-bouwstenen &bull; {FEATURE_MODULE_SPECS.length} feature-componenten
             </p>
           </div>
           <div className="rounded-tile border border-border-subtle bg-canvas/70 p-4">
@@ -345,9 +345,9 @@ export default function PresentationClient() {
           <TabPanel className="space-y-8 focus:outline-none">
             <div className="space-y-4">
               <div>
-                <h2 className="h2">UI Primitives (components/ui/)</h2>
+                <h2 className="h2">UI-bouwstenen (components/ui/)</h2>
                 <p className="mt-1 text-sm text-fg-secondary">
-                  Verplichte herbruikbare bouwstenen gebouwd op Headless UI v2, react-toastify v11 en Tailwind CSS v4 tokens.
+                  Verplichte herbruikbare basiscomponenten gebouwd op Headless UI v2, react-toastify v11 en Tailwind CSS v4 tokens.
                 </p>
               </div>
 
@@ -360,7 +360,7 @@ export default function PresentationClient() {
                     <div>
                       <div className="flex items-center justify-between gap-2">
                         <h3 className="h4 font-mono text-brand">{primitive.name}</h3>
-                        <span className="badge-surface">UI Primitive</span>
+                        <span className="badge-surface">UI-bouwsteen</span>
                       </div>
                       <p className="mt-2 text-sm leading-relaxed text-fg-secondary">
                         {primitive.summary}
@@ -399,9 +399,9 @@ export default function PresentationClient() {
 
             <div className="space-y-4">
               <div>
-                <h2 className="h2">Feature Domeinen (components/features/)</h2>
+                <h2 className="h2">Feature-componenten (components/features/)</h2>
                 <p className="mt-1 text-sm text-fg-secondary">
-                  Zelfvoorzienende domeinmodules met eigen &lt;Suspense&gt; grenzen, Server/Client scheiding en getypeerde props.
+                  Zelfvoorzienende domeincomponenten met eigen &lt;Suspense&gt; grenzen, Server/Client scheiding en getypeerde props.
                 </p>
               </div>
 
