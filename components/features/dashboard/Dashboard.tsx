@@ -4,6 +4,7 @@ import { getAppUser } from '@/lib/auth'
 import { getMediaDetailHref } from '@/lib/utils'
 import DashboardCard, { type DashboardCardProps } from './DashboardCard'
 import DashboardHero from './DashboardHero'
+import DashboardText from './DashboardText'
 
 export interface DashboardProps {
   heading: string
@@ -106,6 +107,12 @@ export default function Dashboard({
       <Suspense fallback={<DashboardCardsSkeleton />}>
         <DashboardCardsContent />
       </Suspense>
+
+      <DashboardText
+        heading="Front-end Ontwikkeling & Next.js"
+        description="Ik bouw deze app met veel plezier in Next.js en gebruik hem op dit moment voor presentaties rondom Front-end Ontwikkeling. Het project is nog volop in ontwikkeling, met als doel om de app later ook via Google Play uit te brengen. Het idee is simpel: geen eindeloos scrollen of verloren kijktips in groepschats meer, maar één overzichtelijke plek voor trending films en series, je eigen watchlist en aanraders voor vrienden. Onder de motorkap werkt alles samen via de Next.js App Router, React 19, TypeScript, Tailwind CSS v4, Supabase en de TMDB API."
+      />
+
     </section>
   )
 }
