@@ -7,15 +7,15 @@ import { AccountWatchlist } from '@/components/features/account'
 function WatchlistSkeleton() {
   return (
     <div className="space-y-6 animate-pulse">
-      <div className="h-6 w-48 bg-gray-800 rounded" />
+      <div className="h-6 w-48 bg-surface-hover rounded-control" />
       <div className="flex gap-2">
-        <div className="h-8 w-24 bg-gray-800/60 rounded" />
-        <div className="h-8 w-24 bg-gray-800/60 rounded" />
-        <div className="h-8 w-24 bg-gray-800/60 rounded" />
+        <div className="h-8 w-24 bg-surface-hover rounded-control" />
+        <div className="h-8 w-24 bg-surface-hover rounded-control" />
+        <div className="h-8 w-24 bg-surface-hover rounded-control" />
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="aspect-2/3 bg-gray-800/40 rounded-xl" />
+          <div key={i} className="aspect-2/3 bg-surface border border-border-subtle rounded-tile" />
         ))}
       </div>
     </div>

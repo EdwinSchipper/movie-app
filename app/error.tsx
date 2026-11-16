@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-import Link from 'next/link'
 import { ArrowPathIcon, FilmIcon, HomeIcon } from '@heroicons/react/24/outline'
 import { UIButton } from '@/components/ui'
 
@@ -76,19 +75,21 @@ export default function ErrorPage({ error, retry }: ErrorPageProps) {
             variant="primary"
             size="md"
             onClick={() => retry()}
-            className="gap-2 min-h-10"
+            className="min-h-10"
           >
             <ArrowPathIcon className="icon-sm" aria-hidden="true" />
             Take opnieuw opnemen
           </UIButton>
 
-          <Link
+          <UIButton
             href="/"
-            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-border-default bg-canvas/70 px-4 py-2 text-sm font-medium text-fg-secondary transition-colors hover:bg-surface-hover hover:text-fg-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            variant="outline"
+            size="md"
+            className="min-h-10"
           >
             <HomeIcon className="icon-sm" aria-hidden="true" />
             Terug naar home
-          </Link>
+          </UIButton>
         </div>
       </div>
     </section>

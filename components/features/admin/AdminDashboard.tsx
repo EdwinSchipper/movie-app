@@ -16,29 +16,29 @@ export default function AdminDashboard({
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 bg-gray-900/60 border border-gray-800 rounded-xl">
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">
+        <div className="p-5 bg-surface border border-border-subtle rounded-card">
+          <span className="label-tech block">
             Geregistreerde Accounts
           </span>
-          <span className="text-3xl font-bold text-gray-100 mt-2 block">
+          <span className="text-3xl font-bold text-fg-primary mt-2 block">
             {users.length}
           </span>
         </div>
 
-        <div className="p-5 bg-gray-900/60 border border-gray-800 rounded-xl">
-          <span className="text-xs font-semibold text-purple-400 uppercase tracking-wider block">
+        <div className="p-5 bg-surface border border-border-subtle rounded-card">
+          <span className="text-xs font-mono uppercase tracking-widest text-accent-violet block">
             Beheerders (Admins)
           </span>
-          <span className="text-3xl font-bold text-purple-300 mt-2 block">
+          <span className="text-3xl font-bold text-accent-violet mt-2 block">
             {adminCount}
           </span>
         </div>
 
-        <div className="p-5 bg-gray-900/60 border border-gray-800 rounded-xl">
-          <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider block">
+        <div className="p-5 bg-surface border border-border-subtle rounded-card">
+          <span className="text-xs font-mono uppercase tracking-widest text-accent-blue-hover block">
             Publieke Aanbevelingen
           </span>
-          <span className="text-3xl font-bold text-blue-300 mt-2 block">
+          <span className="text-3xl font-bold text-fg-primary mt-2 block">
             {recommendations.length}
           </span>
         </div>
@@ -46,10 +46,10 @@ export default function AdminDashboard({
 
       <div>
         <div className="mb-6">
-          <h2 className="text-xl font-bold text-gray-100">
+          <h2 className="h3">
             Beheer Dashboard
           </h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-fg-secondary mt-1">
             Kies een beheerdersmodule om accounts te beheren of aanbevelingen te cureren.
           </p>
         </div>
@@ -61,7 +61,7 @@ export default function AdminDashboard({
             href="/admin/users"
             buttonText="Gebruikers beheren"
             badge={`${users.length} accounts`}
-            icon={<UsersIcon className="w-5 h-5 text-purple-400" />}
+            icon={<UsersIcon className="icon-md text-accent-violet" />}
           />
 
           <AdminCard
@@ -70,7 +70,7 @@ export default function AdminDashboard({
             href="/admin/recommendations"
             buttonText="Aanbevelingen beheren"
             badge={`${recommendations.length} titels`}
-            icon={<SparklesIcon className="w-5 h-5 text-purple-400" />}
+            icon={<SparklesIcon className="icon-md text-accent-violet" />}
           />
         </div>
       </div>

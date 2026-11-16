@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import Link from 'next/link'
 import {
   Squares2X2Icon,
   Bars3Icon,
@@ -96,12 +95,12 @@ export default function AccountWatchlist({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-subtle">
         <div>
-          <h2 className="text-xl font-bold text-gray-100">
+          <h2 className="h3">
             Mijn Watchlist
           </h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-fg-secondary mt-1">
             Beheer en filter jouw persoonlijke kijklijst.
           </p>
         </div>
@@ -115,7 +114,7 @@ export default function AccountWatchlist({
             title="Rasterweergave"
             className="p-1.5"
           >
-            <Squares2X2Icon className="w-4 h-4" />
+            <Squares2X2Icon className="icon-sm" />
           </UIButton>
           <UIButton
             type="button"
@@ -125,14 +124,14 @@ export default function AccountWatchlist({
             title="Lijstweergave"
             className="p-1.5"
           >
-            <Bars3Icon className="w-4 h-4" />
+            <Bars3Icon className="icon-sm" />
           </UIButton>
         </div>
       </div>
 
       {errorMessage ? (
-        <div className="p-4 rounded-lg text-sm border flex items-center gap-3 bg-red-950/60 border-red-800/80 text-red-300">
-          <XMarkIcon className="w-5 h-5 shrink-0 text-red-400" />
+        <div className="p-4 rounded-control text-sm border flex items-center gap-3 bg-accent-coral/15 border-accent-coral/40 text-accent-coral">
+          <XMarkIcon className="icon-md shrink-0 text-accent-coral" />
           <span>{errorMessage}</span>
         </div>
       ) : null}
@@ -148,35 +147,33 @@ export default function AccountWatchlist({
             className="gap-1.5"
           >
             <span>{tab.label}</span>
-            <span className="px-1.5 py-0.5 rounded-full text-2xs bg-gray-950/40 text-gray-200">
+            <span className="px-1.5 py-0.5 rounded-pill text-2xs bg-black/25">
               {tab.count}
             </span>
           </UIButton>
         ))}
 
-        <span className="ml-auto text-xs text-gray-500">
+        <span className="ml-auto label-meta">
           {visibleItems.length} van {filteredItems.length} getoond (max. {defaultTileLimit})
         </span>
       </div>
 
       {visibleItems.length === 0 ? (
-        <div className="text-center py-16 px-4 bg-gray-900/30 border border-gray-800/80 rounded-xl">
-          <BookmarkSlashIcon className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-          <h3 className="text-base font-semibold text-gray-300">
+        <div className="text-center py-16 px-4 bg-surface border border-border-subtle rounded-card">
+          <BookmarkSlashIcon className="w-12 h-12 text-fg-muted mx-auto mb-3" />
+          <h3 className="h4">
             Geen titels gevonden
           </h3>
-          <p className="text-sm text-gray-500 mt-1 max-w-sm mx-auto">
+          <p className="text-sm text-fg-secondary mt-1 max-w-sm mx-auto">
             {segment === 'all'
               ? 'Je watchlist is momenteel leeg. Verken trending films en series om titels toe te voegen!'
               : segment === 'watched'
                 ? 'Je hebt nog geen titels gemarkeerd als reeds bekeken.'
                 : 'Er staan geen titels klaar om nog te bekijken.'}
           </p>
-          <Link href="/trending" className="inline-block mt-4">
-            <UIButton variant="primary" size="sm">
-              Trending bekijken
-            </UIButton>
-          </Link>
+          <UIButton href="/trending" variant="primary" size="sm" className="mt-4">
+            Trending bekijken
+          </UIButton>
         </div>
       ) : (
         <div

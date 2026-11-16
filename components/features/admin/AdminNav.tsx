@@ -37,10 +37,10 @@ const tabs: AdminNavTab[] = [
 
 function AdminNavSkeleton() {
   return (
-    <div className="flex space-x-2 border-b border-gray-800 pb-2 mb-8 animate-pulse">
-      <div className="h-9 w-24 bg-gray-800/60 rounded-lg" />
-      <div className="h-9 w-40 bg-gray-800/60 rounded-lg" />
-      <div className="h-9 w-44 bg-gray-800/60 rounded-lg" />
+    <div className="flex space-x-2 border-b border-border-subtle pb-2 mb-8 animate-pulse">
+      <div className="h-9 w-24 bg-surface-hover rounded-control" />
+      <div className="h-9 w-40 bg-surface-hover rounded-control" />
+      <div className="h-9 w-44 bg-surface-hover rounded-control" />
     </div>
   )
 }
@@ -49,7 +49,7 @@ function AdminNavContent() {
   const pathname = usePathname()
 
   return (
-    <nav className="flex space-x-2 border-b border-gray-800 pb-2 mb-8" aria-label="Admin Tabs">
+    <nav className="flex space-x-2 border-b border-border-subtle pb-2 mb-8" aria-label="Admin Tabs">
       {tabs.map((tab) => {
         const isActive = tab.exact
           ? pathname === tab.href
@@ -61,14 +61,14 @@ function AdminNavContent() {
           <Link
             key={tab.href}
             href={tab.href}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm transition-colors border ${
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-control text-sm transition-colors border ${
               isActive
-                ? 'bg-purple-600/15 text-purple-300 border-purple-500/40 font-semibold'
-                : 'text-gray-400 border-transparent hover:text-gray-200 hover:bg-gray-800/40 font-medium'
+                ? 'bg-accent-violet/15 text-accent-violet border-accent-violet/40 font-semibold'
+                : 'text-fg-secondary border-transparent hover:text-fg-primary hover:bg-surface-hover font-medium'
             }`}
             aria-current={isActive ? 'page' : undefined}
           >
-            <Icon className={`w-4 h-4 ${isActive ? 'text-purple-400' : 'text-gray-500'}`} />
+            <Icon className={`icon-sm ${isActive ? 'text-accent-violet' : 'text-fg-muted'}`} />
             <span>{tab.label}</span>
           </Link>
         )

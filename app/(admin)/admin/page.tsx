@@ -9,13 +9,13 @@ function AdminDashboardSkeleton() {
   return (
     <div className="space-y-8 animate-pulse">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="h-24 bg-gray-900/60 rounded-xl" />
-        <div className="h-24 bg-gray-900/60 rounded-xl" />
-        <div className="h-24 bg-gray-900/60 rounded-xl" />
+        <div className="h-24 bg-surface border border-border-subtle rounded-card" />
+        <div className="h-24 bg-surface border border-border-subtle rounded-card" />
+        <div className="h-24 bg-surface border border-border-subtle rounded-card" />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
-        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
+        <div className="h-48 rounded-card bg-surface border border-border-subtle" />
+        <div className="h-48 rounded-card bg-surface border border-border-subtle" />
       </div>
     </div>
   )

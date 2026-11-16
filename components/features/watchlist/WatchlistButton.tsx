@@ -126,7 +126,7 @@ export default function WatchlistButton({
       )}
 
       {error && (
-        <p className="text-xs text-red-600 font-medium mt-1 animate-fadeIn" role="alert">
+        <p className="text-xs text-accent-coral font-medium mt-1" role="alert">
           {error}
         </p>
       )}

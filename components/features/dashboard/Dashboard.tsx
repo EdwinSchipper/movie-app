@@ -13,15 +13,18 @@ export interface DashboardProps {
 
 function DashboardHeroSkeleton() {
   return (
-    <div className="w-full rounded-2xl bg-gray-200 animate-pulse mb-10 min-h-80 md:min-h-96" />
+    <div className="w-full rounded-hero bg-surface border border-border-subtle animate-pulse motion-reduce:animate-none mb-10 min-h-80 md:min-h-96" />
   )
 }
 
 function DashboardCardsSkeleton() {
   return (
-    <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
+    <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse motion-reduce:animate-none">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="h-52 rounded-xl bg-gray-200/10" />
+        <div
+          key={i}
+          className="h-52 rounded-card bg-surface border border-border-subtle"
+        />
       ))}
     </div>
   )
@@ -98,10 +101,10 @@ export default function Dashboard({
       </Suspense>
 
       <div className="mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-300 mb-2">
+        <h1 className="h1 mb-2">
           {heading}
         </h1>
-        {subheading && <p className="text-gray-500">{subheading}</p>}
+        {subheading && <p className="text-fg-secondary">{subheading}</p>}
       </div>
 
       <Suspense fallback={<DashboardCardsSkeleton />}>

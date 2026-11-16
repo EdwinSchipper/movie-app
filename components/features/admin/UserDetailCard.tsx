@@ -9,20 +9,20 @@ export interface UserDetailCardProps {
 
 export default function UserDetailCard({ user }: UserDetailCardProps) {
   return (
-    <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-6 sm:p-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-800">
+    <div className="bg-surface border border-border-subtle rounded-card p-6 sm:p-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border-subtle">
         <div>
           <Link
             href="/admin/users"
-            className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-200 transition-colors mb-2"
+            className="inline-flex items-center gap-1.5 text-xs text-fg-secondary hover:text-fg-primary transition-colors mb-2"
           >
-            <ChevronLeftIcon className="w-3.5 h-3.5" />
+            <ChevronLeftIcon className="icon-xs" />
             <span>Terug naar gebruikersoverzicht</span>
           </Link>
-          <h2 className="text-xl font-bold text-gray-100">
+          <h2 className="h3">
             Gebruikersdetails
           </h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-fg-secondary mt-1">
             Overzicht van accountgegevens en actieve autorisatierol.
           </p>
         </div>

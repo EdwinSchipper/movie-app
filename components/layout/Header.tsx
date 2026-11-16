@@ -8,7 +8,7 @@ export default function Header() {
         <div className="flex items-center gap-6 sm:gap-20 w-full justify-between">
           <Link
             href="/"
-            className="text-xl font-bold tracking-tight text-gray-300 hover:text-blue-600 transition-colors shrink-0"
+            className="text-xl font-bold tracking-tight text-fg-primary hover:text-brand transition-colors shrink-0"
           >
             Movie App
           </Link>
