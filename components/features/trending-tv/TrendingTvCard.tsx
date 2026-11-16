@@ -30,7 +30,7 @@ export default function TrendingTvCard({ show }: TrendingTvCardProps) {
         )}
       </div>
 
-      <h3 className="mt-2 h5 line-clamp-1 group-hover:text-brand transition-colors">
+      <h3 className="mt-2 h5 line-clamp-1 group-hover:text-accent-blue-hover transition-colors">
         {show.name}
       </h3>
     </Link>

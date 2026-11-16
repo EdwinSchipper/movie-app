@@ -1,9 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { MagnifyingGlassIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
-import { UIInput } from '@/components/ui'
+import { UIButton, UIInput } from '@/components/ui'
 import { AccountRoleBadge } from '@/components/features/account'
 import { formatDate, getUserInitial } from '@/lib/utils'
 import type { AdminUserSummary } from '@/types'
@@ -134,13 +133,14 @@ export default function UserList({ users }: UserListProps) {
                       </td>
 
                       <td className="px-6 py-4 text-right whitespace-nowrap">
-                        <Link
+                        <UIButton
                           href={`/admin/users/${user.id}`}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-fg-primary hover:text-brand transition-colors bg-surface-hover border border-border-default px-3 py-1.5 rounded-control"
+                          variant="secondary"
+                          size="xs"
                         >
                           <span>Rechten instellen</span>
-                          <ChevronRightIcon className="icon-xs" />
-                        </Link>
+                          <ChevronRightIcon className="icon-xs" aria-hidden="true" />
+                        </UIButton>
                       </td>
                     </tr>
                   )

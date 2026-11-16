@@ -61,7 +61,7 @@ function SearchResultItem({ item, onSelect }: SearchResultItemProps) {
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-fg-primary truncate group-hover:text-brand transition-colors">
+          <p className="text-sm font-medium text-fg-primary truncate group-hover:text-accent-blue-hover transition-colors">
             {title}
           </p>
           <div className="flex items-center gap-2 mt-0.5">

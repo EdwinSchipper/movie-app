@@ -227,7 +227,7 @@ function RegisterFormContent({ className = '' }: RegisterFormProps) {
         Al een account?{' '}
         <Link
           href={loginHref}
-          className="font-medium text-fg-primary hover:text-brand transition-colors"
+          className="font-semibold text-accent-blue-hover hover:text-accent-blue transition-colors"
         >
           Direct inloggen
         </Link>

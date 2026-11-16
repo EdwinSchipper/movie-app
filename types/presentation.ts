@@ -67,6 +67,82 @@ export interface PromisePatternSpec {
   behavior: string
 }
 
+export type TimelineFlowId = 'home' | 'movie-detail' | 'trending' | 'search' | 'admin'
+
+export type TimelineRoleView = 'guest' | 'user' | 'admin'
+
+export type TimelineGateStatus =
+  | 'direct'
+  | 'waiting'
+  | 'parallel'
+  | 'cached'
+  | 'short-circuit'
+  | 'interactive'
+
+export type TimelineComponentRole =
+  | 'Proxy'
+  | 'Layout Shell'
+  | 'Page Shell'
+  | 'Suspense Boundary'
+  | 'Server Content'
+  | 'Client Component'
+  | 'Error / 404 Boundary'
+
+export interface TimelineBlockPromise {
+  call: string
+  status: TimelineGateStatus
+  statusText: string
+}
+
+export interface TimelineComponentBlock {
+  id: string
+  name: string
+  filePath: string
+  role: TimelineComponentRole
+  status: TimelineGateStatus
+  statusLabel: string
+  microNote: string
+  summary?: string
+  fallback?: string
+  promises?: TimelineBlockPromise[]
+  proceedsWhen: string
+  childrenLayout?: 'stack' | 'parallel'
+  childrenLabel?: string
+  children?: TimelineComponentBlock[]
+}
+
+export interface TimelineStageVariant {
+  title?: string
+  subtitle?: string
+  gateTrigger?: string
+  layout?: 'single' | 'parallel'
+  blocks?: TimelineComponentBlock[]
+}
+
+export interface TimelineStageSpec {
+  id: string
+  order: string
+  title: string
+  subtitle: string
+  gateTrigger: string
+  layout: 'single' | 'parallel'
+  connectFromBlockIds?: string[]
+  blocks: TimelineComponentBlock[]
+  variantsByRole?: Partial<Record<TimelineRoleView, TimelineStageVariant>>
+}
+
+export interface TimelineFlowSpec {
+  id: TimelineFlowId
+  routePath: string
+  routeHref?: string
+  label: string
+  badge: string
+  scopeTone: 'emerald' | 'brand' | 'violet'
+  summary: string
+  keyTakeaway: string
+  stages: TimelineStageSpec[]
+}
+
 export interface IntegrationSpec {
   name: string
   category: 'Database & Auth' | 'Externe API' | 'Media CDN' | 'Hosting & CDN' | 'CI & Release'

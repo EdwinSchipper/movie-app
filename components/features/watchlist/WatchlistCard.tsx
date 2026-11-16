@@ -30,7 +30,7 @@ export default function WatchlistCard({ item }: WatchlistCardProps) {
         )}
       </div>
 
-      <h2 className="mt-2 h5 line-clamp-1 group-hover:text-brand transition-colors">
+      <h2 className="mt-2 h5 line-clamp-1 group-hover:text-accent-blue-hover transition-colors">
         {item.title}
       </h2>
     </Link>
