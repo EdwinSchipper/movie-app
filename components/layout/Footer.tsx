@@ -7,13 +7,13 @@ export default function Footer() {
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 md:order-2 mb-4 md:mb-0">
           <Link
             href="/presentatie"
-            className="text-sm/6 text-fg-secondary hover:text-brand transition-colors"
+            className="text-sm/6 text-fg-secondary hover:text-accent-blue-hover transition-colors"
           >
-            Architectuur &amp; Presentatie
+            Architectuur
           </Link>
           <Link
             href="/tijdlijn"
-            className="text-sm/6 text-fg-secondary hover:text-brand transition-colors"
+            className="text-sm/6 text-fg-secondary hover:text-accent-blue-hover transition-colors"
           >
             Dataflow
           </Link>

@@ -194,7 +194,7 @@ function LoginFormContent({
           Nog geen account?{' '}
           <Link
             href="/register"
-            className="font-semibold text-brand hover:text-brand-hover transition-colors"
+            className="font-semibold text-accent-blue-hover hover:text-accent-blue transition-colors"
           >
             Account registreren
           </Link>

@@ -126,7 +126,7 @@ export default function AdminRecommendations({
                     <div className="min-w-0">
                       <Link
                         href={detailHref}
-                        className="h5 hover:text-brand truncate block transition-colors"
+                        className="h5 hover:text-accent-blue-hover truncate block transition-colors"
                       >
                         {item.title}
                       </Link>

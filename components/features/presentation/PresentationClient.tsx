@@ -295,7 +295,7 @@ export default function PresentationClient() {
                           {route.navigableHref && (
                             <Link
                               href={route.navigableHref}
-                              className="inline-flex min-h-7 items-center gap-1 rounded-pill border border-border-default bg-canvas/60 px-2.5 py-0.5 text-xs font-medium text-fg-secondary transition-colors hover:border-brand hover:text-brand focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                              className="inline-flex min-h-7 items-center gap-1 rounded-pill border border-border-default bg-canvas/60 px-2.5 py-0.5 text-xs font-medium text-fg-secondary transition-colors hover:border-accent-blue-hover hover:text-accent-blue-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60"
                             >
                               Open
                               <ArrowTopRightOnSquareIcon className="icon-xs" aria-hidden="true" />

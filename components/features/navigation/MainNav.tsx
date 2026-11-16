@@ -23,14 +23,14 @@ async function MainNavContent() {
       aria-label="Hoofdnavigatie"
       className="hidden sm:flex items-center gap-4 text-sm font-medium text-fg-secondary"
     >
-      <Link href="/trending" className="hover:text-fg-primary transition-colors">
+      <Link href="/trending" className="hover:text-accent-blue-hover transition-colors">
         Trending
       </Link>
-      <Link href="/recommendations" className="hover:text-fg-primary transition-colors">
+      <Link href="/recommendations" className="hover:text-accent-blue-hover transition-colors">
         Aanbevelingen
       </Link>
       {user ? (
-        <Link href="/watchlist" className="hover:text-fg-primary transition-colors">
+        <Link href="/watchlist" className="hover:text-accent-blue-hover transition-colors">
           Watchlist
         </Link>
       ) : null}

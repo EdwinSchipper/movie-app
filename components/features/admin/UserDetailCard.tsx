@@ -14,7 +14,7 @@ export default function UserDetailCard({ user }: UserDetailCardProps) {
         <div>
           <Link
             href="/admin/users"
-            className="inline-flex items-center gap-1.5 text-xs text-fg-secondary hover:text-fg-primary transition-colors mb-2"
+            className="inline-flex items-center gap-1.5 text-xs text-fg-secondary hover:text-accent-blue-hover transition-colors mb-2"
           >
             <ChevronLeftIcon className="icon-xs" />
             <span>Terug naar gebruikersoverzicht</span>

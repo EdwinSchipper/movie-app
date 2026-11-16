@@ -136,42 +136,6 @@ export const ROUTE_SPECS: RouteSpec[] = [
       'Publiek leesbaar via RLS (anon + authenticated); mutaties zijn strikt voorbehouden aan administrators.',
   },
   {
-    path: '/presentatie',
-    navigableHref: '/presentatie',
-    filePath: 'app/presentatie/page.tsx',
-    routeGroup: 'Basis',
-    scope: 'Publiek',
-    renderMode: 'Statisch',
-    summary:
-      'Interactieve architectuurkaart van alle routes, UI primitives, scopes, Promises en koppelingen.',
-    componentName: 'PresentationOverview',
-    propsSpec: 'PresentationClient met React state, Headless UI TabGroup en Disclosure',
-    dataDependencies: ['Statische typesafe architectuurdefinities uit presentationData.ts'],
-    connectedFeatures: ['PresentationOverview', 'PresentationClient', 'RouteMapOverview'],
-    connectedUiPrimitives: ['UIButton', 'UIInput (binnen PresentationClient & RouteMapOverview)'],
-    connectedIntegrations: ['Vercel Platform & Image Optimization'],
-    securityNotes:
-      'Pure presentatielaag zonder directe DB- of API-calls; directe klikbare links naar publieke en beveiligde routes.',
-  },
-  {
-    path: '/tijdlijn',
-    navigableHref: '/tijdlijn',
-    filePath: 'app/tijdlijn/page.tsx',
-    routeGroup: 'Basis',
-    scope: 'Publiek',
-    renderMode: 'Statisch',
-    summary:
-      'Interactieve data stroom in React Flow die per route en gebruikersrol toont wanneer componenten starten en welke Promises wachten, cachen of kortsluiten.',
-    componentName: 'ArchitectureTimeline',
-    propsSpec: 'TimelineClient met Flow-selector, Rol-simulator en Headless UI Disclosure',
-    dataDependencies: ['Statische typesafe tijdlijnspecificaties uit timelineData.ts'],
-    connectedFeatures: ['ArchitectureTimeline', 'TimelineClient'],
-    connectedUiPrimitives: ['UIButton (binnen TimelineClient)'],
-    connectedIntegrations: ['Vercel Platform & Image Optimization'],
-    securityNotes:
-      'Pure presentatielaag; visualiseert auth short-circuiting en RBAC zonder live databasecalls.',
-  },
-  {
     path: '/login',
     navigableHref: '/login',
     filePath: 'app/(auth)/login/page.tsx',
@@ -413,7 +377,7 @@ export const UI_PRIMITIVE_SPECS: UiPrimitiveSpec[] = [
     keyProps: ['size?: sm | md', 'type?', 'ref?: Ref<HTMLInputElement>', 'className?'],
     foundation: '@headlessui/react Input',
     summary: 'Tekst-, e-mail-, wachtwoord- en zoekinvoer met focus-ringen en React 19 ref-prop.',
-    usedIn: ['HeaderSearch', 'LoginForm', 'RegisterForm', 'UserList', 'AdminRecommendations', 'PresentationClient'],
+    usedIn: ['HeaderSearch', 'LoginForm', 'RegisterForm', 'UserList', 'AdminRecommendations'],
   },
   {
     name: 'UISelect',
@@ -562,14 +526,6 @@ export const FEATURE_MODULE_SPECS: FeatureModuleSpec[] = [
     propsInterfaces: ['MainNav (geen externe props; leest usePathname)'],
     summary: 'Primaire applicatienavigatie tussen Home, Trending, Watchlist en Aanbevelingen.',
     dataFlow: 'Markeert actieve route via usePathname() en Next.js prefetching met Link.',
-  },
-  {
-    domain: 'presentation',
-    folderPath: 'components/features/presentation/',
-    boundary: 'Hybride (Server + Client)',
-    propsInterfaces: ['PresentationOverview + PresentationClient + RouteMapOverview + ArchitectureTimeline + TimelineClient'],
-    summary: 'Interactieve route-kaart en specificatietabs op /presentatie en visuele data stroom op /tijdlijn.',
-    dataFlow: 'Koppelt routes, features, promises en executiefasen interactief via TabGroup, Disclosure en rolsimulatie.',
   },
 ]
 

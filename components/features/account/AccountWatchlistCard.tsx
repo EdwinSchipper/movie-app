@@ -83,7 +83,7 @@ export default function AccountWatchlistCard({
           }
         >
           <h3
-            className={`h5 hover:text-brand transition-colors ${
+            className={`h5 hover:text-accent-blue-hover transition-colors ${
               isRow ? 'truncate' : 'line-clamp-1'
             }`}
           >
