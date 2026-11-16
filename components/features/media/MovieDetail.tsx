@@ -28,11 +28,9 @@ function MovieDetailSkeleton() {
 
 async function MovieDetailContent({ params }: MovieDetailProps) {
   const { id } = await params
+  const movie = await getMovieDetails(id)
 
-  let movie
-  try {
-    movie = await getMovieDetails(id)
-  } catch {
+  if (!movie) {
     notFound()
   }
 

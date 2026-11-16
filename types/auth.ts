@@ -1,8 +1,16 @@
 import { z } from 'zod'
 
-export type UserRole = 'admin' | 'user'
+export const userRoleSchema = z.enum(['admin', 'user'], {
+  error: 'Ongeldige gebruikersrol opgegeven.',
+})
 
-export type TileDisplayMode = 'grid' | 'row'
+export type UserRole = z.infer<typeof userRoleSchema>
+
+export const tileDisplayModeSchema = z.enum(['grid', 'row'], {
+  error: 'Ongeldige weergavemodus opgegeven.',
+})
+
+export type TileDisplayMode = z.infer<typeof tileDisplayModeSchema>
 
 export interface AppUser {
   id: string
@@ -10,10 +18,15 @@ export interface AppUser {
   role: UserRole
 }
 
-export interface UserSettings {
-  tile_count_preference: number
-  tile_display_mode: TileDisplayMode
-}
+export const userSettingsSchema = z.object({
+  tile_count_preference: z
+    .int('Aantal tiles moet een geheel getal zijn.')
+    .min(5, 'Aantal tiles moet minimaal 5 zijn.')
+    .max(100, 'Aantal tiles mag maximaal 100 zijn.'),
+  tile_display_mode: tileDisplayModeSchema,
+})
+
+export type UserSettings = z.infer<typeof userSettingsSchema>
 
 export interface UserProfile extends AppUser, UserSettings {
   created_at: string
@@ -43,7 +56,16 @@ export const registerSchema = z
 
 export type RegisterInput = z.infer<typeof registerSchema>
 
-export interface LoginInput {
-  email: string
-  password: string
-}
+export const loginSchema = z.object({
+  email: z.email('Vul zowel een geldig e-mailadres als wachtwoord in.'),
+  password: z
+    .string('Vul zowel een geldig e-mailadres als wachtwoord in.')
+    .min(1, 'Vul zowel een geldig e-mailadres als wachtwoord in.'),
+})
+
+export type LoginInput = z.infer<typeof loginSchema>
+
+export const updateUserRoleSchema = z.object({
+  userId: z.uuid('Ongeldige gebruiker-ID opgegeven.'),
+  newRole: userRoleSchema,
+})

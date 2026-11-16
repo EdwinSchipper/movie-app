@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useTransition } from 'react'
-import { UISwitch } from '@/components/ui'
+import { useRef, useState, useTransition } from 'react'
+import { UISwitch, useToast } from '@/components/ui'
 import { getTrendingTv } from '@/lib/tmdb'
 import type { TimeWindow, TvShow } from '@/types'
 import TrendingTvCard from './TrendingTvCard'
@@ -18,12 +18,28 @@ export default function TrendingTvClient({
   const [range, setRange] = useState<TimeWindow>('day')
   const [shows, setShows] = useState<TvShow[]>(initialShows)
   const [isPending, startTransition] = useTransition()
+  const requestIdRef = useRef(0)
+  const toast = useToast()
 
   const handleToggle = (nextRange: TimeWindow) => {
+    if (nextRange === range) return
+
+    const previousRange = range
+    const requestId = ++requestIdRef.current
     setRange(nextRange)
+
     startTransition(async () => {
-      const data = await getTrendingTv(nextRange)
-      setShows(data)
+      try {
+        const data = await getTrendingTv(nextRange)
+        if (requestId === requestIdRef.current) {
+          setShows(data)
+        }
+      } catch {
+        if (requestId === requestIdRef.current) {
+          setRange(previousRange)
+          toast.error('Kon trending series niet bijwerken. Probeer het opnieuw.')
+        }
+      }
     })
   }
 
@@ -38,6 +54,7 @@ export default function TrendingTvClient({
       </div>
 
       <div
+        aria-busy={isPending}
         className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 transition-opacity ${
           isPending ? 'opacity-60' : 'opacity-100'
         }`}

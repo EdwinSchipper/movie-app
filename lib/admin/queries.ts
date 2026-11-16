@@ -1,11 +1,10 @@
 'use server'
 
 import { cache } from 'react'
-import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { isAdmin } from '@/lib/auth'
 import { normalizeUserProfile, normalizeUserRole } from '@/lib/utils'
-import type { ActionResult, AdminUserSummary, UserProfile, UserRole } from '@/types'
+import type { AdminUserSummary, UserProfile } from '@/types'
 
 export const getAdminUsers = cache(async (): Promise<AdminUserSummary[]> => {
   const isAuthorized = await isAdmin()
@@ -58,60 +57,3 @@ export const getAdminUserById = cache(async (id: string): Promise<UserProfile | 
 
   return normalizeUserProfile(data)
 })
-
-export async function updateUserRole(
-  userId: string,
-  newRole: UserRole
-): Promise<ActionResult> {
-  const isAuthorized = await isAdmin()
-  if (!isAuthorized) {
-    return {
-      success: false,
-      error: 'Toegang geweigerd: alleen administrators kunnen rollen wijzigen.',
-    }
-  }
-
-  if (!userId || (newRole !== 'admin' && newRole !== 'user')) {
-    return {
-      success: false,
-      error: 'Ongeldige gebruiker-ID of rol opgegeven.',
-    }
-  }
-
-  const supabase = await createClient()
-
-  const { error: rpcError } = await supabase.rpc('set_user_role', {
-    target_user_id: userId,
-    new_role: newRole,
-  })
-
-  if (rpcError) {
-    const { data: updatedRow, error: updateError } = await supabase
-      .from('profiles')
-      .update({ role: newRole, updated_at: new Date().toISOString() })
-      .eq('id', userId)
-      .select('id')
-      .maybeSingle()
-
-    if (updateError) {
-      console.error('Fout bij bijwerken gebruikersrol:', updateError.message)
-      return {
-        success: false,
-        error: updateError.message,
-      }
-    }
-
-    if (!updatedRow) {
-      return {
-        success: false,
-        error: 'Gebruikersprofiel kon niet worden bijgewerkt.',
-      }
-    }
-  }
-
-  revalidatePath('/admin', 'layout')
-
-  return {
-    success: true,
-  }
-}

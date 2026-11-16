@@ -36,9 +36,11 @@ De codebase volgt een strikte scheiding tussen presentatie, domeinfeatures, serv
 - **UI Primitives & Design Tokens (`components/ui/`, `app/globals.css`)**: Herbruikbare basiscomponenten (`UIButton`, `UIInput`, `UISelect`, `UISwitch`, `UISpinner`, `ToastProvider`) gebouwd op Headless UI en Tailwind v4 tokens.
 - **Data & Server Actions (`lib/`)**:
   - `lib/env.ts` — Type-safe omgevingsvariabelen gevalideerd met Zod 4.
-  - `lib/tmdb.ts` — Gecachete server-side TMDB v3 fetches met veilige foutafhandeling.
-  - `lib/auth.ts`, `lib/watchlist.ts`, `lib/recommendations.ts`, `lib/admin.ts` — Server-side Supabase acties met expliciete kolomselecties (geen `select('*')`).
-  - `lib/utils/` — Centrale isomorfe helpers voor formatting, media-URL's, filters, profielnormalisatie en open-redirect beveiliging.
+  - `lib/tmdb/` (`client.ts`, `queries.ts`, `index.ts`) — Gecachete server-side TMDB v3 fetches met timeouts en `404` vs API-fout semantiek.
+  - `lib/auth/`, `lib/account/`, `lib/admin/`, `lib/watchlist/`, `lib/recommendations/` — Modulaire domeinmappen met gescheiden `queries.ts` (`React.cache()`), `actions.ts` (`'use server'`) en expliciete `index.ts` barrels, met expliciete kolomselecties (geen `select('*')`).
+  - `lib/supabase/` — Gecachete `@supabase/ssr` server client, browser client en Next.js 16 proxy helper.
+  - `lib/utils/` — Centrale isomorfe helpers voor formatting, media-URL's, payload-normalisatie, filters, profielen en open-redirect beveiliging.
+  - `lib/index.ts` — Toplevel aggregatie-barrel voor de volledige data- en helperlaag.
 - **Strikte Types (`types/`)**: Domein- en API-interfaces met expliciet benoemde barrel-exports in `types/index.ts`.
 
 ---
