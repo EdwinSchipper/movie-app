@@ -21,7 +21,7 @@ description: Next.js 16.4 (Turbopack, PPR, React Compiler), React 19, Tailwind C
   - `pnpm lint`: `eslint` (`pnpm lint --max-warnings=0` in Quality Gate)
   - `pnpm type-check`: `tsc --noEmit`
   - `pnpm release:master`: `node scripts/release-master.mjs`
-- Kern-dependencies: Next.js `16.4.2`, React `19.3.0`, `babel-plugin-react-compiler`, Tailwind CSS v4 met `@tailwindcss/postcss`, `@headlessui/react` v2, `@heroicons/react`, `@supabase/ssr`, `@supabase/supabase-js`, Zod v4.
+- Kern-dependencies: Next.js `16.4.2`, React `19.3.0`, `babel-plugin-react-compiler`, Tailwind CSS v4 met `@tailwindcss/postcss`, `@headlessui/react` v2, `@heroicons/react`, `react-toastify` v11 (`ToastProvider`), `@supabase/ssr`, `@supabase/supabase-js`, Zod v4.
 
 ### Next.js Configuratie (`next.config.ts`) & PostCSS (`postcss.config.mjs`)
 
@@ -31,5 +31,5 @@ description: Next.js 16.4 (Turbopack, PPR, React Compiler), React 19, Tailwind C
 
 ### Tailwind CSS v4, Layout & UI Primitives
 
-- [`app/globals.css`](../../../app/globals.css) definieert alle centrale `@theme inline` kleuren/radii en `@utility` classes (`.h1`–`.h6`, `.label-*`, `.badge-*`, `.icon-*`).
-- Gebruik altijd de UI primitives uit [`components/ui/`](../../../components/ui/) (`UIButton`, `UIInput`, `UISelect`, `UISwitch`, `UISpinner`, `ToastProvider`) gebouwd op `@headlessui/react` v2, en iconen uit `@heroicons/react` — nooit ruwe `<button>`, `<input type="text|email|password|search">`, `<select>` of losse inline `<svg>` buiten [`Spinner.tsx`](../../../components/ui/Spinner.tsx).
+- [`app/globals.css`](../../../app/globals.css) definieert alle centrale `@theme inline` kleuren/radii, `--toastify-*` design-token overrides voor `react-toastify` en `@utility` classes (`.h1`–`.h6`, `.label-*`, `.badge-*`, `.icon-*`).
+- Gebruik altijd de UI primitives uit [`components/ui/`](../../../components/ui/) (`UIButton`, `UIInput`, `UISelect`, `UISwitch`, `UISpinner`, `ToastProvider` op basis van `react-toastify/unstyled` + `ReactToastify.css`) gebouwd op `@headlessui/react` v2, en iconen uit `@heroicons/react` — nooit ruwe `<button>`, `<input type="text|email|password|search">`, `<select>` of losse inline `<svg>` buiten [`Spinner.tsx`](../../../components/ui/Spinner.tsx).
