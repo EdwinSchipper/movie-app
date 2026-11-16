@@ -4,3 +4,9 @@ export { default as DashboardCard } from './DashboardCard'
 export type { DashboardCardProps } from './DashboardCard'
 export { default as DashboardHero } from './DashboardHero'
 export type { DashboardHeroProps } from './DashboardHero'
+export { default as DashboardShowcase } from './DashboardShowcase'
+export type {
+  DashboardShowcaseItem,
+  DashboardShowcaseProps,
+  DashboardShowcaseVariant,
+} from './DashboardShowcase'
