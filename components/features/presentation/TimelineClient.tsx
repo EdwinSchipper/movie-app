@@ -55,10 +55,9 @@ const STATUS_LEGEND: {
   { label: 'Client', dotClass: 'bg-brand' },
 ]
 
-const NODE_WIDTH = 248
-const HORIZONTAL_GAP = 36
-const VERTICAL_LEVEL_GAP = 148
-const STAGE_GAP = 176
+const NODE_HEIGHT = 136
+const HORIZONTAL_STEP = 385
+const VERTICAL_GAP = 28
 
 type ArchitectureNodeData = {
   block: TimelineComponentBlock
@@ -77,59 +76,87 @@ interface FlattenedDiagramNode {
 
 function getStatusVisuals(status: TimelineGateStatus): {
   dotClass: string
+  barClass: string
+  barWidthClass: string
   textClass: string
-  pillBgClass: string
+  badgeClass: string
   stripeClass: string
   strokeColor: string
+  edgePillBg: string
+  edgePillText: string
 } {
   switch (status) {
     case 'direct':
       return {
         dotClass: 'bg-fg-muted',
+        barClass: 'bg-fg-muted',
+        barWidthClass: 'w-full',
         textClass: 'text-fg-secondary',
-        pillBgClass: 'bg-canvas/70',
+        badgeClass: 'bg-surface-hover text-fg-secondary',
         stripeClass: 'border-l-border-default',
         strokeColor: '#8e8e93',
+        edgePillBg: '#2e2e2e',
+        edgePillText: '#f5f5f5',
       }
     case 'waiting':
       return {
         dotClass: 'bg-accent-coral',
+        barClass: 'bg-accent-coral',
+        barWidthClass: 'w-3/5',
         textClass: 'text-accent-coral',
-        pillBgClass: 'bg-accent-coral/15',
+        badgeClass: 'bg-accent-coral/15 text-accent-coral',
         stripeClass: 'border-l-accent-coral/70',
         strokeColor: '#ff4d2d',
+        edgePillBg: '#ff4d2d',
+        edgePillText: '#ffffff',
       }
     case 'parallel':
       return {
         dotClass: 'bg-accent-emerald',
+        barClass: 'bg-accent-emerald',
+        barWidthClass: 'w-full',
         textClass: 'text-accent-emerald',
-        pillBgClass: 'bg-accent-emerald/15',
+        badgeClass: 'bg-accent-emerald/15 text-accent-emerald',
         stripeClass: 'border-l-accent-emerald/70',
         strokeColor: '#12b76a',
+        edgePillBg: '#12b76a',
+        edgePillText: '#ffffff',
       }
     case 'cached':
       return {
         dotClass: 'bg-accent-blue-hover',
+        barClass: 'bg-accent-blue-hover',
+        barWidthClass: 'w-full',
         textClass: 'text-accent-blue-hover',
-        pillBgClass: 'bg-accent-blue/15',
+        badgeClass: 'bg-accent-blue/20 text-accent-blue-hover',
         stripeClass: 'border-l-accent-blue-hover/70',
         strokeColor: '#3b82f6',
+        edgePillBg: '#2563eb',
+        edgePillText: '#ffffff',
       }
     case 'short-circuit':
       return {
         dotClass: 'bg-accent-violet',
+        barClass: 'bg-accent-violet',
+        barWidthClass: 'w-1/4',
         textClass: 'text-accent-violet',
-        pillBgClass: 'bg-accent-violet/15',
+        badgeClass: 'bg-accent-violet/20 text-accent-violet',
         stripeClass: 'border-l-accent-violet/70',
         strokeColor: '#8b5cf6',
+        edgePillBg: '#8b5cf6',
+        edgePillText: '#ffffff',
       }
     case 'interactive':
       return {
         dotClass: 'bg-brand',
+        barClass: 'bg-brand',
+        barWidthClass: 'w-5/6',
         textClass: 'text-brand',
-        pillBgClass: 'bg-brand/15',
+        badgeClass: 'bg-brand/15 text-brand',
         stripeClass: 'border-l-brand/70',
         strokeColor: '#e2ff32',
+        edgePillBg: '#e2ff32',
+        edgePillText: '#111111',
       }
   }
 }
@@ -166,38 +193,83 @@ function collectBlockNodes(
   return collected
 }
 
-function measureSubtreeWidth(block: TimelineComponentBlock): number {
+function measureSubtreeHeight(block: TimelineComponentBlock): number {
   const children = block.children ?? []
   if (children.length === 0) {
-    return NODE_WIDTH
+    return NODE_HEIGHT
   }
 
   if (block.childrenLayout === 'parallel') {
-    const childWidths = children.map(measureSubtreeWidth)
+    const childHeights = children.map(measureSubtreeHeight)
     const total =
-      childWidths.reduce((sum, width) => sum + width, 0) +
-      Math.max(0, children.length - 1) * HORIZONTAL_GAP
-    return Math.max(NODE_WIDTH, total)
+      childHeights.reduce((sum, height) => sum + height, 0) +
+      Math.max(0, children.length - 1) * VERTICAL_GAP
+    return Math.max(NODE_HEIGHT, total)
   }
 
-  const maxChild = Math.max(...children.map(measureSubtreeWidth))
-  return Math.max(NODE_WIDTH, maxChild)
+  const maxChild = Math.max(...children.map(measureSubtreeHeight))
+  return Math.max(NODE_HEIGHT, maxChild)
 }
 
-function measureSubtreeDepth(block: TimelineComponentBlock): number {
+function measureSubtreeColumns(block: TimelineComponentBlock): number {
   const children = block.children ?? []
   if (children.length === 0) {
     return 1
   }
 
   if (block.childrenLayout === 'parallel') {
-    return 1 + Math.max(...children.map(measureSubtreeDepth))
+    return 1 + Math.max(...children.map(measureSubtreeColumns))
   }
 
-  return 1 + children.reduce((sum, child) => sum + measureSubtreeDepth(child), 0)
+  return 1 + children.reduce((sum, child) => sum + measureSubtreeColumns(child), 0)
 }
 
-function buildGraphForStages(
+function buildFlowEdge(
+  id: string,
+  source: string,
+  target: string,
+  status: TimelineGateStatus,
+  pillLabel: string
+): Edge {
+  const visuals = getStatusVisuals(status)
+  const isAnimated =
+    status === 'waiting' ||
+    status === 'parallel' ||
+    status === 'cached' ||
+    status === 'interactive'
+
+  return {
+    id,
+    source,
+    target,
+    label: pillLabel,
+    labelStyle: {
+      fill: visuals.edgePillText,
+      fontSize: 11,
+      fontWeight: 600,
+    },
+    labelBgStyle: {
+      fill: visuals.edgePillBg,
+      stroke: 'transparent',
+    },
+    labelBgPadding: [8, 3],
+    labelBgBorderRadius: 999,
+    animated: isAnimated,
+    style: {
+      stroke: visuals.strokeColor,
+      strokeWidth: status === 'short-circuit' ? 1.5 : 2,
+      strokeDasharray: '5 5',
+    },
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      width: 14,
+      height: 14,
+      color: visuals.strokeColor,
+    },
+  }
+}
+
+function buildHorizontalGraphForStages(
   stages: TimelineStageSpec[],
   selectedBlockId: string
 ): { nodes: ArchitectureNode[]; edges: Edge[] } {
@@ -206,18 +278,21 @@ function buildGraphForStages(
   const incomingNodeIds = new Set<string>()
   const outgoingNodeIds = new Set<string>()
   const placedNodeIds = new Set<string>()
+  const placedCenterY = new Map<string, number>()
 
   const placeSubtree = (
     block: TimelineComponentBlock,
     stageOrder: string,
-    centerX: number,
-    startY: number
+    startX: number,
+    centerY: number
   ) => {
     placedNodeIds.add(block.id)
+    placedCenterY.set(block.id, centerY)
+
     rawNodes.push({
       id: block.id,
       type: 'componentNode',
-      position: { x: Math.round(centerX - NODE_WIDTH / 2), y: Math.round(startY) },
+      position: { x: Math.round(startX), y: Math.round(centerY - NODE_HEIGHT / 2) },
       selected: block.id === selectedBlockId,
       data: {
         block,
@@ -231,116 +306,93 @@ function buildGraphForStages(
     if (children.length === 0) return
 
     if (block.childrenLayout === 'parallel') {
-      const childWidths = children.map(measureSubtreeWidth)
-      const totalWidth =
-        childWidths.reduce((sum, width) => sum + width, 0) +
-        Math.max(0, children.length - 1) * HORIZONTAL_GAP
+      const childHeights = children.map(measureSubtreeHeight)
+      const totalHeight =
+        childHeights.reduce((sum, height) => sum + height, 0) +
+        Math.max(0, children.length - 1) * VERTICAL_GAP
 
-      let cursorX = centerX - totalWidth / 2
+      let cursorY = centerY - totalHeight / 2
       children.forEach((child, childIndex) => {
-        const childWidth = childWidths[childIndex]
-        const childCenterX = cursorX + childWidth / 2
-        const childY = startY + VERTICAL_LEVEL_GAP
-        placeSubtree(child, stageOrder, childCenterX, childY)
+        const childHeight = childHeights[childIndex]
+        const childCenterY = cursorY + childHeight / 2
+        const childX = startX + HORIZONTAL_STEP
 
-        const visuals = getStatusVisuals(child.status)
-        const isAnimated =
-          child.status === 'waiting' ||
-          child.status === 'parallel' ||
-          child.status === 'cached' ||
-          child.status === 'interactive'
+        placeSubtree(child, stageOrder, childX, childCenterY)
 
-        rawEdges.push({
-          id: `edge-${block.id}-${child.id}`,
-          source: block.id,
-          target: child.id,
-          animated: isAnimated,
-          style: {
-            stroke: visuals.strokeColor,
-            strokeWidth: child.status === 'short-circuit' ? 1.5 : 2,
-            strokeDasharray:
-              child.status === 'short-circuit' ? '5 5' : undefined,
-          },
-          markerEnd: {
-            type: MarkerType.ArrowClosed,
-            width: 15,
-            height: 15,
-            color: visuals.strokeColor,
-          },
-        })
+        rawEdges.push(
+          buildFlowEdge(
+            `edge-${block.id}-${child.id}`,
+            block.id,
+            child.id,
+            child.status,
+            child.statusLabel
+          )
+        )
         outgoingNodeIds.add(block.id)
         incomingNodeIds.add(child.id)
 
-        cursorX += childWidth + HORIZONTAL_GAP
+        cursorY += childHeight + VERTICAL_GAP
       })
       return
     }
 
     let previousId = block.id
-    let cursorY = startY + VERTICAL_LEVEL_GAP
+    let cursorX = startX + HORIZONTAL_STEP
     children.forEach((child) => {
-      placeSubtree(child, stageOrder, centerX, cursorY)
+      placeSubtree(child, stageOrder, cursorX, centerY)
 
-      const visuals = getStatusVisuals(child.status)
-      const isAnimated =
-        child.status === 'waiting' ||
-        child.status === 'parallel' ||
-        child.status === 'cached' ||
-        child.status === 'interactive'
-
-      rawEdges.push({
-        id: `edge-${previousId}-${child.id}`,
-        source: previousId,
-        target: child.id,
-        animated: isAnimated,
-        style: {
-          stroke: visuals.strokeColor,
-          strokeWidth: child.status === 'short-circuit' ? 1.5 : 2,
-          strokeDasharray:
-            child.status === 'short-circuit' ? '5 5' : undefined,
-        },
-        markerEnd: {
-          type: MarkerType.ArrowClosed,
-          width: 15,
-          height: 15,
-          color: visuals.strokeColor,
-        },
-      })
+      rawEdges.push(
+        buildFlowEdge(
+          `edge-${previousId}-${child.id}`,
+          previousId,
+          child.id,
+          child.status,
+          child.statusLabel
+        )
+      )
       outgoingNodeIds.add(previousId)
       incomingNodeIds.add(child.id)
 
       previousId = child.id
-      cursorY += measureSubtreeDepth(child) * VERTICAL_LEVEL_GAP
+      cursorX += measureSubtreeColumns(child) * HORIZONTAL_STEP
     })
   }
 
-  let currentY = 0
+  let currentX = 0
   let previousStageRootIds: string[] = []
 
   stages.forEach((stage, stageIndex) => {
-    const blockWidths = stage.blocks.map(measureSubtreeWidth)
-    const stageWidth =
-      blockWidths.reduce((sum, width) => sum + width, 0) +
-      Math.max(0, stage.blocks.length - 1) * HORIZONTAL_GAP
+    const blockHeights = stage.blocks.map(measureSubtreeHeight)
+    const stageHeight =
+      blockHeights.reduce((sum, height) => sum + height, 0) +
+      Math.max(0, stage.blocks.length - 1) * VERTICAL_GAP
 
-    let cursorX = -stageWidth / 2
+    const configuredSources = (stage.connectFromBlockIds ?? []).filter((id) =>
+      placedNodeIds.has(id)
+    )
+    const singleAlignedY =
+      stage.blocks.length === 1 && configuredSources.length === 1
+        ? placedCenterY.get(configuredSources[0])
+        : undefined
+
+    let cursorY =
+      singleAlignedY !== undefined
+        ? singleAlignedY - stageHeight / 2
+        : -stageHeight / 2
 
     const stageRootIds: string[] = []
-    let maxStageDepth = 1
+    let maxStageColumns = 1
 
     stage.blocks.forEach((block, blockIndex) => {
-      const width = blockWidths[blockIndex]
-      const centerX = cursorX + width / 2
-      placeSubtree(block, stage.order, centerX, currentY)
+      const height = blockHeights[blockIndex]
+      const centerY = cursorY + height / 2
+      placeSubtree(block, stage.order, currentX, centerY)
       stageRootIds.push(block.id)
-      maxStageDepth = Math.max(maxStageDepth, measureSubtreeDepth(block))
-      cursorX += width + HORIZONTAL_GAP
+      maxStageColumns = Math.max(maxStageColumns, measureSubtreeColumns(block))
+      cursorY += height + VERTICAL_GAP
     })
 
     if (stageIndex > 0) {
-      const configuredSources = (stage.connectFromBlockIds ?? []).filter((id) =>
-        placedNodeIds.has(id)
-      )
       const sourceIds =
         configuredSources.length > 0 ? configuredSources : previousStageRootIds
 
@@ -350,49 +402,22 @@ function buildGraphForStages(
         if (!targetId) return
 
         const targetBlock = stage.blocks.find((b) => b.id === targetId)
-        const visuals = getStatusVisuals(targetBlock?.status ?? 'direct')
-        const isAnimated =
-          targetBlock?.status === 'waiting' ||
-          targetBlock?.status === 'parallel' ||
-          targetBlock?.status === 'cached' ||
-          targetBlock?.status === 'interactive'
-
-        rawEdges.push({
-          id: `stage-edge-${sourceId}-${targetId}`,
-          source: sourceId,
-          target: targetId,
-          label: sourceIdx === 0 ? `${stage.order} · ${stage.gateTrigger}` : undefined,
-          labelStyle: {
-            fill: '#d4d4d8',
-            fontSize: 11,
-            fontWeight: 500,
-          },
-          labelBgStyle: {
-            fill: '#242424',
-            stroke: 'rgba(255, 255, 255, 0.16)',
-            strokeWidth: 1,
-          },
-          labelBgPadding: [8, 4],
-          labelBgBorderRadius: 999,
-          animated: isAnimated,
-          style: {
-            stroke: visuals.strokeColor,
-            strokeWidth: 2,
-          },
-          markerEnd: {
-            type: MarkerType.ArrowClosed,
-            width: 15,
-            height: 15,
-            color: visuals.strokeColor,
-          },
-        })
+        rawEdges.push(
+          buildFlowEdge(
+            `stage-edge-${sourceId}-${targetId}`,
+            sourceId,
+            targetId,
+            targetBlock?.status ?? 'direct',
+            sourceIdx === 0 ? `${stage.order} · ${targetBlock?.statusLabel ?? 'Door'}` : targetBlock?.statusLabel ?? 'Door'
+          )
+        )
         outgoingNodeIds.add(sourceId)
         incomingNodeIds.add(targetId)
       })
     }
 
     previousStageRootIds = stageRootIds
-    currentY += (maxStageDepth - 1) * VERTICAL_LEVEL_GAP + STAGE_GAP
+    currentX += maxStageColumns * HORIZONTAL_STEP
   })
 
   const nodes: ArchitectureNode[] = rawNodes.map((node) => ({
@@ -411,10 +436,11 @@ function ComponentFlowNode({ data, selected }: NodeProps<ArchitectureNode>) {
   const { block, stageOrder, hasIncoming, hasOutgoing } = data
   const visuals = getStatusVisuals(block.status)
   const isShortCircuit = block.status === 'short-circuit'
+  const promiseCount = block.promises?.length ?? 0
 
   return (
     <div
-      className={`w-62 rounded-tile border transition-all px-4 py-3.5 shadow-lg ${
+      className={`w-68 rounded-tile border transition-all px-4 py-3.5 shadow-xl ${
         selected
           ? 'bg-surface-hover border-brand ring-2 ring-brand/40'
           : isShortCircuit
@@ -424,7 +450,7 @@ function ComponentFlowNode({ data, selected }: NodeProps<ArchitectureNode>) {
     >
       <Handle
         type="target"
-        position={Position.Top}
+        position={Position.Left}
         isConnectable={false}
         className={
           hasIncoming
@@ -433,12 +459,37 @@ function ComponentFlowNode({ data, selected }: NodeProps<ArchitectureNode>) {
         }
       />
 
-      <div className="flex items-center justify-between gap-2">
-        <span className="font-mono text-2xs font-bold text-brand">
-          {stageOrder} &middot; {block.role}
-        </span>
+      <div className="space-y-1">
+        <p className="text-sm font-semibold text-fg-primary leading-snug truncate">
+          {block.name}
+        </p>
+        <p className="font-mono text-2xs text-fg-muted truncate">
+          {block.role} &middot; {block.microNote}
+        </p>
+      </div>
+
+      <div className="mt-2.5 h-1.5 w-full rounded-pill bg-canvas overflow-hidden">
+        <div className={`h-full rounded-pill ${visuals.barClass} ${visuals.barWidthClass}`} />
+      </div>
+
+      <div className="mt-3 flex items-end justify-between gap-2">
+        <div className="flex items-center gap-4 text-2xs">
+          <div>
+            <span className="block text-fg-muted">Fase</span>
+            <span className="font-mono font-semibold text-fg-primary">
+              {stageOrder}
+            </span>
+          </div>
+          <div>
+            <span className="block text-fg-muted">Promises</span>
+            <span className="font-mono font-semibold text-fg-primary">
+              {promiseCount}
+            </span>
+          </div>
+        </div>
+
         <span
-          className={`inline-flex items-center gap-1.5 text-2xs font-semibold ${visuals.textClass}`}
+          className={`inline-flex items-center gap-1.5 rounded-pill px-2.5 py-0.5 text-2xs font-semibold ${visuals.badgeClass}`}
         >
           <span
             aria-hidden="true"
@@ -448,17 +499,9 @@ function ComponentFlowNode({ data, selected }: NodeProps<ArchitectureNode>) {
         </span>
       </div>
 
-      <p className="mt-1.5 text-sm font-semibold text-fg-primary leading-snug truncate">
-        {block.name}
-      </p>
-
-      <p className="mt-1 font-mono text-2xs text-fg-muted truncate">
-        {block.microNote}
-      </p>
-
       <Handle
         type="source"
-        position={Position.Bottom}
+        position={Position.Right}
         isConnectable={false}
         className={
           hasOutgoing
@@ -487,7 +530,7 @@ function TimelineFlowCanvas({
   selectedBlockId,
   onSelectBlock,
 }: TimelineFlowCanvasProps) {
-  const initialGraph = buildGraphForStages(stages, selectedBlockId)
+  const initialGraph = buildHorizontalGraphForStages(stages, selectedBlockId)
   const [nodes, setNodes, onNodesChange] = useNodesState(initialGraph.nodes)
   const [edges, , onEdgesChange] = useEdgesState(initialGraph.edges)
 
@@ -501,7 +544,7 @@ function TimelineFlowCanvas({
   }, [selectedBlockId, setNodes])
 
   return (
-    <div className="h-140 lg:h-176 w-full rounded-card border border-border-default bg-canvas overflow-hidden">
+    <div className="h-132 md:h-148 w-full rounded-card border border-border-default bg-canvas overflow-hidden">
       <ReactFlow<ArchitectureNode, Edge>
         nodes={nodes}
         edges={edges}
@@ -511,12 +554,11 @@ function TimelineFlowCanvas({
         nodeTypes={FLOW_NODE_TYPES}
         forceColorMode="dark"
         fitView
-        fitViewOptions={{ padding: 0.2 }}
-        minZoom={0.45}
+        fitViewOptions={{ padding: 0.16 }}
+        minZoom={0.35}
         maxZoom={1.5}
         nodesConnectable={false}
         elementsSelectable
-        proOptions={{ hideAttribution: false }}
       >
         <Background
           variant={BackgroundVariant.Dots}
@@ -527,10 +569,10 @@ function TimelineFlowCanvas({
         <Controls showInteractive={false} />
         <Panel position="top-left">
           <div className="rounded-pill border border-border-subtle bg-surface/90 px-3 py-1.5 text-xs text-fg-secondary backdrop-blur">
-            Route:{' '}
+            Dataflow:{' '}
             <code className="font-mono font-bold text-brand">{routePath}</code>
             <span className="hidden sm:inline text-fg-muted ml-2">
-              &bull; Sleep nodes of scroll om te zoomen
+              &bull; Links naar rechts &middot; Klik een blok voor details
             </span>
           </div>
         </Panel>
@@ -595,13 +637,13 @@ export default function TimelineClient() {
     >
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-2 max-w-2xl">
-          <p className="label-tech text-brand">Data stroom</p>
+          <p className="label-tech text-brand">Dataflow</p>
           <h1 id="timeline-heading" className="h1">
-            Data stroom &amp; Componenten per Route
+            Dataflow &amp; Componenten per Route
           </h1>
           <p className="text-sm md:text-base text-fg-secondary">
-            Interactief node-diagram: zie direct welke componenten vertakken, welke
-            Promises lopen en klik op een blok voor de exacte werking.
+            Volg van links naar rechts welke componenten starten, welke Promises
+            wachten en waar auth kortsluit.
           </p>
         </div>
 
@@ -673,95 +715,90 @@ export default function TimelineClient() {
         ))}
       </ul>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <div className="lg:col-span-8">
-          <ReactFlowProvider>
-            <TimelineFlowCanvas
-              key={`${activeFlow.id}-${selectedRole}`}
-              stages={resolvedStages}
-              routePath={activeFlow.routePath}
-              selectedBlockId={activeNode?.block.id ?? ''}
-              onSelectBlock={setSelectedBlockId}
-            />
-          </ReactFlowProvider>
-        </div>
+      <ReactFlowProvider>
+        <TimelineFlowCanvas
+          key={`${activeFlow.id}-${selectedRole}`}
+          stages={resolvedStages}
+          routePath={activeFlow.routePath}
+          selectedBlockId={activeNode?.block.id ?? ''}
+          onSelectBlock={setSelectedBlockId}
+        />
+      </ReactFlowProvider>
 
-        <aside
-          aria-label="Inspectiepaneel geselecteerde component"
-          className="lg:col-span-4 lg:sticky lg:top-24 rounded-card bg-surface p-6 space-y-6"
-        >
-          {activeNode && activeVisuals ? (
-            <>
-              <div className="flex items-center justify-between gap-2 pb-4 border-b border-border-subtle">
+      <aside
+        aria-label="Inspectiepaneel geselecteerde component"
+        className="rounded-card bg-surface p-6 md:p-7 space-y-6"
+      >
+        {activeNode && activeVisuals ? (
+          <>
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-border-subtle">
+              <div className="flex flex-wrap items-center gap-3">
                 <span className="font-mono text-xs text-fg-muted">
                   Blok {resolvedIndex + 1} van {allNodes.length} &middot;{' '}
                   <strong className="text-brand">{activeNode.stageOrder}</strong>
                 </span>
-
-                <div className="flex items-center gap-1.5">
-                  <UIButton
-                    type="button"
-                    size="xs"
-                    variant="outline"
-                    disabled={resolvedIndex === 0}
-                    onClick={() =>
-                      setSelectedBlockId(allNodes[resolvedIndex - 1].block.id)
-                    }
-                    aria-label="Vorig blok in diagram"
-                  >
-                    <ArrowLeftIcon className="icon-xs" aria-hidden="true" />
-                    Vorige
-                  </UIButton>
-                  <UIButton
-                    type="button"
-                    size="xs"
-                    variant="outline"
-                    disabled={resolvedIndex >= allNodes.length - 1}
-                    onClick={() =>
-                      setSelectedBlockId(allNodes[resolvedIndex + 1].block.id)
-                    }
-                    aria-label="Volgend blok in diagram"
-                  >
-                    Volgende
-                    <ArrowRightIcon className="icon-xs" aria-hidden="true" />
-                  </UIButton>
-                </div>
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-pill px-3 py-1 text-xs font-medium ${activeVisuals.badgeClass}`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`size-2 rounded-full ${activeVisuals.dotClass}`}
+                  />
+                  {activeNode.block.statusLabel}
+                </span>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="label-tech">{activeNode.block.role}</span>
-                  <span
-                    className={`inline-flex items-center gap-1.5 rounded-pill px-3 py-1 text-xs font-medium ${activeVisuals.pillBgClass} ${activeVisuals.textClass}`}
-                  >
-                    <span
-                      aria-hidden="true"
-                      className={`size-2 rounded-full ${activeVisuals.dotClass}`}
-                    />
-                    {activeNode.block.statusLabel}
-                  </span>
-                </div>
+              <div className="flex items-center gap-1.5">
+                <UIButton
+                  type="button"
+                  size="xs"
+                  variant="outline"
+                  disabled={resolvedIndex === 0}
+                  onClick={() =>
+                    setSelectedBlockId(allNodes[resolvedIndex - 1].block.id)
+                  }
+                  aria-label="Vorig blok in diagram"
+                >
+                  <ArrowLeftIcon className="icon-xs" aria-hidden="true" />
+                  Vorige
+                </UIButton>
+                <UIButton
+                  type="button"
+                  size="xs"
+                  variant="outline"
+                  disabled={resolvedIndex >= allNodes.length - 1}
+                  onClick={() =>
+                    setSelectedBlockId(allNodes[resolvedIndex + 1].block.id)
+                  }
+                  aria-label="Volgend blok in diagram"
+                >
+                  Volgende
+                  <ArrowRightIcon className="icon-xs" aria-hidden="true" />
+                </UIButton>
+              </div>
+            </div>
 
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="space-y-2.5">
+                <span className="label-tech block">{activeNode.block.role}</span>
                 <h2 className="h3">{activeNode.block.name}</h2>
                 <p className="font-mono text-xs text-brand break-all">
                   {activeNode.block.filePath}
                 </p>
-
                 {activeNode.block.summary && (
                   <p className="text-sm leading-relaxed text-fg-secondary pt-1">
                     {activeNode.block.summary}
                   </p>
                 )}
+                {activeNode.block.fallback && (
+                  <div className="rounded-tile bg-canvas/70 px-3.5 py-2.5 space-y-1 mt-2">
+                    <span className="label-tech block">Tijdelijke Skeleton UI</span>
+                    <code className="font-mono text-xs font-semibold text-fg-primary">
+                      {activeNode.block.fallback}
+                    </code>
+                  </div>
+                )}
               </div>
-
-              {activeNode.block.fallback && (
-                <div className="rounded-tile bg-canvas/70 px-4 py-3 space-y-1">
-                  <span className="label-tech block">Tijdelijke UI tijdens wachten</span>
-                  <code className="font-mono text-xs font-semibold text-fg-primary">
-                    {activeNode.block.fallback}
-                  </code>
-                </div>
-              )}
 
               <div className="space-y-2.5">
                 <h3 className="label-tech">Data &amp; Promises in dit blok</h3>
@@ -785,52 +822,56 @@ export default function TimelineClient() {
                     })}
                   </ul>
                 ) : (
-                  <p className="text-xs text-fg-muted">
+                  <p className="text-xs text-fg-muted leading-relaxed">
                     Dit blok wacht niet zelf op asynchrone data en voert geen directe queries uit.
                   </p>
                 )}
               </div>
 
-              <div className="rounded-tile bg-canvas/85 p-4 space-y-1.5">
-                <span className={`label-tech block ${activeVisuals.textClass}`}>
-                  Wanneer gaat het door?
-                </span>
-                <p className="text-sm leading-relaxed text-fg-primary">
-                  {activeNode.block.proceedsWhen}
-                </p>
-              </div>
-
-              {activeNode.block.children && activeNode.block.children.length > 0 && (
-                <div className="space-y-2 pt-2 border-t border-border-subtle">
-                  <span className="label-tech block">
-                    {activeNode.block.childrenLabel ?? 'Hangt onder dit blok'}
+              <div className="space-y-4">
+                <div className="rounded-tile bg-canvas/85 p-4 space-y-1.5">
+                  <span className={`label-tech block ${activeVisuals.textClass}`}>
+                    Wanneer gaat het door?
                   </span>
-                  <div className="flex flex-wrap gap-2">
-                    {activeNode.block.children.map((childBlock) => (
-                      <UIButton
-                        key={childBlock.id}
-                        type="button"
-                        size="xs"
-                        variant="outline"
-                        onClick={() => setSelectedBlockId(childBlock.id)}
-                      >
-                        {childBlock.name}
-                      </UIButton>
-                    ))}
-                  </div>
+                  <p className="text-sm leading-relaxed text-fg-primary">
+                    {activeNode.block.proceedsWhen}
+                  </p>
                 </div>
-              )}
-            </>
-          ) : null}
 
-          <div className="pt-4 border-t border-border-subtle space-y-1">
-            <span className="label-tech block">Kernprincipe van {activeFlow.routePath}</span>
-            <p className="text-xs leading-relaxed text-fg-secondary">
-              {activeFlow.keyTakeaway}
-            </p>
-          </div>
-        </aside>
-      </div>
+                {activeNode.block.children && activeNode.block.children.length > 0 && (
+                  <div className="space-y-2">
+                    <span className="label-tech block">
+                      {activeNode.block.childrenLabel ?? 'Hangt rechts onder dit blok'}
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {activeNode.block.children.map((childBlock) => (
+                        <UIButton
+                          key={childBlock.id}
+                          type="button"
+                          size="xs"
+                          variant="outline"
+                          onClick={() => setSelectedBlockId(childBlock.id)}
+                        >
+                          {childBlock.name}
+                        </UIButton>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="pt-2 border-t border-border-subtle space-y-1">
+                  <span className="label-tech block">
+                    Kernprincipe van {activeFlow.routePath}
+                  </span>
+                  <p className="text-xs leading-relaxed text-fg-secondary">
+                    {activeFlow.keyTakeaway}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : null}
+      </aside>
     </section>
   )
 }
