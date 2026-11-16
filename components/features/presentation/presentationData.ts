@@ -154,6 +154,24 @@ export const ROUTE_SPECS: RouteSpec[] = [
       'Pure presentatielaag zonder directe DB- of API-calls; directe klikbare links naar publieke en beveiligde routes.',
   },
   {
+    path: '/tijdlijn',
+    navigableHref: '/tijdlijn',
+    filePath: 'app/tijdlijn/page.tsx',
+    routeGroup: 'Basis',
+    scope: 'Publiek',
+    renderMode: 'Statisch',
+    summary:
+      'Interactieve data stroom in React Flow die per route en gebruikersrol toont wanneer componenten starten en welke Promises wachten, cachen of kortsluiten.',
+    componentName: 'ArchitectureTimeline',
+    propsSpec: 'TimelineClient met Flow-selector, Rol-simulator en Headless UI Disclosure',
+    dataDependencies: ['Statische typesafe tijdlijnspecificaties uit timelineData.ts'],
+    connectedFeatures: ['ArchitectureTimeline', 'TimelineClient'],
+    connectedUiPrimitives: ['UIButton (binnen TimelineClient)'],
+    connectedIntegrations: ['Vercel Platform & Image Optimization'],
+    securityNotes:
+      'Pure presentatielaag; visualiseert auth short-circuiting en RBAC zonder live databasecalls.',
+  },
+  {
     path: '/login',
     navigableHref: '/login',
     filePath: 'app/(auth)/login/page.tsx',
@@ -549,9 +567,9 @@ export const FEATURE_MODULE_SPECS: FeatureModuleSpec[] = [
     domain: 'presentation',
     folderPath: 'components/features/presentation/',
     boundary: 'Hybride (Server + Client)',
-    propsInterfaces: ['PresentationOverview + PresentationClient + RouteMapOverview'],
-    summary: 'Interactieve route-kaart en technische specificatietabs op /presentatie voor presentaties.',
-    dataFlow: 'Koppelt routes, features, promises en externe diensten interactief via TabGroup en Disclosure.',
+    propsInterfaces: ['PresentationOverview + PresentationClient + RouteMapOverview + ArchitectureTimeline + TimelineClient'],
+    summary: 'Interactieve route-kaart en specificatietabs op /presentatie en visuele data stroom op /tijdlijn.',
+    dataFlow: 'Koppelt routes, features, promises en executiefasen interactief via TabGroup, Disclosure en rolsimulatie.',
   },
 ]
 

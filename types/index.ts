@@ -72,4 +72,13 @@ export type {
   ScopeBoundarySpec,
   PromisePatternSpec,
   IntegrationSpec,
+  TimelineFlowId,
+  TimelineRoleView,
+  TimelineGateStatus,
+  TimelineComponentRole,
+  TimelineBlockPromise,
+  TimelineComponentBlock,
+  TimelineStageVariant,
+  TimelineStageSpec,
+  TimelineFlowSpec,
 } from './presentation'

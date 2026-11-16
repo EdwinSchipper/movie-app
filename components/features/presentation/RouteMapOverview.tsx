@@ -32,7 +32,7 @@ const ROUTE_MAP_BRANCHES: RouteGroupBranch[] = [
     subtitle: 'Basis Route Group (PPR + Suspense)',
     badgeClass: 'badge-emerald',
     accentBorderClass: 'border-accent-emerald/40',
-    paths: ['/', '/trending', '/movies/[id]', '/tv/[id]', '/recommendations', '/presentatie'],
+    paths: ['/', '/trending', '/movies/[id]', '/tv/[id]', '/recommendations', '/presentatie', '/tijdlijn'],
   },
   {
     id: 'auth',
