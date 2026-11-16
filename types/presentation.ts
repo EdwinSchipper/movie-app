@@ -26,6 +26,7 @@ export interface RouteSpec {
   propsSpec: string
   dataDependencies: string[]
   connectedFeatures: string[]
+  connectedUiPrimitives: string[]
   connectedIntegrations: string[]
   securityNotes: string
 }
