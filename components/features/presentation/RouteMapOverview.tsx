@@ -142,26 +142,23 @@ export default function RouteMapOverview() {
                       <li key={route.path} className="relative flex items-center">
                         <span
                           aria-hidden="true"
-                          className={`-ml-3 mr-2 h-px w-3 shrink-0 transition-colors ${
-                            isSelected ? 'bg-brand' : 'bg-border-default'
-                          }`}
+                          className={`-ml-3 mr-2 h-px w-3 shrink-0 transition-colors ${isSelected ? 'bg-brand' : 'bg-border-default'
+                            }`}
                         />
                         <UIButton
                           type="button"
                           variant={isSelected ? 'primary' : 'outline'}
                           size="xs"
                           onClick={() => setSelectedPath(route.path)}
-                          className={`w-full justify-between gap-2 px-2.5 py-2 text-left ${
-                            isSelected
+                          className={`w-full justify-between gap-2 px-2.5 py-2 text-left ${isSelected
                               ? 'bg-brand! text-brand-fg! ring-2 ring-brand/40 font-semibold'
                               : 'bg-surface! text-fg-secondary! border-border-subtle! data-hover:border-border-default! data-hover:text-fg-primary!'
-                          }`}
+                            }`}
                         >
                           <span className="truncate font-mono text-xs">{route.path}</span>
                           <span
-                            className={`shrink-0 text-[10px] font-mono ${
-                              isSelected ? 'text-brand-fg/80' : 'text-fg-muted'
-                            }`}
+                            className={`shrink-0 text-[10px] font-mono ${isSelected ? 'text-brand-fg/80' : 'text-fg-muted'
+                              }`}
                           >
                             {route.renderMode === 'PPR + Suspense' ? 'PPR' : route.renderMode}
                           </span>
@@ -224,12 +221,12 @@ export default function RouteMapOverview() {
               <div className="flex items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-fg-primary">
                   <CpuChipIcon className="icon-sm text-accent-violet" aria-hidden="true" />
-                  2. Features &amp; UI Primitives
+                  2. Componenten
                 </span>
                 <ArrowRightIcon className="icon-xs hidden xl:block text-fg-muted" aria-hidden="true" />
               </div>
               <div className="space-y-1">
-                <span className="label-meta block uppercase tracking-wider">Features / Layouts</span>
+
                 <ul className="space-y-1">
                   {activeRoute.connectedFeatures.map((feature) => (
                     <li key={feature} className="text-xs font-mono text-fg-secondary">
@@ -241,7 +238,7 @@ export default function RouteMapOverview() {
               {activeRoute.connectedUiPrimitives.length > 0 && (
                 <div className="space-y-1 border-t border-border-subtle pt-2">
                   <span className="label-meta block uppercase tracking-wider">
-                    Intern via componenten
+                    UI-bouwstenen (intern gebruikt)
                   </span>
                   <ul className="space-y-1">
                     {activeRoute.connectedUiPrimitives.map((primitive) => (
@@ -294,11 +291,10 @@ export default function RouteMapOverview() {
                 return (
                   <div
                     key={integration.name}
-                    className={`rounded-control border p-3 transition-all ${
-                      isConnected
+                    className={`rounded-control border p-3 transition-all ${isConnected
                         ? 'border-brand/60 bg-surface shadow-md opacity-100'
                         : 'border-border-subtle bg-surface/40 opacity-45'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-xs font-semibold text-fg-primary">
