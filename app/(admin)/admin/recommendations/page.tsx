@@ -7,8 +7,8 @@ import { AdminRecommendations } from '@/components/features/admin'
 function AdminRecommendationsSkeleton() {
   return (
     <div className="space-y-6 animate-pulse">
-      <div className="h-10 bg-gray-900/80 rounded-lg max-w-md" />
-      <div className="h-64 bg-gray-900/40 rounded-xl" />
+      <div className="h-10 bg-surface-hover rounded-control max-w-md" />
+      <div className="h-64 bg-surface border border-border-subtle rounded-card" />
     </div>
   )
 }

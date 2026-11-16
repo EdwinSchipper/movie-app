@@ -7,11 +7,11 @@ import { AccountDashboard } from '@/components/features/account'
 function AccountDashboardSkeleton() {
   return (
     <div className="space-y-8 animate-pulse">
-      <div className="h-36 rounded-2xl bg-gray-900/60 border border-gray-800" />
+      <div className="h-36 rounded-hero bg-surface border border-border-subtle" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
-        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
-        <div className="h-48 rounded-xl bg-gray-900/40 border border-gray-800" />
+        <div className="h-48 rounded-card bg-surface border border-border-subtle" />
+        <div className="h-48 rounded-card bg-surface border border-border-subtle" />
+        <div className="h-48 rounded-card bg-surface border border-border-subtle" />
       </div>
     </div>
   )
