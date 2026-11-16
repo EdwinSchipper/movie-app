@@ -61,3 +61,15 @@ export {
   type RegisterInput,
   type LoginInput,
 } from './auth'
+
+export type {
+  ArchitectureTabId,
+  RouteAccessScope,
+  RouteRenderMode,
+  RouteSpec,
+  UiPrimitiveSpec,
+  FeatureModuleSpec,
+  ScopeBoundarySpec,
+  PromisePatternSpec,
+  IntegrationSpec,
+} from './presentation'
