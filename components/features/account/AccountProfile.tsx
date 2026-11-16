@@ -11,13 +11,13 @@ export interface AccountProfileProps {
 export default function AccountProfile({ profile }: AccountProfileProps) {
   return (
     <div className="space-y-6">
-      <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-6 sm:p-8 backdrop-blur-xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-800">
+      <div className="bg-surface border border-border-subtle rounded-card p-6 sm:p-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border-subtle">
           <div>
-            <h2 className="text-xl font-bold text-gray-100">
+            <h2 className="h3">
               Profiel & Accountgegevens
             </h2>
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-sm text-fg-secondary mt-1">
               Overzicht van je persoonlijke account en autorisatiestatus.
             </p>
           </div>
@@ -35,7 +35,7 @@ export default function AccountProfile({ profile }: AccountProfileProps) {
           description="Beheer je bewaarde films en series, gefilterd op bekeken of nog te bekijken."
           href="/account/watchlist"
           buttonText="Naar Watchlist"
-          icon={<BookmarkIcon className="w-5 h-5 text-blue-400" />}
+          icon={<BookmarkIcon className="icon-md text-accent-blue-hover" />}
         />
 
         <AccountCard
@@ -43,7 +43,7 @@ export default function AccountProfile({ profile }: AccountProfileProps) {
           description="Pas het aantal getoonde tiles en de layout (grid of lijst) aan naar wens."
           href="/account/settings"
           buttonText="Naar Instellingen"
-          icon={<Cog6ToothIcon className="w-5 h-5 text-blue-400" />}
+          icon={<Cog6ToothIcon className="icon-md text-accent-blue-hover" />}
         />
       </div>
     </div>

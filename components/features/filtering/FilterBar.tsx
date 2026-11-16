@@ -23,11 +23,11 @@ export interface FilterBarProps {
 
 function FilterBarSkeleton({ className = '' }: FilterBarProps) {
   return (
-    <section className={`px-4 py-2 rounded-xl bg-gray-200/5 ${className}`.trim()}>
+    <section className={`px-4 py-2 rounded-card border border-border-subtle bg-surface/60 ${className}`.trim()}>
       <div className="flex flex-wrap items-end gap-3 sm:gap-4 py-4 animate-pulse">
-        <div className="w-36 h-14 bg-gray-200/10 rounded-lg" />
-        <div className="w-44 h-14 bg-gray-200/10 rounded-lg" />
-        <div className="w-48 h-14 bg-gray-200/10 rounded-lg" />
+        <div className="w-36 h-14 bg-surface-hover rounded-control" />
+        <div className="w-44 h-14 bg-surface-hover rounded-control" />
+        <div className="w-48 h-14 bg-surface-hover rounded-control" />
       </div>
     </section>
   )
@@ -74,7 +74,7 @@ function FilterBarContent({ className = '' }: FilterBarProps) {
   }
 
   return (
-    <section className={`relative z-20 px-4 py-2 rounded-xl bg-gray-200/5 ${className}`.trim()}>
+    <section className={`relative z-20 px-4 py-2 rounded-card border border-border-subtle bg-surface/60 ${className}`.trim()}>
       <div className="flex flex-wrap items-end gap-3 sm:gap-4 py-4">
         <UISelect<FilterMediaType>
           label="Type"
@@ -106,7 +106,7 @@ function FilterBarContent({ className = '' }: FilterBarProps) {
             size="sm"
             disabled={isPending}
             onClick={handleReset}
-            className="h-9 mb-0.5 text-xs text-gray-400 hover:text-gray-200"
+            className="h-9 mb-0.5"
           >
             Filters wissen
           </UIButton>

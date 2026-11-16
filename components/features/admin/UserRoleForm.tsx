@@ -21,7 +21,7 @@ const roleOptions: {
     value: 'user',
     label: 'Standaard Gebruiker (user)',
     badgeText: 'Standaard',
-    badgeClass: 'bg-gray-800 text-gray-300',
+    badgeClass: 'badge-surface',
     description:
       'Heeft toegang tot eigen Watchlist, persoonlijke instellingen en kan publieke aanbevelingen inzien. Heeft geen beheerdersrechten.',
   },
@@ -29,7 +29,7 @@ const roleOptions: {
     value: 'admin',
     label: 'Administrator (admin)',
     badgeText: 'Volledige toegang',
-    badgeClass: 'bg-purple-900/60 text-purple-300 border border-purple-700/50',
+    badgeClass: 'badge-violet',
     description:
       "Kan publieke aanbevelingen beheren (toevoegen/verwijderen op detailpagina's en in het admin panel) en gebruikersrechten van alle accounts aanpassen.",
   },
@@ -65,28 +65,28 @@ export default function UserRoleForm({ user }: UserRoleFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-gray-900/60 border border-gray-800 rounded-xl p-6 sm:p-8">
-      <div className="pb-6 border-b border-gray-800">
-        <h3 className="text-lg font-bold text-gray-100">
+    <form onSubmit={handleSubmit} className="bg-surface border border-border-subtle rounded-card p-6 sm:p-8">
+      <div className="pb-6 border-b border-border-subtle">
+        <h3 className="h3">
           Rechten & Autorisatie Instellen
         </h3>
-        <p className="text-sm text-gray-400 mt-1">
+        <p className="text-sm text-fg-secondary mt-1">
           Kies het rechtenniveau voor dit account. Wijzigingen zijn per direct van kracht.
         </p>
       </div>
 
       {feedback ? (
         <div
-          className={`mt-6 p-4 rounded-lg text-sm border flex items-center gap-3 ${
+          className={`mt-6 p-4 rounded-control text-sm border flex items-center gap-3 ${
             feedback.type === 'success'
-              ? 'bg-emerald-950/60 border-emerald-800/80 text-emerald-300'
-              : 'bg-red-950/60 border-red-800/80 text-red-300'
+              ? 'bg-accent-emerald/15 border-accent-emerald/40 text-accent-emerald'
+              : 'bg-accent-coral/15 border-accent-coral/40 text-accent-coral'
           }`}
         >
           {feedback.type === 'success' ? (
-            <CheckIcon className="w-5 h-5 shrink-0 text-emerald-400" />
+            <CheckIcon className="icon-md shrink-0 text-accent-emerald" />
           ) : (
-            <XMarkIcon className="w-5 h-5 shrink-0 text-red-400" />
+            <XMarkIcon className="icon-md shrink-0 text-accent-coral" />
           )}
           <span>{feedback.message}</span>
         </div>
@@ -98,12 +98,12 @@ export default function UserRoleForm({ user }: UserRoleFormProps) {
           return (
             <label
               key={option.value}
-              className={`flex items-start gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
+              className={`flex items-start gap-4 p-4 rounded-card border cursor-pointer transition-all ${
                 isSelected
                   ? option.value === 'admin'
-                    ? 'bg-purple-950/25 border-purple-500/50 text-white'
-                    : 'bg-blue-950/20 border-blue-500/50 text-white'
-                  : 'bg-gray-950/60 border-gray-800 text-gray-400 hover:border-gray-700'
+                    ? 'bg-accent-violet/15 border-accent-violet/50 text-fg-primary'
+                    : 'bg-accent-blue/15 border-accent-blue/50 text-fg-primary'
+                  : 'bg-canvas/60 border-border-subtle text-fg-secondary hover:border-border-default'
               }`}
             >
               <input
@@ -114,20 +114,20 @@ export default function UserRoleForm({ user }: UserRoleFormProps) {
                 onChange={() => setSelectedRole(option.value)}
                 className={`mt-1 ${
                   option.value === 'admin'
-                    ? 'text-purple-600 focus:ring-purple-500'
-                    : 'text-blue-600 focus:ring-blue-500'
+                    ? 'accent-accent-violet'
+                    : 'accent-accent-blue'
                 }`}
               />
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-gray-200">
+                  <span className="text-sm font-semibold text-fg-primary">
                     {option.label}
                   </span>
-                  <span className={`px-2 py-0.5 rounded text-2xs font-semibold ${option.badgeClass}`}>
+                  <span className={option.badgeClass}>
                     {option.badgeText}
                   </span>
                 </div>
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-fg-muted mt-1">
                   {option.description}
                 </p>
               </div>
@@ -136,17 +136,16 @@ export default function UserRoleForm({ user }: UserRoleFormProps) {
         })}
       </div>
 
-      <div className="pt-6 mt-6 border-t border-gray-800 flex justify-end">
+      <div className="pt-6 mt-6 border-t border-border-subtle flex justify-end">
         <UIButton
           type="submit"
           variant="primary"
           size="md"
           disabled={isPending || selectedRole === user.role}
-          className="gap-2"
         >
           {isPending ? (
             <>
-              <UISpinner size="sm" className="text-white" />
+              <UISpinner size="sm" />
               <span>Bezig met bijwerken...</span>
             </>
           ) : (

@@ -166,7 +166,7 @@ export const ROUTE_SPECS: RouteSpec[] = [
     propsSpec: 'LoginFormProps { className?: string } (gebruikt useSearchParams in Suspense)',
     dataDependencies: ['login(formData) Server Action in lib/auth/actions.ts'],
     connectedFeatures: ['LoginForm'],
-    connectedUiPrimitives: ['UIButton'],
+    connectedUiPrimitives: ['UIInput', 'UIButton'],
     connectedIntegrations: ['Supabase (PostgreSQL + SSR Auth)', 'TMDB Image CDN (image.tmdb.org)', 'Vercel Platform & Image Optimization'],
     securityNotes:
       'Bestemmings-URL na login wordt geschoond met getSafeRedirectPath() tegen open-redirect aanvallen.',
@@ -395,7 +395,7 @@ export const UI_PRIMITIVE_SPECS: UiPrimitiveSpec[] = [
     keyProps: ['size?: sm | md', 'type?', 'ref?: Ref<HTMLInputElement>', 'className?'],
     foundation: '@headlessui/react Input',
     summary: 'Tekst-, e-mail-, wachtwoord- en zoekinvoer met focus-ringen en React 19 ref-prop.',
-    usedIn: ['HeaderSearch', 'RegisterForm', 'UserList', 'AdminRecommendations', 'PresentationClient'],
+    usedIn: ['HeaderSearch', 'LoginForm', 'RegisterForm', 'UserList', 'AdminRecommendations', 'PresentationClient'],
   },
   {
     name: 'UISelect',
