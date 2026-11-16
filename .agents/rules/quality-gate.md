@@ -46,12 +46,14 @@ git grep --untracked -n -E "\.select\(\s*['\"]\*['\"]\s*\)" -- "app/" "component
 *(0 resultaten toegestaan).*
 
 ## 5. Image Optimization & Design Token Gates
-Conform [`.agents/rules/image-optimization.md`](image-optimization.md) en [`.agents/rules/official-stack-standards.md`](official-stack-standards.md):
+Conform [`.agents/rules/image-optimization.md`](image-optimization.md), [`.agents/rules/official-stack-standards.md`](official-stack-standards.md) en [`.agents/rules/accessibility.md`](accessibility.md):
 ```bash
 git grep --untracked -n -P "\bpriority\b" -- "app/" "components/"
 git grep --untracked -n -P "sizes=\x22[^\x22]*\b(sm|md|lg|xl):" -- "app/" "components/"
+git grep --untracked -n -E "(bg|text|border|ring)-(gray|blue|red)-" -- "components/ui/"
+git grep --untracked -n -E "<Link[^>]*>\s*<UIButton|<UIButton[^>]*>\s*<Link" -- "app/" "components/"
 ```
-*(Streef bij nieuwe en gewijzigde componenten naar `preload` i.p.v. deprecated `priority`, geldige CSS media-queries in `sizes` en centrale `@theme` design tokens uit `app/globals.css`).*
+*(Bovenstaande controles moeten 0 resultaten opleveren: `preload` i.p.v. deprecated `priority`, geldige CSS media-queries in `sizes`, geen hardcoded `gray-*`/`blue-*`/`red-*` in `components/ui/`, en geen geneste `<Link>` + `<UIButton>` combinaties — gebruik `<UIButton href="...">`.)*
 
 ## 6. Linter, Unused-Code, Type-Safety & Build Gates
 - **Ongebruikte imports, variabelen & parameters (`react-jsx`)**:

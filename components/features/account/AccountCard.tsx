@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { UIButton } from '@/components/ui'
 
@@ -43,11 +42,9 @@ export default function AccountCard({
       </div>
 
       <div>
-        <Link href={href}>
-          <UIButton variant="primary" size="sm" className="w-full">
-            {buttonText}
-          </UIButton>
-        </Link>
+        <UIButton href={href} variant="primary" size="sm" className="w-full">
+          {buttonText}
+        </UIButton>
       </div>
     </div>
   )

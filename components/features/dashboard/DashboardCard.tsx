@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { UIButton } from '@/components/ui'
 
 export interface DashboardCardProps {
@@ -24,11 +23,9 @@ export default function DashboardCard({
       </div>
 
       <div>
-        <Link href={href}>
-          <UIButton variant="primary" size="md" className="w-full">
-            {buttonText}
-          </UIButton>
-        </Link>
+        <UIButton href={href} variant="primary" size="md" className="w-full">
+          {buttonText}
+        </UIButton>
       </div>
     </div>
   )

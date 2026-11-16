@@ -37,7 +37,7 @@ export default function UISwitch<T extends string = string>({
         onClick={() => handleChange(options[0])}
         className={`transition-colors ${
           disabled ? 'cursor-not-allowed' : 'cursor-pointer'
-        } ${!isSecond ? 'text-blue-400 font-bold' : 'text-gray-400 hover:text-gray-200'}`}
+        } ${!isSecond ? 'text-brand font-bold' : 'text-fg-muted hover:text-fg-primary'}`}
       >
         {labels[0]}
       </span>
@@ -45,15 +45,15 @@ export default function UISwitch<T extends string = string>({
         checked={isSecond}
         disabled={disabled}
         onChange={(checked) => handleChange(checked ? options[1] : options[0])}
-        className="group inline-flex h-6 w-11 items-center rounded-full border border-gray-700/80 bg-gray-800 transition-colors cursor-pointer focus:outline-none data-checked:border-blue-500 data-checked:bg-blue-600 data-focus:ring-2 data-focus:ring-blue-500/50 data-disabled:cursor-not-allowed"
+        className="group inline-flex h-6 w-11 items-center rounded-pill border border-border-default bg-surface transition-colors cursor-pointer focus:outline-none data-checked:border-brand data-checked:bg-brand data-focus:ring-2 data-focus:ring-brand/50 data-disabled:cursor-not-allowed"
       >
-        <span className="size-4 translate-x-1 rounded-full bg-white transition-transform group-data-checked:translate-x-5.5" />
+        <span className="size-4 translate-x-1 rounded-full bg-fg-primary transition-transform group-data-checked:translate-x-5.5 group-data-checked:bg-brand-fg" />
       </HeadlessSwitch>
       <span
         onClick={() => handleChange(options[1])}
         className={`transition-colors ${
           disabled ? 'cursor-not-allowed' : 'cursor-pointer'
-        } ${isSecond ? 'text-blue-400 font-bold' : 'text-gray-400 hover:text-gray-200'}`}
+        } ${isSecond ? 'text-brand font-bold' : 'text-fg-muted hover:text-fg-primary'}`}
       >
         {labels[1]}
       </span>

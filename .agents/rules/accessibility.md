@@ -15,7 +15,7 @@ Toegankelijkheid is standaard onderdeel van elke UI- en media-component binnen d
 
 ## 2. Touch Targets, Keyboard & Headless UI v2
 - **Touch Targets (WCAG 2.2 AA+)**: Alle knoppen en interactieve links zijn minimaal `24×24px` (voor primaire mobiele acties streven naar `44×44px`).
-- **Geen Geneste Interactieve Elementen**: Plaats nooit een `<button>` binnen een `<a>`/`<Link>` of andersom; style een `<Link>` rechtstreeks als knop of gebruik navigatie-triggers buiten het anker.
+- **Geen Geneste Interactieve Elementen**: Plaats nooit een `<button>` binnen een `<a>`/`<Link>` of andersom; gebruik voor een link die eruitziet als een knop altijd `<UIButton href="...">` (of `getButtonClasses()` uit `@/components/ui`) zodat één centrale knopdefinitie een valide `<a>` rendert zonder dubbele focus-stops.
 - **Focus, Toetsenbord & Feedback**: Interactieve controls (`UIButton`, `UIInput`, `UISelect`, `UISwitch`) gebruiken `@headlessui/react` v2 (zonder `@deprecated` aliassen). Overlays en dropdowns (zoals `HeaderSearch`) sluiten met `Escape` en click-outside en hervatten focus logisch. Alle interactieve elementen behouden zichtbare focus-ringen (`:focus-visible` / `data-focus:ring-2`). Toast-meldingen (`ToastProvider`) gebruiken `role="status"` / `aria-live="polite"`.
 
 ## 3. Contrast, Media Scrims & Streaming (Next.js 16)

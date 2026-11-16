@@ -57,14 +57,17 @@ export default function AdminRecommendations({
           </p>
         </div>
 
-        <Link
+        <UIButton
           href="/recommendations"
           target="_blank"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-surface hover:bg-surface-hover text-fg-primary border border-border-default rounded-control transition-colors shrink-0"
+          rel="noopener noreferrer"
+          variant="secondary"
+          size="sm"
+          className="shrink-0"
         >
           <span>Publieke weergave bekijken</span>
           <ArrowTopRightOnSquareIcon className="icon-xs" />
-        </Link>
+        </UIButton>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

@@ -31,5 +31,6 @@ description: Next.js 16.4 (Turbopack, PPR, React Compiler), React 19, Tailwind C
 
 ### Tailwind CSS v4, Layout & UI Primitives
 
-- [`app/globals.css`](../../../app/globals.css) definieert alle centrale `@theme inline` kleuren/radii, `--toastify-*` design-token overrides voor `react-toastify` en `@utility` classes (`.h1`–`.h6`, `.label-*`, `.badge-*`, `.icon-*`).
+- [`app/globals.css`](../../../app/globals.css) definieert alle centrale `@theme inline` kleuren/radii/typografie (`--brand`, `--accent-blue`, `--accent-blue-hover`, `--text-2xs`, `--radius-control`), `--toastify-*` design-token overrides voor `react-toastify` en `@utility` classes (`.h1`–`.h6`, `.label-*`, `.badge-*`, `.icon-*`).
 - Gebruik altijd de UI primitives uit [`components/ui/`](../../../components/ui/) (`UIButton`, `UIInput`, `UISelect`, `UISwitch`, `UISpinner`, `ToastProvider` op basis van `react-toastify/unstyled` + `ReactToastify.css`) gebouwd op `@headlessui/react` v2, en iconen uit `@heroicons/react` — nooit ruwe `<button>`, `<input type="text|email|password|search">`, `<select>` of losse inline `<svg>` buiten [`Spinner.tsx`](../../../components/ui/Spinner.tsx).
+- `UIButton` (`<UIButton href="...">` of `getButtonClasses()`) in [`Button.tsx`](../../../components/ui/Button.tsx) is de verplichte **Single Source of Truth** voor zowel knoppen als knop-links; plaats geen losse knop-classes op `<Link>`, nest geen `<Link><UIButton>`, en gebruik in `components/ui/` uitsluitend `@theme` design tokens uit `app/globals.css`.

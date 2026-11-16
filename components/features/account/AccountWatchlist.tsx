@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import Link from 'next/link'
 import {
   Squares2X2Icon,
   Bars3Icon,
@@ -172,11 +171,9 @@ export default function AccountWatchlist({
                 ? 'Je hebt nog geen titels gemarkeerd als reeds bekeken.'
                 : 'Er staan geen titels klaar om nog te bekijken.'}
           </p>
-          <Link href="/trending" className="inline-block mt-4">
-            <UIButton variant="primary" size="sm">
-              Trending bekijken
-            </UIButton>
-          </Link>
+          <UIButton href="/trending" variant="primary" size="sm" className="mt-4">
+            Trending bekijken
+          </UIButton>
         </div>
       ) : (
         <div

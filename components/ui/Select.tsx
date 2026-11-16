@@ -48,16 +48,16 @@ export default function UISelect<T extends string = string>({
       className={`inline-flex flex-col gap-1.5 ${className}`.trim()}
     >
       {label ? (
-        <Label className="text-xs font-semibold text-gray-400 tracking-wide">
+        <Label className="label-form">
           {label}
         </Label>
       ) : null}
       <Listbox value={value} onChange={onChange}>
         <ListboxButton
-          className={`relative w-full cursor-pointer rounded-lg border border-gray-700/80 bg-gray-900/60 ${selectSizes[size]} pr-8 text-left font-medium text-gray-200 shadow-xs transition-colors focus:outline-none data-hover:border-gray-600 data-focus:border-blue-500 data-focus:ring-2 data-focus:ring-blue-500/50 data-disabled:cursor-not-allowed data-disabled:opacity-50`}
+          className={`relative w-full cursor-pointer rounded-control border border-border-default bg-canvas/80 ${selectSizes[size]} pr-8 text-left font-medium text-fg-primary shadow-xs transition-colors focus:outline-none data-hover:border-fg-muted/50 data-focus:border-brand data-focus:ring-2 data-focus:ring-brand/40 data-disabled:cursor-not-allowed data-disabled:opacity-50`}
         >
           <span className="block truncate">{selectedOption?.label}</span>
-          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-400">
+          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-fg-muted">
             <ChevronDownIcon className="h-4 w-4" />
           </span>
         </ListboxButton>
@@ -66,13 +66,13 @@ export default function UISelect<T extends string = string>({
           anchor="bottom start"
           modal={false}
           transition
-          className="z-50 mt-1 max-h-60 w-(--button-width) overflow-auto rounded-lg border border-gray-700 bg-gray-900 py-1 text-sm shadow-xl focus:outline-none transition duration-100 ease-out data-closed:scale-95 data-closed:opacity-0 pointer-events-auto"
+          className="z-50 mt-1 max-h-60 w-(--button-width) overflow-auto rounded-control border border-border-default bg-surface py-1 text-sm shadow-xl focus:outline-none transition duration-100 ease-out data-closed:scale-95 data-closed:opacity-0 pointer-events-auto"
         >
           {options.map((option) => (
             <ListboxOption
               key={option.value}
               value={option.value}
-              className="group relative cursor-pointer select-none py-2 px-3 text-gray-300 transition-colors data-focus:bg-blue-600 data-focus:text-white data-selected:font-semibold data-selected:text-blue-400 data-focus:data-selected:text-white"
+              className="group relative cursor-pointer select-none py-2 px-3 text-fg-secondary transition-colors data-focus:bg-surface-hover data-focus:text-fg-primary data-selected:font-semibold data-selected:text-brand data-focus:data-selected:text-brand"
             >
               <span className="block truncate">{option.label}</span>
             </ListboxOption>
