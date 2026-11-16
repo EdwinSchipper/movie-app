@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "type-check": "tsc --noEmit",
+    "release:master": "node scripts/release-master.mjs"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.10",

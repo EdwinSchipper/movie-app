@@ -10,6 +10,7 @@ export {
 export {
   getTmdbImageUrl,
   getMediaDetailHref,
+  normalizeMediaActionPayload,
   validateMediaActionPayload,
   validateMediaTarget,
   type TmdbImageSize,

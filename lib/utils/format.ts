@@ -1,5 +1,22 @@
 import type { MediaType } from '@/types'
 
+const dateFormatterCache = new Map<string, Intl.DateTimeFormat>()
+
+function getDateFormatter(options?: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
+  const cacheKey = options
+    ? JSON.stringify(Object.entries(options).sort(([a], [b]) => a.localeCompare(b)))
+    : 'default'
+
+  const cached = dateFormatterCache.get(cacheKey)
+  if (cached) {
+    return cached
+  }
+
+  const formatter = new Intl.DateTimeFormat('nl-NL', options)
+  dateFormatterCache.set(cacheKey, formatter)
+  return formatter
+}
+
 export function formatDate(
   dateString?: string | null,
   options?: Intl.DateTimeFormatOptions,
@@ -8,7 +25,7 @@ export function formatDate(
   if (!dateString) return fallback
   const date = new Date(dateString)
   if (isNaN(date.getTime())) return fallback
-  return new Intl.DateTimeFormat('nl-NL', options).format(date)
+  return getDateFormatter(options).format(date)
 }
 
 export function formatReleaseYear(
