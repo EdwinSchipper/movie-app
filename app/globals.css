@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "react-toastify/ReactToastify.css";
 
 :root {
   --background: #141414;
@@ -17,6 +18,33 @@
   --accent-violet: #8b5cf6;
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-default: rgba(255, 255, 255, 0.16);
+
+  --toastify-color-dark: var(--surface);
+  --toastify-text-color-dark: var(--fg-primary);
+  --toastify-color-info: var(--brand);
+  --toastify-color-success: var(--accent-emerald);
+  --toastify-color-error: var(--accent-coral);
+  --toastify-color-progress-dark: linear-gradient(
+    to right,
+    #4cd964,
+    #5ac8fa,
+    #007aff,
+    #34aadc,
+    #5856d6,
+    #ff2d55
+  );
+  --toastify-color-progress-info: var(--toastify-color-progress-dark);
+  --toastify-color-progress-success: var(--toastify-color-progress-dark);
+  --toastify-color-progress-warning: var(--toastify-color-progress-dark);
+  --toastify-color-progress-error: var(--toastify-color-progress-dark);
+  --toastify-color-progress-bgo: 0.18;
+  --toastify-toast-bd-radius: var(--radius-control);
+  --toastify-toast-padding: 14px 36px 14px 16px;
+  --toastify-toast-min-height: 56px;
+  --toastify-toast-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.5),
+    0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --toastify-font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
 @theme inline {
@@ -140,4 +168,17 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.Toastify__toast-theme--dark {
+  border: 1px solid var(--border-default);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .Toastify--animate,
+  .Toastify--animate-icon {
+    animation-duration: 0.01ms !important;
+  }
 }
