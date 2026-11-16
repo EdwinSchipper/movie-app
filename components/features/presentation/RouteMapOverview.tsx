@@ -220,21 +220,38 @@ export default function RouteMapOverview() {
               </p>
             </div>
 
-            <div className="relative rounded-control border border-border-subtle bg-surface p-4 space-y-2">
+            <div className="relative rounded-control border border-border-subtle bg-surface p-4 space-y-3">
               <div className="flex items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-fg-primary">
                   <CpuChipIcon className="icon-sm text-accent-violet" aria-hidden="true" />
-                  2. UI &amp; Features
+                  2. Features &amp; UI Primitives
                 </span>
                 <ArrowRightIcon className="icon-xs hidden xl:block text-fg-muted" aria-hidden="true" />
               </div>
-              <ul className="space-y-1">
-                {activeRoute.connectedFeatures.map((feature) => (
-                  <li key={feature} className="text-xs font-mono text-fg-secondary">
-                    &bull; {feature}
-                  </li>
-                ))}
-              </ul>
+              <div className="space-y-1">
+                <span className="label-meta block uppercase tracking-wider">Features / Layouts</span>
+                <ul className="space-y-1">
+                  {activeRoute.connectedFeatures.map((feature) => (
+                    <li key={feature} className="text-xs font-mono text-fg-secondary">
+                      &bull; {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {activeRoute.connectedUiPrimitives.length > 0 && (
+                <div className="space-y-1 border-t border-border-subtle pt-2">
+                  <span className="label-meta block uppercase tracking-wider">
+                    Intern via componenten
+                  </span>
+                  <ul className="space-y-1">
+                    {activeRoute.connectedUiPrimitives.map((primitive) => (
+                      <li key={primitive} className="text-xs font-mono text-fg-muted">
+                        &bull; {primitive}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             <div className="relative rounded-control border border-border-subtle bg-surface p-4 space-y-2">
