@@ -226,7 +226,9 @@ export default function RouteMapOverview() {
                 <ArrowRightIcon className="icon-xs hidden xl:block text-fg-muted" aria-hidden="true" />
               </div>
               <div className="space-y-1">
-
+                <span className="label-meta block uppercase tracking-wider">
+                  Feature-componenten &amp; Layouts
+                </span>
                 <ul className="space-y-1">
                   {activeRoute.connectedFeatures.map((feature) => (
                     <li key={feature} className="text-xs font-mono text-fg-secondary">
