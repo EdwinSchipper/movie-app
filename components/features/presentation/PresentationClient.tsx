@@ -146,7 +146,7 @@ export default function PresentationClient() {
 
           <div className="shrink-0">
             <UIButton href="/tijdlijn" variant="outline" size="sm">
-              Bekijk Data stroom
+              Bekijk Dataflow
             </UIButton>
           </div>
         </div>
